@@ -2,18 +2,14 @@ import {
   Flex,
   Button,
   ButtonGroup,
-  Stack,
-  StackDivider,
-  Text,
   FormLabel,
   Editable,
   EditablePreview,
   EditableInput,
-  HStack,
   VStack,
   FormControl,
 } from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import IconButton from "../../../../core/components/IconButton";
@@ -36,10 +32,15 @@ type TaskDescriptionProps = {
 };
 
 const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
-  console.log("TaskDescription");
+  console.log("TaskDescription renders");
 
-  //#region Hooks
   const dispatch = useDispatch();
+
+  function onClose() {
+    setShow(false);
+  }
+
+  // #region Duration
   const [startTime, setStartTime] = useState<Date>(
     new Date(task ? task.timeInterval.startTime : Date.now() + 10)
   );
@@ -47,36 +48,6 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
   const [endTime, setEndTime] = useState<Date>(
     new Date(task ? task.timeInterval.endTime : Date.now() + 10)
   );
-  //#endregion
-
-  //#region Handlers
-
-  function onClose() {
-    setShow(false);
-  }
-  function onCancelHandler() {
-    setShow(false);
-  }
-
-  async function onEditFormSubmitHandler() {
-    const payload = {
-      ...task,
-      title: titleRef.current.textContent,
-      description: descriptionRef.current.textContent,
-      timeInterval: {
-        startTime,
-        endTime,
-      },
-      taskType: taskType,
-      category: category,
-      focusLevel: Number(focusLevelRef.current.value),
-    };
-
-    await taskService.updateTask(payload, dispatch);
-
-    setShow(false);
-  }
-  //#endregion
 
   function onStartTimeChangeHandler(hour, minute) {
     setStartTime((prev) => {
@@ -93,10 +64,6 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
       return prev;
     });
   }
-  function onTaskTypeRadioChange(value) {
-    setTaskType(value);
-  }
-
   const durationSection = task != null && (
     <TimePicker
       startTime={startTime}
@@ -106,13 +73,22 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
       setTime={undefined}
     />
   );
+  // #endregion
 
+  // #region Task Type Section
   const [taskType, setTaskType] = useState("TODO");
+
+  function onTaskTypeRadioChange(value) {
+    setTaskType(value);
+  }
 
   const taskTypeSection = (
     <TaskTypeRadio value={taskType} onChange={onTaskTypeRadioChange} />
   );
 
+  // #endregion
+
+  // #region Title
   const titleRef = useRef<HTMLInputElement>();
 
   const titleSection = task != null && (
@@ -134,7 +110,9 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
       </Editable>
     </FormControl>
   );
+  // #endregion
 
+  // #region Description
   const descriptionRef = useRef<HTMLInputElement>();
 
   const descriptionSection = task && (
@@ -156,7 +134,9 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
       </Editable>
     </FormControl>
   );
+  // #endregion
 
+  // #region Category Selection
   const [showCategorySelection, setShowCategorySelection] = useState(false);
   const [category, setCategory] = useState(task.category);
 
@@ -173,7 +153,7 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
     setCategory(newlySelectedCategory);
   }
 
-  const categorySection = (
+  const categorySelection = (
     <FormControl
       {...style.formControl}
       id="title"
@@ -207,6 +187,9 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
     </FormControl>
   );
 
+  // #endregion
+
+  // #region Focus Level
   const focusLevelRef = useRef<FocusLevelRef>();
   const focusLevelSection = task && (
     <>
@@ -216,9 +199,34 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
       />
     </>
   );
+  // #endregion
+
+  // #region Buttons
+  function onCancelHandler() {
+    setShow(false);
+  }
+
+  async function onFormSubmitHandler() {
+    const payload = {
+      ...task,
+      title: titleRef.current.textContent,
+      description: descriptionRef.current.textContent,
+      timeInterval: {
+        startTime,
+        endTime,
+      },
+      taskType: taskType,
+      category: category,
+      focusLevel: Number(focusLevelRef.current.value),
+    };
+
+    await taskService.updateTask(payload, dispatch);
+
+    setShow(false);
+  }
   const buttons = (
     <ButtonGroup pt={20} width="22rem" justifyContent="space-evenly">
-      <Button variant="solid" onClick={onEditFormSubmitHandler}>
+      <Button variant="solid" onClick={onFormSubmitHandler}>
         Save
       </Button>
       <Button variant="unstyled" onClick={onCancelHandler}>
@@ -226,6 +234,7 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
       </Button>
     </ButtonGroup>
   );
+  // #endregion
 
   return (
     task && (
@@ -259,7 +268,7 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
 
               {titleSection}
               {descriptionSection}
-              {categorySection}
+              {categorySelection}
 
               {focusLevelSection}
               {buttons}

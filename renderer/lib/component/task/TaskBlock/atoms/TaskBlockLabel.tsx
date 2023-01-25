@@ -1,6 +1,5 @@
 import { Stack, Text } from "@chakra-ui/react";
-import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
-import React, { ComponentProps } from "react";
+import React from "react";
 import DurationDisplay from "../../../../../core/components/ui/DurationDisplay";
 
 type TaskBlockLabelProps = {
