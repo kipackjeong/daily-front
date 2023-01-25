@@ -1,0 +1,73 @@
+import { useDisclosure, Button, Card } from "@chakra-ui/react";
+
+import React, { Component } from "react";
+import {
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+} from "@chakra-ui/react";
+
+type ModalLayoutProps = {
+  title?: string;
+  width?: string;
+  height?: string;
+  direction?: string;
+  show?: boolean;
+  noHeader?: boolean;
+  onClose?: VoidFunction;
+  haveButton?: boolean;
+  children?;
+};
+const ModalLayout = ({
+  title,
+  width,
+  height,
+  direction,
+  noHeader = false,
+  show = false,
+  onClose = null,
+  haveButton = false,
+  children,
+}: ModalLayoutProps) => {
+  const { isOpen, onOpen } = useDisclosure();
+
+  return (
+    <>
+      {haveButton && <Button onClick={onOpen}>Open Modal</Button>}
+      <Drawer
+        size="full"
+        isOpen={show ? show : isOpen}
+        placement="top"
+        onClose={onClose}
+      >
+        <DrawerOverlay>
+          <DrawerContent
+            width={`${width ? width : "100%"}`}
+            height={`${height ? height : "100%"}`}
+            margin="auto"
+          >
+            <DrawerCloseButton zIndex={1} onClick={onClose} />
+            {!noHeader && <DrawerHeader pb={0}>{title}</DrawerHeader>}
+            <DrawerBody
+              sx={{
+                w: "100%",
+                h: "100%",
+                display: "flex",
+                flexDir: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {children}
+            </DrawerBody>
+          </DrawerContent>
+        </DrawerOverlay>
+      </Drawer>
+    </>
+  );
+};
+
+export default ModalLayout;

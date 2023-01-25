@@ -1,0 +1,44 @@
+onMouseDown={(e) => {
+          console.log("onMouseDown");
+          // switch on isMouseDown to true
+          setIsMouseDown(true);
+          const blockLocY = getOffset(e.target).y;
+          const target = e.target as HTMLDivElement;
+          const minute = convertPXtoMinute(e.clientY - blockLocY);
+          const startTime = getTodayDate();
+          const hr = Number(target.id.substring(0, 2));
+          startTime.setHours(hr);
+          startTime.setMinutes(convertPXtoMinute(e.clientY - blockLocY));
+          startTime.setSeconds(0);
+          console.log(startTime);
+
+          const newTask: ITask = {
+            title: "",
+            timeInterval: {
+              startTime: startTime,
+              endTime: startTime,
+            },
+          };
+          2;
+          dispatch(taskActions.addTasks(newTask));
+        }}
+        onMouseMove={(e) => {
+          // if onMouseDown = true
+          const blockLocY = getOffset(e.target).y;
+          if (isMouseDown) {
+            console.log("should update the shape");
+          }
+          //    update the shape
+          // else
+          //    return
+          return;
+        }}
+        onMouseUp={(e) => {
+          // switch off isMouseDown to false
+          console.log("onMouseUp");
+          setIsMouseDown(false);
+
+          // calculate the height, time interval for the task.
+          // create task and push it into taskform.
+          // show taskform.
+        }}
