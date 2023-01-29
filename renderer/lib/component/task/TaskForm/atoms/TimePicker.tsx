@@ -7,8 +7,7 @@ import {
   FormErrorMessage,
   useStyleConfig,
 } from "@chakra-ui/react";
-import React, { useMemo, useState } from "react";
-import logger from "../../../../../utils/logger";
+import React, { useEffect, useMemo, useState } from "react";
 
 type TimeInputBlockType = {
   time: Date;
@@ -17,17 +16,55 @@ type TimeInputBlockType = {
 const TimeInputBlock = ({ time, onChange }: TimeInputBlockType) => {
   console.log("TimeInputBlock - render");
 
-  const [hour, setHour] = useState(Number(time.getHours()));
+  const [hour, setHour] = useState(
+    time.getHours() > 12 ? time.getHours() - 12 : time.getHours()
+  );
 
-  const [minute, setMinute] = useState(Number(time.getMinutes()));
+  const [minute, setMinute] = useState(time.getMinutes());
 
-  function handleHourChange(e) {
-    setHour(e);
-    onChange(e, minute);
+  const [isAM, setIsAM] = useState(time.getHours() < 12 ? true : false);
+
+  useEffect(() => {
+    console.log("hour: " + hour);
+    console.log("minute: " + minute);
+    console.log("isAM: " + isAM);
+    onChange(
+      hour != 13 && hour != 12 && hour >= 2 && !isAM ? hour + 12 : hour,
+      minute
+    );
+  }, [hour, minute, isAM]);
+
+  function handleHourChange(str, num) {
+    if ((hour == 11 && num == 12) || (hour == 12 && num == 11)) {
+      setIsAM((prev) => !prev);
+
+      if (!isAM) {
+        num = hour == 12 && num == 11 ? 11 : 0;
+      }
+    }
+
+    if (((hour == 1 && num == 0) || (hour == 13 && num == 0)) && !isAM) {
+      num = 12;
+    }
+
+    //local state
+    setHour(num);
+
+    // if (hour == 13 && num == 12) {
+    //   setIsAM(true);
+    // }
   }
-  function handleMinuteChange(e) {
-    setMinute(e);
-    onChange(hour, e);
+
+  function handleMinuteChange(str, num) {
+    if (minute == 59 && num == 60) {
+      setHour((prev) => prev + 1);
+      num = 0;
+    }
+    if (minute == 0 && num == -1) {
+      setHour((prev) => prev - 1);
+      num = 59;
+    }
+    setMinute(num);
   }
 
   const widthPerBlock = "60px";
@@ -36,9 +73,27 @@ const TimeInputBlock = ({ time, onChange }: TimeInputBlockType) => {
 
   const fontSize = "4xl";
 
+  const hrFormat = (val) => {
+    let newVal;
+    console.log("hrFormat");
+    // console("hour: " + hour);
+    // console.log("val: " + val);
+
+    newVal = val > 12 ? val - 12 : val;
+
+    return format(newVal);
+  };
+
   const format = (val) => {
     if (val < 10) {
       val = "0" + val;
+    }
+    if (val == -1) {
+      return val;
+    }
+
+    if (val.length > 2) {
+      return val.substring(val.length - 2, val.length);
     }
 
     return val;
@@ -56,14 +111,14 @@ const TimeInputBlock = ({ time, onChange }: TimeInputBlockType) => {
     <>
       <NumberInput
         allowMouseWheel
-        defaultValue={Number(time.getHours())}
+        defaultValue={hour}
         max={24}
-        min={1}
+        min={0}
         w={widthPerBlock}
         h={heightPerBlock}
         border="none"
-        clampValueOnBlur={false}
-        value={format(time.getHours())}
+        clampValueOnBlur={true}
+        value={hrFormat(hour)}
         onChange={handleHourChange}
       >
         <NumberInputField sx={numberInputFieldStyle} />
@@ -71,19 +126,19 @@ const TimeInputBlock = ({ time, onChange }: TimeInputBlockType) => {
       <Text>:</Text>
       <NumberInput
         allowMouseWheel
-        defaultValue={Number(time.getMinutes())}
-        max={59}
-        min={0}
+        defaultValue={minute}
+        max={60}
+        min={-1}
         value={format(minute)}
         w={widthPerBlock}
         h={heightPerBlock}
-        clampValueOnBlur={false}
+        clampValueOnBlur={true}
         onChange={handleMinuteChange}
       >
         <NumberInputField sx={numberInputFieldStyle} />
       </NumberInput>
       <Text fontSize={fontSize} fontWeight="bold">
-        {hour < 12 ? "am" : "pm"}
+        {isAM ? "am" : "pm"}
       </Text>
     </>
   );

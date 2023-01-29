@@ -1,8 +1,8 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import { createWrapper } from "next-redux-wrapper";
-import { dateSlice } from "../models/app-date/app-date.slice";
-import { taskSlice } from "../models/task/task.slice";
+import { taskSlice } from "../slices/task.slice";
 import { logger } from "redux-logger";
+import { dateSlice } from "../slices/date.slice";
 
 const makeStore = () =>
   configureStore({

@@ -14,7 +14,7 @@ class CategoryService implements IService {
     return await categoryApi.post(payload);
   }
   public async updateById(id: string, payload: ICategory) {
-    return await categoryApi.put(payload, id);
+    return await categoryApi.put(id, payload);
   }
   public async deleteById(id: string) {
     return await categoryApi.delete(id);

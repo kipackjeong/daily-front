@@ -9,5 +9,6 @@ module.exports = {
   env: {
     mongodburl:
       "mongodb+srv://kipackjeong:A20181004a%3F@daily-test.clvjbwe.mongodb.net/test",
+    apiurl: "http://localhost:3000",
   },
 };

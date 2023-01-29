@@ -6,14 +6,11 @@ import TaskForm from "../task/TaskForm/TaskForm";
 import { useSelector } from "react-redux";
 
 import { useRouter } from "next/router";
-import { IAppDate } from "../../models/app-date";
-import {
-  selectDates,
-  selectSelectedDate,
-} from "../../models/app-date/app-date.slice";
-import { getNowHour, getNowMinute } from "../../utils/helper";
-import { selectLatestTask } from "../../models/task/task.slice";
+import { getMonthInStr, getNowHour, getNowMinute } from "../../utils/helper";
+import { selectLatestTask } from "../../redux/slices/task.slice";
 import { ITask } from "../../models/task";
+import { selectDate, selectDates } from "../../redux/slices/date.slice";
+import TaskFactory from "../../models/task/task.factory";
 
 type DateSelectionBarProps = {
   flex?: number;
@@ -24,8 +21,9 @@ const DateSelectionBar = ({ isMini, onDateSelect }: DateSelectionBarProps) => {
   console.log("DateSelectionBar renders");
 
   // #region Hooks
+  const date = useSelector(selectDate);
   const dates = useSelector(selectDates);
-  const selectedDate: IAppDate = useSelector(selectSelectedDate);
+
   const latestTask: ITask = useSelector(selectLatestTask);
 
   const [newTask, setNewTask] = useState(null);
@@ -40,56 +38,44 @@ const DateSelectionBar = ({ isMini, onDateSelect }: DateSelectionBarProps) => {
   // #endregion
 
   const [prevWeekDateStr, nextWeekDateStr] = useMemo(() => {
-    const { year, month, date } = selectedDate;
-
     const oneDayInMS = 86400000;
 
-    const dateInDate = new Date(year, month, date).getTime();
+    const dateInDate = new Date(date).getTime();
 
     return [
       new Date(dateInDate - 7 * oneDayInMS).toISOString().split("T")[0],
       new Date(dateInDate + 7 * oneDayInMS).toISOString().split("T")[0],
     ];
-  }, [selectedDate]);
+  }, [date]);
 
   //#region Handler
 
   function onAddTodoClickHandler(e) {
     setShowItemForm(true);
 
-    const { year, month, date } = selectedDate;
     const hourNow = getNowHour();
     const minNow = getNowMinute();
 
-    setNewTask({
-      taskType: "TODO",
-      title: "",
-      focusLevel: 50,
-      timeInterval: {
-        startTime: new Date(year, month, date - 1, hourNow, minNow),
-        endTime: new Date(year, month, date - 1, hourNow, minNow + 20),
-        taskType: "TODO",
-      },
-    });
+    const startTime = new Date(date);
+    const endTime = new Date(date);
+    startTime.setHours(hourNow);
+    startTime.setMinutes(minNow);
+
+    setNewTask(TaskFactory.createEmptyTodo(startTime, endTime));
   }
 
   function onAddDidClickHandler(e) {
     setShowItemForm(true);
 
-    const { year, month, date } = selectedDate;
     const hourNow = getNowHour();
     const minNow = getNowMinute();
 
-    setNewTask({
-      taskType: "DID",
-      title: "",
-      focusLevel: 50,
-      timeInterval: {
-        startTime: new Date(year, month, date - 1, hourNow - 1, minNow),
-        endTime: new Date(year, month, date - 1, hourNow, minNow),
-        taskType: "TODO",
-      },
-    });
+    const startTime = new Date(date);
+    const endTime = new Date(date);
+    startTime.setHours(hourNow);
+    startTime.setMinutes(minNow);
+
+    setNewTask(TaskFactory.createEmptyDid(startTime, endTime));
   }
 
   //#endregion
@@ -114,7 +100,7 @@ const DateSelectionBar = ({ isMini, onDateSelect }: DateSelectionBarProps) => {
       >
         <Flex p={5} width="100%" justifyContent={"space-between"}>
           <Text fontWeight="bold" fontSize={isMini ? "1.5rem" : "2rem"}>
-            {selectedDate.getMonthInStr()}
+            {getMonthInStr(date)}
           </Text>
           <HStack spacing={1}>
             <Button p={2} border="none" onClick={onAddTodoClickHandler}>
@@ -139,18 +125,18 @@ const DateSelectionBar = ({ isMini, onDateSelect }: DateSelectionBarProps) => {
             />
           )}
 
-          {dates.map((date, i) => {
-            if (date.month != selectedDate.month) {
+          {dates.map((d, i) => {
+            if (date.getMonth() != d.getMonth()) {
               return (
                 <DateBox
                   key={i}
-                  date={date}
+                  date={d}
                   fontSizes={dateBoxFontSizes}
                   isShallow={true}
                   onClick={onDateSelect}
                 ></DateBox>
               );
-            } else if (date.id == selectedDate.id) {
+            } else if (date.getDate() == d.getDate()) {
               return (
                 <DateBox
                   key={i}
@@ -161,10 +147,11 @@ const DateSelectionBar = ({ isMini, onDateSelect }: DateSelectionBarProps) => {
                 ></DateBox>
               );
             }
+
             return (
               <DateBox
                 key={i}
-                date={date}
+                date={d}
                 fontSizes={dateBoxFontSizes}
                 onClick={onDateSelect}
               ></DateBox>

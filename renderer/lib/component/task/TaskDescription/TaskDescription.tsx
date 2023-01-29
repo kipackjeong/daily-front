@@ -9,7 +9,7 @@ import {
   VStack,
   FormControl,
 } from "@chakra-ui/react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import IconButton from "../../../../core/components/IconButton";
@@ -42,14 +42,16 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
 
   // #region Duration
   const [startTime, setStartTime] = useState<Date>(
-    new Date(task ? task.timeInterval.startTime : Date.now() + 10)
+    task ? task.timeInterval.startTime : new Date(Date.now() + 10)
   );
 
   const [endTime, setEndTime] = useState<Date>(
-    new Date(task ? task.timeInterval.endTime : Date.now() + 10)
+    task ? task.timeInterval.endTime : new Date(Date.now() + 10)
   );
 
   function onStartTimeChangeHandler(hour, minute) {
+    console.log(hour);
+
     setStartTime((prev) => {
       prev.setHours(hour);
       prev.setMinutes(minute);
@@ -58,6 +60,8 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
   }
 
   function onEndTimeChangeHandler(hour, minute) {
+    console.log(hour);
+
     setEndTime((prev) => {
       prev.setHours(hour);
       prev.setMinutes(minute);
@@ -138,7 +142,16 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
 
   // #region Category Selection
   const [showCategorySelection, setShowCategorySelection] = useState(false);
-  const [category, setCategory] = useState(task.category);
+  const [category, setCategory] = useState(null);
+
+  useEffect(() => {
+    async function fetchCategory() {
+      console.log(task.category);
+      const category = await categoryService.findById(task.category);
+      setCategory(category);
+    }
+    if (task.category) fetchCategory();
+  }, []);
 
   function onCategoryPlusClicked() {
     setShowCategorySelection(true);
@@ -162,7 +175,7 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
       <FormLabel>Category</FormLabel>
       <Flex alignItems="center" justifyContent="center">
         {task && category ? (
-          <Category category={category as ICategory} />
+          <Category category={category} />
         ) : (
           <>
             <IconButton icon={FaPlus} onClick={onCategoryPlusClicked} />
@@ -207,16 +220,23 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
   }
 
   async function onFormSubmitHandler() {
+    let timeInterval = {
+      startTime,
+      endTime,
+    };
+    if (startTime > endTime) {
+      const temp = startTime;
+      timeInterval.startTime = endTime;
+      timeInterval.endTime = temp;
+    }
+
     const payload = {
       ...task,
       title: titleRef.current.textContent,
       description: descriptionRef.current.textContent,
-      timeInterval: {
-        startTime,
-        endTime,
-      },
+      timeInterval,
       taskType: taskType,
-      category: category,
+      category: category && category._id,
       focusLevel: Number(focusLevelRef.current.value),
     };
 

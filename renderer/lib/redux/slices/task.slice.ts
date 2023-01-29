@@ -2,9 +2,9 @@ import { useFocusEffect } from "@chakra-ui/react";
 import { createSlice } from "@reduxjs/toolkit";
 
 import { HYDRATE } from "next-redux-wrapper";
-import indexReducer from "../../store";
-import { AppState } from "../../store/app.store";
-import ITask from "./task.interface";
+import indexReducer from "../stores";
+import { AppState } from "../stores/app.store";
+import ITask from "../../models/task/task.interface";
 
 type SetTaskAction = {
   payload: ITask[];
@@ -59,7 +59,6 @@ export const taskSlice = createSlice({
     // Action to set the authentication status
     setTasks(state, action: SetTaskAction) {
       state.tasks = action.payload;
-
       orderTasksByEndTime(state.tasks);
       refreshLatestTask(state);
     },

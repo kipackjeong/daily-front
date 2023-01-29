@@ -1,12 +1,5 @@
-import {
-  Box,
-  Flex,
-  FlexProps,
-  Icon,
-  Link,
-  useStyleConfig,
-} from "@chakra-ui/react";
-import { IconType } from "react-icons";
+import { Box, Flex, FlexProps, Icon, useStyleConfig } from "@chakra-ui/react";
+import Link from "next/link";
 import { LinkItemProps } from "./SideBar";
 
 interface NavItemProps extends FlexProps {
@@ -16,14 +9,10 @@ interface NavItemProps extends FlexProps {
 const NavItem = ({ link }: NavItemProps) => {
   const containerStyle = useStyleConfig("Flex", { variant: "navItem" });
   return (
-    <Link
-      href={link.link}
-      style={{ textDecoration: "none" }}
-      _focus={{ boxShadow: "none" }}
-    >
+    <Link href={link.link} style={{ textDecoration: "none" }}>
       <Flex __css={containerStyle}>
         {link.icon && (
-          <Icon 
+          <Icon
             mr="4"
             fontSize="16"
             _groupHover={{

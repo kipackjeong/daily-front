@@ -3,15 +3,16 @@ import { Box, Divider, Flex, Text, useStyleConfig } from "@chakra-ui/react";
 import { pixelPerHour } from "./constant";
 import TaskBlock from "../task/TaskBlock/TaskBlock";
 
-import TaskForm from "../task/TaskForm/TaskForm";
 import { useDispatch, useSelector } from "react-redux";
-import { ITask, taskActions, taskService } from "../../models/task";
-import { getHeight, getOffset, convertPXtoMinute } from "../../utils/converter";
-import { getPositionFromTheDate, toHourOnlyString } from "../../utils/helper";
+import { ITask, taskService } from "../../models/task";
 import {
-  selectDates,
-  selectSelectedDate,
-} from "../../models/app-date/app-date.slice";
+  convertPXtoMinute,
+  getHeight,
+  getOffset,
+  roundToIntervalFive,
+  toHourOnlyString,
+} from "../../utils/helper";
+import { selectDate } from "../../redux/slices/date.slice";
 
 type TimeBlockProps = {
   id;
@@ -21,17 +22,14 @@ type TimeBlockProps = {
 };
 
 const TimeBlock = ({ id, time, tasksArr, isMini }: TimeBlockProps) => {
-  console.log("TimeBlock - render");
+  // console.log("TimeBlock - render");
 
   //#region Hooks
   const dispatch = useDispatch();
-  const selectedDate = useSelector(selectSelectedDate);
+  const selectedDate = useSelector(selectDate);
 
   const [tasks, setTasks] = useState(tasksArr);
-  const [showTaskForm, setShowTaskForm] = useState(false);
 
-  const [height, setHeight] = useState<string>("1px");
-  const [positionY, setPositionY] = useState(getPositionFromTheDate(time));
   //#endregion
 
   useEffect(() => {
@@ -60,31 +58,20 @@ const TimeBlock = ({ id, time, tasksArr, isMini }: TimeBlockProps) => {
     }
     const taskStartTime = new Date(time);
 
-    taskStartTime.setMinutes(
-      time.getMinutes() + (convertPXtoMinute(yDiff) % 60)
-    );
+    const minuteToAdd = roundToIntervalFive(convertPXtoMinute(yDiff) % 60);
+
+    taskStartTime.setMinutes(time.getMinutes() + minuteToAdd);
 
     const taskEndTime = new Date(taskStartTime);
+    
     taskEndTime.setMinutes(taskEndTime.getMinutes() + 10);
 
     const payload: ITask = {
-      position: position,
       timeInterval: { startTime: taskStartTime, endTime: taskEndTime },
     };
 
     await taskService.createTask(payload, selectedDate, dispatch);
   }
-
-  //TODO: implement drag draw task block.
-  const onTaskFormSubmitHandler = () => {
-    setShowTaskForm(false);
-  };
-
-  function onTaskFormCancelClick(task: ITask) {
-    setShowTaskForm(false);
-    setTasks((prev) => [...prev.slice(0, prev.length - 1)]);
-  }
-
   //#endregion
 
   // #region Styles
@@ -99,7 +86,6 @@ const TimeBlock = ({ id, time, tasksArr, isMini }: TimeBlockProps) => {
     return (
       tasks.length != 0 &&
       tasks.map((task, i) => {
-        console.log(task);
         if (task.timeInterval.startTime.getHours() == time.getHours()) {
           return <TaskBlock key={i} task={task} />;
         }
@@ -119,14 +105,6 @@ const TimeBlock = ({ id, time, tasksArr, isMini }: TimeBlockProps) => {
       _hover={{ backgroundColor: "brand.lightGray" }}
     >
       {taskBlocks}
-      {showTaskForm && (
-        <TaskForm
-          task={tasks.at(tasks.length - 1)}
-          onSubmit={onTaskFormSubmitHandler}
-          onCancel={onTaskFormCancelClick}
-        />
-      )}
-
       <Box
         flexDir="column"
         justifyContent={"flex-start"}

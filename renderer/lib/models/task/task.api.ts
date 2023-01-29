@@ -1,62 +1,55 @@
 import IApi from "../../../core/interfaces/api.interface";
 import logger from "../../../utils/logger";
-import IAppDate from "../app-date/app-date.interface";
 import ITask from "./task.interface";
+import axios from "axios";
 
 class TaskApi implements IApi {
-  url = "/api/tasks";
+  url = process.env.apiurl + "/tasks";
 
-  public async post(payload: ITask, query) {
+  public async post(payload: ITask, query?) {
     console.log("TaskApi.post()");
 
-    const res = await fetch(`${this.url}/${query}`, {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+    const res = await axios.post(`${this.url}/${query ? query : ""}`, payload);
 
-    if (res.status == 200) {
-      const json = await res.json();
-      return json.data;
+    if (res.status == 201) {
+      const data = res.data;
+
+      return data.data;
     }
   }
 
-  public async put(task: ITask) {
+  public async put(id: string, task: ITask) {
     console.log("taskApi.put()");
 
-    const res = await fetch(this.url + "/" + task._id, {
-      method: "PUT",
-      body: JSON.stringify(task),
-    });
+    const res = await axios.put(this.url + "/" + id, task);
 
     if (res.status == 201) {
-      const json = await res.json();
-      return json.data;
+      const data = await res.data;
+
+      return data.data;
     }
   }
 
   public async get(query: string) {
     console.log("taskApi.get()");
 
-    const res = await fetch(this.url + "/" + query, {
-      method: "GET",
-    });
+    const res = await axios.get(this.url + "/" + query);
 
-    const json = await res.json();
+    const data = await res.data;
+    console.log(data);
 
     if (res.status == 200) {
-      return json.data;
+      return data.data;
     } else {
-      logger.error(res, json.message);
+      logger.error(res, data.message);
     }
   }
   public async delete(query: string) {
     console.log("taskApi.delete()");
 
-    const res = await fetch(this.url + "/" + query, {
-      method: "DELETE",
-    });
+    const res = await axios.delete(this.url + "/" + query);
 
-    if (res.status == 204) {
+    if (res.status == 200) {
       return;
     } else {
       logger.error(res);

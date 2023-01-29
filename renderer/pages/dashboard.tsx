@@ -9,8 +9,4 @@ function dashBoard() {
     </PageLayout> 
   );
 }
-
-// dashBoard.getInitialProps = async (ctx) => {
-//   console.log("dashboard/[dateStr]/ - getInitialProps");
-// };
 export default dashBoard;

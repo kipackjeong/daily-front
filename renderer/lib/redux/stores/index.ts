@@ -1,12 +1,11 @@
-import logger from "../../utils/logger";
-
 const indexReducer = (state, action) => {
-  logger.info("indexReducer");
-
   const newState = { ...state };
+  newState.date.date = { ...action.payload.date.date };
   newState.date.dates = [...action.payload.date.dates];
-  newState.date.selectedDate = { ...action.payload.date.selectedDate };
   newState.task.tasks = [...action.payload.task.tasks];
+  newState.task.selected = [...action.payload.task.selected];
+  newState.task.latest = { ...action.payload.task.latest };
+
   return newState;
 };
 

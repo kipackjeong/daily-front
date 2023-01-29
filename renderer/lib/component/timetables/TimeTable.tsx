@@ -6,17 +6,18 @@ import CurrentTimeLine from "./CurrentTimeLine";
 import TimeBlock from "./TimeBlock";
 import { Scrollbars } from "react-custom-scrollbars";
 import DeleteButton from "../../../core/components/DeleteButton";
-import { selectSelectedDate } from "../../models/app-date/app-date.slice";
+
 import { ITask, taskService } from "../../models/task";
 import {
   selectTasks,
   selectSelectedTasks,
   taskActions,
-} from "../../models/task/task.slice";
-import { convertPXtoMinute, getOffset } from "../../utils/converter";
+} from "../../redux/slices/task.slice";
+
 import { getTodayDate } from "../../utils/helper";
 import { start } from "repl";
 import TaskBlock from "../task/TaskBlock/TaskBlock";
+import { selectDate } from "../../redux/slices/date.slice";
 
 type TimeTableProps = {
   flex?: number;
@@ -31,7 +32,7 @@ type Payload = {
 const TimeTable = ({ flex, isMini }: TimeTableProps) => {
   console.log("TimeTable - render");
   const dispatch = useDispatch();
-  const selectedDate = useSelector(selectSelectedDate);
+  const selectedDate = useSelector(selectDate);
   const tasks = useSelector(selectTasks);
   const selectedTasks = useSelector(selectSelectedTasks);
   const [currentTime, setCurrentTime] = useState(new Date(Date.now()));
@@ -60,8 +61,7 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
 
   const prePayloads = useMemo(() => {
     return Array.from({ length: 24 }, (_, i) => {
-      const { year, month, date } = selectedDate;
-      const newDate = new Date(year, month, date);
+      const newDate = new Date(selectedDate);
       newDate.setHours(0 + i);
       newDate.setMinutes(0);
       newDate.setSeconds(0);
@@ -81,11 +81,9 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
     });
 
     tasks.forEach((t) => {
-
       const idx = t.timeInterval.startTime.getHours();
 
       result[idx].tasksArr.push(t);
-
     });
 
     return result;
@@ -145,7 +143,7 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
             justifyContent="flex-start"
             flexFlow={"wrap"}
           >
-            {selectedDate.date == new Date(Date.now()).getDate() && (
+            {selectedDate.getDate() == new Date(Date.now()).getDate() && (
               <CurrentTimeLine currentTime={currentTime} />
             )}
             {timeBlocks}

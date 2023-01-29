@@ -10,7 +10,7 @@ import React from "react";
 import BarChart from "../../core/components/BarChart";
 import DoughnutChart from "../../core/components/DoughnutChart";
 import dashBoard from "../../pages/dashboard";
-import { appStoreWrapper } from "../store/app.store";
+import { appStoreWrapper } from "../redux/stores/app.store";
 import { getTodayDateStr } from "../utils/helper";
 import DailyBoard from "./dailyboard";
 
@@ -58,7 +58,7 @@ const DashBoard = () => {
       <Flex flex={0.1} h="100%" flexDir={"column"} ml={5}>
         <Card w="100%" h="100%">
           <CardBody h="100%">
-            <DailyBoard dateStr={getTodayDateStr()} isMini={true} />
+            <DailyBoard isMini={true} />
           </CardBody>
         </Card>
       </Flex>

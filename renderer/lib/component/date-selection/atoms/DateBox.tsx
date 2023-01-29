@@ -1,9 +1,9 @@
 import { Box, Flex, Text, useStyleConfig } from "@chakra-ui/react";
 import React, { MouseEventHandler } from "react";
-import { IAppDate } from "../../../models/app-date";
+import { getDayInStr } from "../../../utils/helper";
 
 type DateProp = {
-  date: IAppDate;
+  date: Date;
   fontSizes?: string[];
   isShallow?: boolean;
   isHighlight?: boolean;
@@ -32,10 +32,10 @@ const DateBox = ({
       onClick={() => onClick(date)}
     >
       <Text fontWeight="bold" fontSize={dateSize}>
-        {date.date}
+        {date.getDate()}
       </Text>
 
-      <Text fontSize={daySize}>{date.getDayInStr()}</Text>
+      <Text fontSize={daySize}>{getDayInStr(date)}</Text>
     </Flex>
   );
 };

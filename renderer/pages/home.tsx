@@ -12,7 +12,7 @@ function home() {
       <Flex>
         <p>
           ⚡ Electron + Next.js ⚡ -
-          <Link href="/daily-board">
+          <Link href="/dailyboard" as="/dailyboard">
             <a>Go to timetable</a>
           </Link>
         </p>

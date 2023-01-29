@@ -14,7 +14,6 @@ import { Scrollbars } from "react-custom-scrollbars";
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ModalLayout from "../../../../core/layouts/ModalLayout";
-import { selectSelectedDate } from "../../../models/app-date/app-date.slice";
 import { ITask, taskService } from "../../../models/task";
 import { FocusLevelSlider } from "./atoms";
 import "primeicons/primeicons.css";
@@ -22,11 +21,11 @@ import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.css";
 import "primeflex/primeflex.css";
 import TimePicker from "./atoms/TimePicker";
-import logger from "../../../../utils/logger";
 import CategorySelection from "./atoms/CategorySelection";
 import style from "./style";
 import TaskTypeRadio from "./atoms/TaskTypeRadio";
-import categoryService from "../../../models/category/category.service";
+import { selectDate } from "../../../redux/slices/date.slice";
+import { setFips } from "crypto";
 
 export interface RadioRef extends HTMLDivElement {
   value: string;
@@ -65,7 +64,8 @@ const TaskForm = ({
   const [endTime, setEndTime] = useState<Date>(
     new Date(task ? task.timeInterval.endTime : Date.now() + 10)
   );
-  const selectedDate = useSelector(selectSelectedDate);
+
+  const selectedDate = useSelector(selectDate);
   const dispatch = useDispatch();
 
   // #endregion
@@ -78,12 +78,22 @@ const TaskForm = ({
     // case when creating new task
     console.log("--Create Task");
 
+    let timeInterval = {
+      startTime,
+      endTime,
+    };
+    if (startTime > endTime) {
+      const temp = startTime;
+      timeInterval.startTime = endTime;
+      timeInterval.endTime = temp;
+    }
+
     const createPayload: ITask = {
       ...task,
       title: titleRef.current.value,
       description: descriptionRef.current.value,
       focusLevel: Number(focusLevelRef.current.value),
-      timeInterval: { startTime, endTime },
+      timeInterval,
       taskType: taskType,
       category: selectedCategory,
     };
@@ -105,6 +115,7 @@ const TaskForm = ({
   }
 
   function onStartTimeChangeHandler(hour, minute) {
+    console.log(hour);
     setStartTime((prev) => {
       console.log("TaskForm - onStartTimeChangeHandler - setStartTime");
       prev.setHours(hour);
@@ -114,6 +125,8 @@ const TaskForm = ({
   }
 
   function onEndTimeChangeHandler(hour, minute) {
+    console.log(hour);
+
     setEndTime((prev) => {
       console.log("TaskForm - onEndTimeChangeHandler - setEndTime");
       prev.setHours(hour);
@@ -127,8 +140,7 @@ const TaskForm = ({
   }
 
   async function onCategorySelect(categoryId) {
-    const newlySelectedCategory = await categoryService.findById(categoryId);
-    setSelectedCategory(newlySelectedCategory);
+    setSelectedCategory(categoryId);
   }
   // #endregion
 

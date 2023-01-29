@@ -33,6 +33,8 @@ const CategoryForm = ({ onSubmit, onCancel, category }: CategoryFormProps) => {
 
   //#region Handlers
   async function onSubmitHandler(e) {
+    console.log("CategoryForm - onSubmitHandler");
+
     e.preventDefault();
     e.stopPropagation();
 
@@ -40,6 +42,7 @@ const CategoryForm = ({ onSubmit, onCancel, category }: CategoryFormProps) => {
       title: titleRef.current.value,
       icon: selectedIcon,
     };
+
     // to update category
 
     if (category) {
