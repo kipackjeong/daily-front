@@ -13,9 +13,10 @@ interface MobileProps extends FlexProps {
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   return (
     <Flex
+      position={"fixed"}
       className="side-bar-mobile"
       ml={{ base: 0, md: 60 }}
-      px={{ base: 4, md: 24 }}
+      px={{ base: 4 }}
       height="20"
       alignItems="center"
       bg={useColorModeValue("white", "gray.900")}

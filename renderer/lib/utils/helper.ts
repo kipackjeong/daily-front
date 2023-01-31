@@ -38,19 +38,22 @@ export function getMinuteDiffForTimeInterval(timeInterval) {
   return Math.abs(Number(endTime) - Number(startTime)) / (1000 * 60);
 }
 
-export function getPositionFromStartTime(timeInterval: TimeInterval) {
+export function getPositionFromStartTime(
+  timeInterval: TimeInterval,
+  pixelPerHour
+) {
   const startTimeMinute = timeInterval.startTime.getMinutes();
   return Math.round(((startTimeMinute * 1.0) / 60) * pixelPerHour);
 }
-export function getPositionFromTheDate(date: Date) {
+export function getPositionFromTheDate(date: Date, pixelPerHour) {
   const minute = date.getMinutes();
   return Math.round(((minute * 1.0) / 60) * pixelPerHour);
 }
 
-export function getAbsolutePositionFromDate(date: Date): Number {
+export function getAbsolutePositionFromDate(date: Date, pixelPerHour): Number {
   const hr = date.getHours(),
     min = date.getMinutes();
-  return hr * pixelPerHour + convertMinuteToPx(min);
+  return hr * pixelPerHour + convertMinuteToPx(min, pixelPerHour);
 }
 export function toAppTimeString(date: Date) {
   return date
@@ -84,14 +87,52 @@ export function addSeconds(date: Date, seconds: number) {
 export function findOverlappedTask(tasks: ITask[], task: ITask) {
   tasks = tasks.filter((t) => t._id != task._id);
 
-  const taskOverlapped = tasks.find(
-    (t) =>
-      // taskEndsBetweenComparerInterval(task, t) ||
-      taskStartsBetweenComparerInterval(task, t) ||
-      taskWrapsTheComparerInterval(task, t)
-  );
+  let closestTask;
+  let closestTaskIndex;
 
-  return taskOverlapped;
+  tasks.forEach((current, i) => {
+    if (
+      taskEndsBetweenComparerInterval(task, current) ||
+      taskStartsBetweenComparerInterval(task, current) ||
+      taskWrapsTheComparerInterval(task, current)
+    ) {
+      if (!closestTask) {
+        closestTask = { ...current };
+        closestTaskIndex = i;
+      } else {
+        console.log("current: ");
+        console.log(current);
+        console.log("task: ");
+        console.log(task);
+        console.log("closestTask: ");
+        console.log(closestTask);
+
+        const closestMedian = findMedianTime(
+          closestTask.timeInterval.startTime,
+          closestTask.timeInterval.endtime
+        );
+        const currentMedian = findMedianTime(
+          current.timeInterval.startTime,
+          current.timeInterval.endTime
+        );
+
+        const taskMedian = findMedianTime(
+          task.timeInterval.startTime,
+          task.timeInterval.endTime
+        );
+
+        if (
+          Math.abs(closestMedian - taskMedian) >
+          Math.abs(currentMedian - taskMedian)
+        ) {
+          closestTask = { ...current };
+          closestTaskIndex = i;
+        }
+      }
+    }
+  });
+
+  return { overlappedTask: closestTask, overlappedTaskIdx: closestTaskIndex };
 }
 export function taskWrapsTheComparerInterval(target: ITask, comparer: ITask) {
   return (
@@ -106,7 +147,7 @@ export function taskEndsBetweenComparerInterval(
 ) {
   return (
     comparer.timeInterval.startTime < target.timeInterval.endTime &&
-    comparer.timeInterval.endTime >= target.timeInterval.endTime
+    comparer.timeInterval.endTime > target.timeInterval.endTime
   );
 }
 export function taskStartsBetweenComparerInterval(
@@ -114,7 +155,7 @@ export function taskStartsBetweenComparerInterval(
   comparer: ITask
 ) {
   return (
-    comparer.timeInterval.startTime <= target.timeInterval.startTime &&
+    comparer.timeInterval.startTime < target.timeInterval.startTime &&
     comparer.timeInterval.endTime > target.timeInterval.startTime
   );
 }
@@ -173,10 +214,10 @@ export function getHeight(el: HTMLDivElement): number {
   return el.clientHeight;
 }
 
-export function convertPXtoMinute(px: number) {
+export function convertPXtoMinute(px: number, pixelPerHour) {
   return Math.round(((px * 1.0) / pixelPerHour) * 60);
 }
-export function convertPXtoSeconds(px: number) {
+export function convertPXtoSeconds(px: number, pixelPerHour) {
   return (
     parseFloat(
       (
@@ -186,14 +227,17 @@ export function convertPXtoSeconds(px: number) {
   );
 }
 
-export function convertMinuteToPx(minute: number) {
+export function convertMinuteToPx(minute: number, pixelPerHour) {
   return Math.round(((minute * 1.0) / 60) * pixelPerHour);
 }
 
-export function convertTimeIntervalToPxHeight(timeInterval: TimeInterval) {
+export function convertTimeIntervalToPxHeight(
+  timeInterval: TimeInterval,
+  pixelPerHour
+) {
   const diffInMinute = getMinuteDiffForTimeInterval(timeInterval);
 
-  return convertMinuteToPx(diffInMinute);
+  return convertMinuteToPx(diffInMinute, pixelPerHour);
 }
 
 const monthMap = {
@@ -279,4 +323,8 @@ export function getOneWeekDates(date: Date) {
   }
 
   return dates;
+}
+
+export function findMedianTime(start: Date, end: Date) {
+  return (end.getTime() - start.getTime()) / 2 + start.getTime();
 }

@@ -1,4 +1,5 @@
 import { Flex, FlexProps } from "@chakra-ui/react";
+import electron from "electron";
 import React from "react";
 
 interface PageLayoutProps extends FlexProps {}
@@ -6,15 +7,15 @@ interface PageLayoutProps extends FlexProps {}
 const PageLayout = ({ children }: PageLayoutProps) => {
   return (
     <Flex
+      mt={{ base: "70px", md: 0 }}
       className="page-layout"
-      height="100%"
+      height={{ sm: "90%", md: "100%" }}
       width="100%"
-      pt={5}
-      pl={5}
-      pr={5}
-      pb={5}
+      py={{ base: 1, md: 5 }}
+      px={{ base: 1, md: 5 }}
       flexDir="column"
       position="relative"
+      overflowY="hidden"
     >
       {children}
     </Flex>

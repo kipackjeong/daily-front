@@ -25,6 +25,7 @@ import ICategory from "../../../../models/category/category.interface";
 import categoryService from "../../../../models/category/category.service";
 import Category from "../../../category/Category";
 import CategoryForm from "../../../category/CategoryForm";
+import style from "../style";
 
 type CategorySelectionProps = {
   onSelect;
@@ -180,7 +181,12 @@ const CategorySelection = ({
   );
 
   return (
-    <FormControl id="category" className="category-selection" isRequired>
+    <FormControl
+      {...style.formControl}
+      id="category"
+      className="category-selection"
+      isRequired
+    >
       {showCategoryAddForm && (
         <CategoryForm
           onSubmit={onCategoryAddFormSubmit}

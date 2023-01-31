@@ -9,7 +9,7 @@ const DoughnutChart = () => {
       {
         data: [300, 50, 100],
         backgroundColor: [
-          colors.brand.lightYellow,
+          colors.brand.yellow[200],
           colors.brand.red[300],
           colors.brand.lightGray,
         ],

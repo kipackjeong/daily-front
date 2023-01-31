@@ -1,8 +1,13 @@
-import { Flex, position, useStyleConfig } from "@chakra-ui/react";
+import { Box, Flex, position, Tooltip, useStyleConfig } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
+import { FaCheck } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { DraggableData, Rnd } from "react-rnd";
+import CheckButton from "../../../../core/components/CheckButton";
 import DeleteButton from "../../../../core/components/DeleteButton";
+import IconButton from "../../../../core/components/IconButton";
+import UndoButton from "../../../../core/components/UndoButton";
+import { useUISetting } from "../../../hooks/useUISettings";
 import {
   ITask,
   taskService,
@@ -18,13 +23,9 @@ import {
   adjustIntervalToStartAfter,
   adjustIntervalToStartBefore,
   findOverlappedTask,
-  getIntervalInMinutes,
   getPositionFromStartTime,
-  roundToIntervalFive,
-  taskEndsBetweenComparerInterval,
-  taskStartsBetweenComparerInterval,
 } from "../../../utils/helper";
-import { pixelPerHour, pixelPerMinute } from "../../timetables/constant";
+import { pixelPerMinute } from "../../timetables/constant";
 import TaskDescription from "../TaskDescription/TaskDescription";
 import TaskForm from "../TaskForm/TaskForm";
 import TaskBlockLabel from "./atoms/TaskBlockLabel";
@@ -47,42 +48,42 @@ const TaskBlock =
     const selectedTasks = useSelector(selectSelectedTasks);
     const tasks = useSelector(selectTasks);
 
+    const { pixelPerHour } = useUISetting();
+
     const [height, setHeight] = useState<string>(
       `${
-        convertTimeIntervalToPxHeight(task.timeInterval) == 0
+        convertTimeIntervalToPxHeight(task.timeInterval, pixelPerHour) == 0
           ? 1
-          : convertTimeIntervalToPxHeight(task.timeInterval)
+          : convertTimeIntervalToPxHeight(task.timeInterval, pixelPerHour)
       }px`
     );
 
     const [heightDiff, setHeightDiff] = useState(0);
-    const [positionY, setPositionY] = useState(
-      getPositionFromStartTime(task.timeInterval)
-    );
-    useEffect(() => {
-      setPositionY(getPositionFromStartTime(task.timeInterval));
-    }, [task.timeInterval]);
 
-    const thisTaskSelected = selectedTasks.includes(task._id);
+    const [positionY, setPositionY] = useState(
+      getPositionFromStartTime(task.timeInterval, pixelPerHour)
+    );
+
+    const taskSelected = selectedTasks.includes(task._id);
 
     // #region Adding Task
 
     // #endregion
 
-    // #region Delete Button
+    // #region Check / Delete Button
 
-    const [showDeleteBtn, setShowDeleteBtn] = useState(thisTaskSelected);
+    const [showButtons, setShowDeleteBtn] = useState(taskSelected);
 
     useEffect(() => {
-      setShowDeleteBtn(thisTaskSelected);
-    }, [thisTaskSelected]);
+      setShowDeleteBtn(taskSelected);
+    }, [taskSelected]);
 
     function onMouseOverHandler() {
       setShowDeleteBtn(true);
     }
 
     function onMouseOutHandler() {
-      if (!thisTaskSelected) {
+      if (!taskSelected) {
         setShowDeleteBtn(false);
       }
     }
@@ -91,18 +92,46 @@ const TaskBlock =
       await taskService.deleteTask(task, dispatch);
     }, [task]);
 
+    const checkBtn =
+      task.taskType == "TODO" ? (
+        <CheckButton
+          style={{ padding: 0 }}
+          onClick={(e) => {
+            e.stopPropagation();
+            taskService.updateTask({ ...task, taskType: "DID" }, dispatch);
+            dispatch(taskActions.resetSelectedTask);
+          }}
+          _hover={{ color: "brand.light" }}
+        />
+      ) : (
+        <UndoButton
+          style={{ padding: 0 }}
+          onClick={(e) => {
+            e.stopPropagation();
+            taskService.updateTask({ ...task, taskType: "TODO" }, dispatch);
+            dispatch(taskActions.resetSelectedTask);
+          }}
+        />
+      );
     const deleteBtn = (
-      <DeleteButton
+      <DeleteButton style={{ padding: 0 }} onClick={onDeleteBtnClickHandler} />
+    );
+
+    const buttons = (
+      <Flex
         style={{
           position: "absolute",
           height: "100%",
           right: "0px",
           border: "none",
+          alignItems: "center",
           zIndex: 2,
           borderRadius: 0,
         }}
-        onClick={onDeleteBtnClickHandler}
-      />
+      >
+        {checkBtn}
+        {deleteBtn}
+      </Flex>
     );
 
     // #endregion
@@ -126,28 +155,32 @@ const TaskBlock =
     // #endregion
 
     // #region Block Label
-    const [showLabels, setShowLabels] = useState(false);
 
-    useEffect(() => {
-      console.log("TaskBlock -- useMemo for showLabels");
-      if (height !== "1px" && height != "0px" && height != "0") {
-        setShowLabels(true);
-      }
-    }, [height, positionY, heightDiff, tasks]);
-
-    const label = <TaskBlockLabel task={task} height={height} />;
+    const label = (
+      <TaskBlockLabel
+        task={task}
+        height={height}
+        color={(taskSelected && "white") || "brand.heavy"}
+      />
+    );
     // #endregion
 
     // #region Block
 
+    useEffect(() => {
+      setPositionY(getPositionFromStartTime(task.timeInterval, pixelPerHour));
+    }, [task.timeInterval, pixelPerHour]);
+
     // sets block's height by task's timeinterval
     useEffect(() => {
-      setHeight(`${convertTimeIntervalToPxHeight(task.timeInterval)}`);
-    }, [task, positionY, heightDiff]);
+      setHeight(
+        `${convertTimeIntervalToPxHeight(task.timeInterval, pixelPerHour)}`
+      );
+    }, [task, positionY, heightDiff, pixelPerHour]);
 
     const containerStyle = useStyleConfig("Flex", { variant: "taskBlockBox" });
 
-    const blockBGColor = thisTaskSelected
+    const blockBGColor = taskSelected
       ? task.taskType == "TODO"
         ? "brand.green.600"
         : "brand.heavy"
@@ -156,9 +189,8 @@ const TaskBlock =
       : "brand.lightGray";
 
     const dynamicStyle = {
-      border: !showLabels && "1px solid #1D2D44",
       backgroundColor: blockBGColor,
-      color: thisTaskSelected && "white",
+      color: taskSelected && "white",
     };
 
     async function onResizeHandler(e, direction, ref, delta, position) {
@@ -179,7 +211,7 @@ const TaskBlock =
         const yDiff = position.y - positionY;
 
         if (Math.abs(yDiff) >= pixelPerMinute) {
-          const minutesToDecrease = convertPXtoMinute(yDiff);
+          const minutesToDecrease = convertPXtoMinute(yDiff, pixelPerHour);
           setPositionY(position.y);
           task.timeInterval.startTime.setMinutes(
             task.timeInterval.startTime.getMinutes() + minutesToDecrease
@@ -191,7 +223,7 @@ const TaskBlock =
         const pxToAdd = delta.height - heightDiff;
 
         if (Math.abs(pxToAdd) >= pixelPerMinute) {
-          const minutesToAdd = convertPXtoMinute(pxToAdd);
+          const minutesToAdd = convertPXtoMinute(pxToAdd, pixelPerHour);
           setHeightDiff(delta.height);
 
           task.timeInterval.endTime.setMinutes(
@@ -217,7 +249,7 @@ const TaskBlock =
 
       if (Math.abs(yd) >= pixelPerMinute) {
         setPositionY(d.y);
-        const secondsToAdd = convertPXtoSeconds(yd);
+        const secondsToAdd = convertPXtoSeconds(yd, pixelPerHour);
 
         addSeconds(task.timeInterval.startTime, secondsToAdd);
         addSeconds(task.timeInterval.endTime, secondsToAdd);
@@ -230,44 +262,142 @@ const TaskBlock =
       // to prevent task time overlapping
       let updatedTask = { ...task };
 
-      let overlappedTask = findOverlappedTask(tasks, updatedTask);
-      let direction: string;
+      let { overlappedTask, overlappedTaskIdx } = findOverlappedTask(
+        tasks,
+        updatedTask
+      );
 
       if (overlappedTask) {
-        // find out direction of snapping by comparing startTime gap with endTime gap between dragging task and overlapping task.
+        console.log("has overlappin task");
+        // find direction to go (above or below)
+        let direction: string;
+        let updatedTaskMiddleTime =
+          (updatedTask.timeInterval.endTime.getTime() -
+            updatedTask.timeInterval.startTime.getTime()) /
+            2 +
+          updatedTask.timeInterval.startTime.getTime();
+
         const startDiff = Math.abs(
           overlappedTask.timeInterval.startTime.getTime() -
-            updatedTask.timeInterval.startTime.getTime()
+            updatedTaskMiddleTime
         );
 
         const endDiff = Math.abs(
-          overlappedTask.timeInterval.endTime.getTime() -
-            updatedTask.timeInterval.endTime.getTime()
+          overlappedTask.timeInterval.endTime.getTime() - updatedTaskMiddleTime
         );
-        direction = startDiff < endDiff ? "up" : "down";
-        let i = 0;
-        while (overlappedTask && i < 5) {
-          i++;
-          console.log("direction: " + direction);
-          // case when task should be setted above the overlapped task.
-          if (direction == "up") {
-            updatedTask = adjustIntervalToStartBefore(
-              updatedTask,
-              overlappedTask
-            );
-          } else {
-            updatedTask = adjustIntervalToStartAfter(
-              updatedTask,
-              overlappedTask
-            );
+
+        direction = startDiff < endDiff ? "above" : "below";
+        console.log("direction: " + direction);
+
+        let taskToAttachTo;
+
+        let aheadTasks = tasks.filter((t) => t._id != task._id);
+        if (direction == "below") {
+          aheadTasks = aheadTasks.slice(overlappedTaskIdx, aheadTasks.length);
+
+          taskToAttachTo = findTaskToAttachTo(aheadTasks, updatedTask);
+
+          if (!taskToAttachTo) {
+            return;
           }
 
-          overlappedTask = findOverlappedTask(tasks, updatedTask);
+          // set updatedTask's start time to end time of taskToAttachTo
+          updatedTask = adjustIntervalToStartAfter(updatedTask, taskToAttachTo);
+        } else {
+          aheadTasks = aheadTasks.slice(0, overlappedTaskIdx + 1).reverse();
+
+          taskToAttachTo = findTaskToAttachTo(aheadTasks, updatedTask);
+
+          if (!taskToAttachTo) {
+            return;
+          }
+
+          updatedTask = adjustIntervalToStartBefore(
+            updatedTask,
+            taskToAttachTo
+          );
         }
+        console.log("taskToAttachTo: ");
+        console.log(taskToAttachTo.title);
+
+        taskService.updateTask(updatedTask, dispatch);
       }
 
+      // if (overlappedTask) {
+      //   console.log("overlappedTask.title: " + overlappedTask.title);
+      //   // find out direction of snapping by comparing startTime gap with endTime gap between dragging task and overlapping task.
+
+      //   tasks.find((t, i) => {
+      //     const currentTask = t;
+      //     console.log(
+      //       "currentTask.timeInterval.startTime: " +
+      //         currentTask.timeInterval.startTime
+      //     );
+      //     console.log(
+      //       "currentTask.timeInterval.endTime: " +
+      //         currentTask.timeInterval.endTime
+      //     );
+      //     let nextTask;
+      //     if (i < tasks.length - 1) nextTask = tasks.at(i + 1);
+
+      //     const gap =
+      //       currentTask.timeInterval.endTime.getTime() -
+      //       nextTask.timeInterval.startTime.getTime();
+      //   });
+
+      //   // while (overlappedTask) {
+      //   overlappedTask = { ...overlappedTask };
+      //   console.log("direction: " + direction);
+      //   // case when task should be setted above the overlapped task.
+      //   if (direction == "up") {
+      //     updatedTask = adjustIntervalToStartBefore(
+      //       updatedTask,
+      //       overlappedTask
+      //     );
+      //   } else {
+      //     updatedTask = adjustIntervalToStartAfter(updatedTask, overlappedTask);
+      //   }
+
+      //   overlappedTask = findOverlappedTask(tasks, updatedTask);
+      //   // }
+      // }
+
+      // prevents onclick triggering ondragstop
       if (d.y != positionY) {
         taskService.updateTask(updatedTask, dispatch);
+      }
+
+      function findTaskToAttachTo(aheadTasks: ITask[], targetTask) {
+        return aheadTasks.find((t, i) => {
+          const currentTaskEndTime = t.timeInterval.endTime;
+
+          let nextTask;
+          if (i < tasks.length - 1) {
+            nextTask = aheadTasks.at(i + 1);
+          } else {
+            nextTask = null;
+          }
+
+          if (!nextTask) {
+            return true;
+          }
+
+          const gap = Math.abs(
+            currentTaskEndTime.getTime() -
+              nextTask.timeInterval.startTime.getTime()
+          );
+          console.log("gap: " + gap);
+
+          if (
+            gap <
+            targetTask.timeInterval.endTime.getTime() -
+              targetTask.timeInterval.startTime.getTime()
+          ) {
+            return false;
+          } else {
+            return true;
+          }
+        });
       }
     };
 
@@ -285,6 +415,8 @@ const TaskBlock =
           } else {
             setShowTaskForm(true);
           }
+
+          dispatch(taskActions.deselectTask(task._id));
         } else {
           // one click
           console.log("-- clicked taskblock with task id: " + task._id);
@@ -297,7 +429,7 @@ const TaskBlock =
           }
 
           // update redux
-          if (!thisTaskSelected) {
+          if (!taskSelected) {
             console.log("-- TaskBlock clicked when is not selected.");
 
             dispatch(taskActions.selectTask(task._id));
@@ -320,9 +452,12 @@ const TaskBlock =
           alignItems: "center",
           zIndex: 1,
           padding: 0,
+          borderWidth: "0.1px",
+          borderBlockStyle: "ridge",
+          borderColor: "brand.heavy",
         }}
-        size={{ width: "95%", height: height }}
-        position={{ x: 32, y: positionY }}
+        size={{ width: "90%", height: height }}
+        position={{ x: 60, y: positionY }}
         onResize={onResizeHandler}
         onDrag={onDragHandler}
         onDragStop={onDragStopHandler}
@@ -331,12 +466,19 @@ const TaskBlock =
         onMouseOut={onMouseOutHandler}
         onClick={onClickHandler}
       >
-        <Flex __css={containerStyle} sx={dynamicStyle}>
+        <Flex
+          __css={containerStyle}
+          sx={dynamicStyle}
+          _hover={{
+            backgroundColor:
+              task.taskType == "TODO" ? "brand.green.300" : "brand.regular",
+          }}
+        >
           {blockDecorationLine}
-          {showLabels && label}
+          {label}
         </Flex>
 
-        {showDeleteBtn && deleteBtn}
+        {showButtons && buttons}
       </Rnd>
     );
 

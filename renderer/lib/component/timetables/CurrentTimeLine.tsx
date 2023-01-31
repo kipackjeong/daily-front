@@ -6,6 +6,7 @@ import {
   useInterval,
 } from "@chakra-ui/react";
 import React, { useEffect, useMemo, useState } from "react";
+import { useUISetting } from "../../hooks/useUISettings";
 import {
   getAbsolutePositionFromDate,
   toAppTimeString,
@@ -15,9 +16,10 @@ type CurrentTimeLineProps = {
   currentTime: Date;
 };
 const CurrentTimeLine = ({}: CurrentTimeLineProps) => {
+  const { pixelPerHour } = useUISetting();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [position, setPosition] = useState(
-    getAbsolutePositionFromDate(currentTime)
+    getAbsolutePositionFromDate(currentTime, pixelPerHour)
   );
   const [currentTimeString, setCurrentTimeString] = useState("");
 
@@ -32,7 +34,7 @@ const CurrentTimeLine = ({}: CurrentTimeLineProps) => {
   useInterval(() => {
     const newDate = new Date();
     setCurrentTime(newDate);
-    setPosition(getAbsolutePositionFromDate(newDate));
+    setPosition(getAbsolutePositionFromDate(newDate, pixelPerHour));
   }, 1000);
 
   //#region Styles
@@ -40,7 +42,7 @@ const CurrentTimeLine = ({}: CurrentTimeLineProps) => {
   const dividerStyle = useStyleConfig("Divider", {
     variant: "currentTimeLine",
   });
-  
+
   const containerStyle = useStyleConfig("Flex", {
     variant: "curTimeMarkLineContainer",
   });

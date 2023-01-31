@@ -14,10 +14,8 @@ import {
   taskActions,
 } from "../../redux/slices/task.slice";
 
-import { getTodayDate } from "../../utils/helper";
-import { start } from "repl";
-import TaskBlock from "../task/TaskBlock/TaskBlock";
 import { selectDate } from "../../redux/slices/date.slice";
+import { useUISetting } from "../../hooks/useUISettings";
 
 type TimeTableProps = {
   flex?: number;
@@ -31,15 +29,14 @@ type Payload = {
 
 const TimeTable = ({ flex, isMini }: TimeTableProps) => {
   console.log("TimeTable - render");
+
   const dispatch = useDispatch();
   const selectedDate = useSelector(selectDate);
   const tasks = useSelector(selectTasks);
   const selectedTasks = useSelector(selectSelectedTasks);
   const [currentTime, setCurrentTime] = useState(new Date(Date.now()));
   const [showDeleteBtn, setShowDeleteBtn] = useState(false);
-  const [isMouseDown, setIsMouseDown] = useState(false);
-  const [blockStartPoint, setBlockStartPoint] = useState();
-  const [newTask, setNewTask] = useState<ITask>();
+  const { incrementPixelPerHour, decrementPixelPerHour } = useUISetting();
 
   useEffect(() => {
     if (selectedTasks.length > 1) {
@@ -52,6 +49,28 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
   useEffect(() => {
     document.addEventListener("keydown", detectKeydown, true);
   }, [selectedTasks]);
+
+  useEffect(() => {
+    document.addEventListener("mousewheel", detectMouseWheel, {
+      passive: false,
+      capture: true,
+    });
+  });
+
+  const detectMouseWheel = async (e) => {
+    e.stopPropagation();
+    const { deltaY } = e;
+    // when it goes up
+    if (deltaY < 0 && e.ctrlKey) {
+      incrementPixelPerHour();
+      e.preventDefault();
+    }
+    // when it goes down
+    else if (deltaY > 0 && e.ctrlKey) {
+      decrementPixelPerHour();
+      e.preventDefault();
+    }
+  };
 
   const detectKeydown = async (e) => {
     if (e.key == "Delete" && selectedTasks) {

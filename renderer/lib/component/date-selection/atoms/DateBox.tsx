@@ -31,11 +31,17 @@ const DateBox = ({
       cursor={isShallow ? "default" : "pointer"}
       onClick={() => onClick(date)}
     >
-      <Text fontWeight="bold" fontSize={dateSize}>
+      <Text fontWeight="bold" fontSize={{ base: "s ", md: dateSize }}>
         {date.getDate()}
       </Text>
 
-      <Text fontSize={daySize}>{getDayInStr(date)}</Text>
+      <Text
+        fontSize={{ base: "xs ", md: daySize }}
+        w={{ base: "50px", md: "100%" }}
+        noOfLines={1}
+      >
+        {getDayInStr(date)}
+      </Text>
     </Flex>
   );
 };

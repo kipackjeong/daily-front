@@ -26,6 +26,7 @@ import style from "./style";
 import TaskTypeRadio from "./atoms/TaskTypeRadio";
 import { selectDate } from "../../../redux/slices/date.slice";
 import { setFips } from "crypto";
+import { selectLatestTask } from "../../../redux/slices/task.slice";
 
 export interface RadioRef extends HTMLDivElement {
   value: string;
@@ -50,12 +51,14 @@ const TaskForm = ({
   isUpdateForm = false,
 }: TaskFormProps) => {
   console.log("TaskForm - render");
+  console.log("task: ");
+  console.log(task);
 
   // #region Hooks
   const titleRef = useRef<HTMLInputElement>();
   const descriptionRef = useRef<HTMLInputElement>();
   const focusLevelRef = useRef<FocusLevelRef>();
-  const [taskType, setTaskType] = useState("TODO");
+  const [taskType, setTaskType] = useState(task.taskType);
   const [selectedCategory, setSelectedCategory] = useState(task.category);
   const [startTime, setStartTime] = useState<Date>(
     new Date(task ? task.timeInterval.startTime : Date.now() + 10)
@@ -87,7 +90,8 @@ const TaskForm = ({
       timeInterval.startTime = endTime;
       timeInterval.endTime = temp;
     }
-
+    console.log("task: ");
+    console.log(task);
     const createPayload: ITask = {
       ...task,
       title: titleRef.current.value,
@@ -115,23 +119,22 @@ const TaskForm = ({
   }
 
   function onStartTimeChangeHandler(hour, minute) {
-    console.log(hour);
     setStartTime((prev) => {
+      const newState = new Date(prev);
       console.log("TaskForm - onStartTimeChangeHandler - setStartTime");
-      prev.setHours(hour);
-      prev.setMinutes(minute);
-      return prev;
+      newState.setHours(hour);
+      newState.setMinutes(minute);
+      return newState;
     });
   }
 
   function onEndTimeChangeHandler(hour, minute) {
-    console.log(hour);
-
     setEndTime((prev) => {
+      const newState = new Date(prev);
       console.log("TaskForm - onEndTimeChangeHandler - setEndTime");
-      prev.setHours(hour);
-      prev.setMinutes(minute);
-      return prev;
+      newState.setHours(hour);
+      newState.setMinutes(minute);
+      return newState;
     });
   }
 
@@ -215,7 +218,7 @@ const TaskForm = ({
     </FormControl>
   );
   const buttons = (
-    <ButtonGroup pt={20} width="22rem" justifyContent="space-evenly">
+    <ButtonGroup pt={"45px"} width="22rem" justifyContent="space-evenly">
       <Button type="submit" variant="solid">
         Save
       </Button>

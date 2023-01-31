@@ -80,7 +80,7 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
   // #endregion
 
   // #region Task Type Section
-  const [taskType, setTaskType] = useState("TODO");
+  const [taskType, setTaskType] = useState(task.taskType);
 
   function onTaskTypeRadioChange(value) {
     setTaskType(value);
@@ -146,11 +146,11 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
 
   useEffect(() => {
     async function fetchCategory() {
-      console.log(task.category);
       const category = await categoryService.findById(task.category);
       setCategory(category);
     }
     if (task.category) fetchCategory();
+    
   }, []);
 
   function onCategoryPlusClicked() {

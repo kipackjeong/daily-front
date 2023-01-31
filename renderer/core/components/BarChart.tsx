@@ -25,7 +25,7 @@ const BarChart = () => {
       {
         label: "Dataset 1",
         backgroundColor: [
-          colors.brand.lightYellow,
+          colors.brand.yellow[200],
           colors.brand.red[300],
           colors.brand.lightGray,
         ],

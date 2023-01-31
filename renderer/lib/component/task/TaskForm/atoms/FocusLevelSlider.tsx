@@ -29,11 +29,11 @@ function FocusLevelSlider({
 
   let color = useMemo(() => {
     if (sliderValue < 35) {
-      return "brand.light";
+      return "brand.red.300";
     } else if (35 < sliderValue && sliderValue < 65) {
-      return "brand.regular";
+      return "brand.yellow.300";
     } else {
-      return "brand.heavy";
+      return "brand.green.300";
     }
   }, [sliderValue]);
 

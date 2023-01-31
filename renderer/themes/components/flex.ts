@@ -19,7 +19,7 @@ const Flex = defineStyleConfig({
     dateBox: {
       flexDir: "column",
       borderRadius: "5px",
-      p: 2,
+      p: { base: 0, md: 1, lg: 2 },
     },
     "dateBox-highlight": {
       flexDir: "column",
@@ -36,16 +36,12 @@ const Flex = defineStyleConfig({
       display: "flex",
       flexDir: "column",
       color: colors.brand.heavy,
-
-      _hover: {
-        backgroundColor: colors.brand.regular,
-      },
       cursor: "pointer",
     },
 
     sideBar: {
       h: "100%",
-      minW: "250px",
+      w: { base: "100px", md: "200px" },
       color: colors.brand.heavy,
     },
 

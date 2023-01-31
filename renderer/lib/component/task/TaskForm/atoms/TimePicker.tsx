@@ -4,10 +4,14 @@ import {
   Flex,
   Text,
   FormControl,
-  FormErrorMessage,
   useStyleConfig,
 } from "@chakra-ui/react";
 import React, { useEffect, useMemo, useState } from "react";
+import { FaRegClock } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import IconButton from "../../../../../core/components/IconButton";
+import { ITask } from "../../../../models/task";
+import { selectTasks } from "../../../../redux/slices/task.slice";
 
 type TimeInputBlockType = {
   time: Date;
@@ -16,25 +20,35 @@ type TimeInputBlockType = {
 const TimeInputBlock = ({ time, onChange }: TimeInputBlockType) => {
   console.log("TimeInputBlock - render");
 
-  const [hour, setHour] = useState(
-    time.getHours() > 12 ? time.getHours() - 12 : time.getHours()
-  );
+  const [hour, setHour] = useState(null);
+  const [minute, setMinute] = useState(null);
 
-  const [minute, setMinute] = useState(time.getMinutes());
-
-  const [isAM, setIsAM] = useState(time.getHours() < 12 ? true : false);
+  const [isAM, setIsAM] = useState(null);
+  const [madeChange, setMadeChange] = useState(false);
 
   useEffect(() => {
-    console.log("hour: " + hour);
-    console.log("minute: " + minute);
-    console.log("isAM: " + isAM);
-    onChange(
-      hour != 13 && hour != 12 && hour >= 2 && !isAM ? hour + 12 : hour,
-      minute
-    );
+    setHour(time.getHours() > 12 ? time.getHours() - 12 : time.getHours());
+    setMinute(time.getMinutes());
+    setIsAM(time.getHours() < 12 ? true : false);
+  }, [time]);
+
+  // updating the actual data which comes from the parent.
+  useEffect(() => {
+    if (madeChange) {
+      onChange(
+        hour != 13 && hour != 12 && hour >= 2 && !isAM ? hour + 12 : hour,
+        minute
+      );
+      setMadeChange(false);
+    }
   }, [hour, minute, isAM]);
 
-  function handleHourChange(str, num) {
+  function handleHourChange(str: string, num: number) {
+    if (str.length > 2) {
+      str = str.substring(str.length - 2, str.length);
+      num = Number(str);
+    }
+
     if ((hour == 11 && num == 12) || (hour == 12 && num == 11)) {
       setIsAM((prev) => !prev);
 
@@ -49,10 +63,7 @@ const TimeInputBlock = ({ time, onChange }: TimeInputBlockType) => {
 
     //local state
     setHour(num);
-
-    // if (hour == 13 && num == 12) {
-    //   setIsAM(true);
-    // }
+    setMadeChange(true);
   }
 
   function handleMinuteChange(str, num) {
@@ -65,6 +76,7 @@ const TimeInputBlock = ({ time, onChange }: TimeInputBlockType) => {
       num = 59;
     }
     setMinute(num);
+    setMadeChange(true);
   }
 
   const widthPerBlock = "60px";
@@ -75,9 +87,6 @@ const TimeInputBlock = ({ time, onChange }: TimeInputBlockType) => {
 
   const hrFormat = (val) => {
     let newVal;
-    console.log("hrFormat");
-    // console("hour: " + hour);
-    // console.log("val: " + val);
 
     newVal = val > 12 ? val - 12 : val;
 
@@ -111,6 +120,7 @@ const TimeInputBlock = ({ time, onChange }: TimeInputBlockType) => {
     <>
       <NumberInput
         allowMouseWheel
+        inputMode="numeric"
         defaultValue={hour}
         max={24}
         min={0}
@@ -160,19 +170,43 @@ const TimePicker = ({
 }: TimePickerProps) => {
   console.log("TimePicker - render");
 
-  const startTimeError = useMemo(
-    () => startTime.getTime() > endTime.getTime(),
-    [startTime]
-  );
-
-  const endTimeError = endTime.getTime() < startTime.getTime();
+  const tasks = useSelector(selectTasks);
 
   const containerStyle = useStyleConfig("Flex", {
     variant: "timePickerContainer",
   });
 
+  const { prevTask, nextTask } = useMemo(() => {
+    let i = -1;
+
+    let prevTask: ITask = tasks.at(-1);
+    let nextTask: ITask;
+
+    while (prevTask && prevTask.timeInterval.endTime >= endTime) {
+      prevTask = tasks.at(--i);
+    }
+    prevTask = tasks.filter((t) => t.timeInterval.endTime < startTime).at(-1);
+
+    nextTask = tasks.find((t) => t.timeInterval.startTime > endTime);
+
+    return { prevTask, nextTask };
+  }, []);
+
   return (
     <Flex className="timepicker-cont" __css={containerStyle}>
+      {prevTask && (
+        <IconButton
+          icon={FaRegClock}
+          hoverMessage="previous tasks's end time."
+          onClick={() => {
+            onStartTimeChange(
+              prevTask.timeInterval.endTime.getHours(),
+              prevTask.timeInterval.endTime.getMinutes()
+            );
+          }}
+        />
+      )}
+
       <FormControl
         className="timepicker-cont__st-formctrl"
         display="flex"
@@ -181,11 +215,6 @@ const TimePicker = ({
         alignItems="center"
       >
         <TimeInputBlock time={startTime} onChange={onStartTimeChange} />
-        {startTimeError && (
-          <FormErrorMessage>
-            The start time should be before the end time.
-          </FormErrorMessage>
-        )}
       </FormControl>
       <Text> - </Text>
       <FormControl
@@ -196,12 +225,19 @@ const TimePicker = ({
         alignItems="center"
       >
         <TimeInputBlock time={endTime} onChange={onEndTimeChange} />
-        {endTimeError && (
-          <FormErrorMessage>
-            The end time should be after the start time.
-          </FormErrorMessage>
-        )}
       </FormControl>
+      {nextTask && (
+        <IconButton
+          icon={FaRegClock}
+          hoverMessage="next task's start time"
+          onClick={() => {
+            onEndTimeChange(
+              nextTask.timeInterval.startTime.getHours(),
+              nextTask.timeInterval.startTime.getMinutes()
+            );
+          }}
+        />
+      )}
     </Flex>
   );
 };

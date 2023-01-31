@@ -9,17 +9,17 @@ class TaskService {
   public async getById(id: string, dispatch?: Dispatch) {
     logger.info("taskService.getById()");
     const task = await taskApi.get(id);
-    logger.info(task);
 
     task.timeInterval.startTime = new Date(task.timeInterval.startTime);
     task.timeInterval.endTime = new Date(task.timeInterval.endTime);
-
-    logger.info(task);
 
     return task;
   }
   public async createTask(payload: ITask, date, dispatch: Dispatch) {
     logger.info("createTask");
+
+    payload.timeInterval.startTime.setSeconds(0);
+    payload.timeInterval.endTime.setSeconds(0);
 
     payload.date = payload.timeInterval.startTime;
 
@@ -31,6 +31,9 @@ class TaskService {
 
   public async updateTask(payload: ITask, dispatch: Dispatch) {
     logger.info("taskService.updateTask()");
+
+    payload.timeInterval.startTime.setSeconds(0);
+    payload.timeInterval.endTime.setSeconds(0);
 
     // take out _id prop.
     const { _id, ...updateTask } = payload;

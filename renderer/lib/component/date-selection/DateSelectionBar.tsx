@@ -61,6 +61,9 @@ const DateSelectionBar = ({ isMini, onDateSelect }: DateSelectionBarProps) => {
     startTime.setHours(hourNow);
     startTime.setMinutes(minNow);
 
+    endTime.setHours(hourNow);
+    endTime.setMinutes(minNow + 10);
+
     setNewTask(TaskFactory.createEmptyTodo(startTime, endTime));
   }
 
@@ -72,8 +75,12 @@ const DateSelectionBar = ({ isMini, onDateSelect }: DateSelectionBarProps) => {
 
     const startTime = new Date(date);
     const endTime = new Date(date);
+
     startTime.setHours(hourNow);
-    startTime.setMinutes(minNow);
+    startTime.setMinutes(minNow - 10);
+
+    endTime.setHours(hourNow);
+    endTime.setMinutes(minNow);
 
     setNewTask(TaskFactory.createEmptyDid(startTime, endTime));
   }

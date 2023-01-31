@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Box, Divider, Flex, Text, useStyleConfig } from "@chakra-ui/react";
-import { pixelPerHour } from "./constant";
 import TaskBlock from "../task/TaskBlock/TaskBlock";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +12,8 @@ import {
   toHourOnlyString,
 } from "../../utils/helper";
 import { selectDate } from "../../redux/slices/date.slice";
+import TaskForm from "../task/TaskForm/TaskForm";
+import { useUISetting } from "../../hooks/useUISettings";
 
 type TimeBlockProps = {
   id;
@@ -29,6 +30,9 @@ const TimeBlock = ({ id, time, tasksArr, isMini }: TimeBlockProps) => {
   const selectedDate = useSelector(selectDate);
 
   const [tasks, setTasks] = useState(tasksArr);
+  const [showTaskForm, setShowTaskForm] = useState(false);
+  const [newTask, setNewTask] = useState(null);
+  const { pixelPerHour } = useUISetting();
 
   //#endregion
 
@@ -58,20 +62,33 @@ const TimeBlock = ({ id, time, tasksArr, isMini }: TimeBlockProps) => {
     }
     const taskStartTime = new Date(time);
 
-    const minuteToAdd = roundToIntervalFive(convertPXtoMinute(yDiff) % 60);
+    const minuteToAdd = roundToIntervalFive(
+      convertPXtoMinute(yDiff, pixelPerHour) % 60
+    );
 
     taskStartTime.setMinutes(time.getMinutes() + minuteToAdd);
 
     const taskEndTime = new Date(taskStartTime);
-    
+
     taskEndTime.setMinutes(taskEndTime.getMinutes() + 10);
 
     const payload: ITask = {
       timeInterval: { startTime: taskStartTime, endTime: taskEndTime },
     };
 
-    await taskService.createTask(payload, selectedDate, dispatch);
+    setShowTaskForm(true);
+    setNewTask(payload);
   }
+
+  function onTaskFormSubmitHandler() {
+    setShowTaskForm(false);
+    setNewTask(null);
+  }
+  function onTaskFormCancelHandler() {
+    setShowTaskForm(false);
+    setNewTask(null);
+  }
+
   //#endregion
 
   // #region Styles
@@ -104,6 +121,13 @@ const TimeBlock = ({ id, time, tasksArr, isMini }: TimeBlockProps) => {
       cursor={"pointer"}
       _hover={{ backgroundColor: "brand.lightGray" }}
     >
+      {showTaskForm && (
+        <TaskForm
+          task={newTask}
+          onSubmit={onTaskFormSubmitHandler}
+          onCancel={onTaskFormCancelHandler}
+        ></TaskForm>
+      )}
       {taskBlocks}
       <Box
         flexDir="column"

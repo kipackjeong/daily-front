@@ -1,6 +1,11 @@
-import { Text, Flex } from "@chakra-ui/react";
+import { Text, Flex, IconButtonProps, FlexProps } from "@chakra-ui/react";
 import mongoose, { ObjectId } from "mongoose";
-import React, { MouseEventHandler, useEffect, useState } from "react";
+import React, {
+  MouseEventHandler,
+  ReactElement,
+  useEffect,
+  useState,
+} from "react";
 import IconButton from "../../../core/components/IconButton";
 import icons from "../../../themes/icons";
 import ICategory from "../../models/category/category.interface";
@@ -8,9 +13,22 @@ import ICategory from "../../models/category/category.interface";
 type CategoryProps = {
   category: ICategory;
   isSelected?;
-  hasTitle?;
-};
-const Category = ({ category, isSelected }: CategoryProps) => {
+  showTitle?;
+  height?;
+  size?;
+  fontSize?;
+  isHoverable?;
+} & FlexProps;
+const Category = ({
+  category,
+  isSelected,
+  size = 6,
+  showTitle = true,
+  height = "50px",
+  fontSize,
+  color = "brand.heavy",
+  isHoverable = true,
+}: CategoryProps) => {
   const [isOnHover, setisOnHover] = useState(false);
 
   //#region Handlers
@@ -39,27 +57,31 @@ const Category = ({ category, isSelected }: CategoryProps) => {
       key={category.title}
       flexDir="column"
       w="50px"
-      h="50px"
+      h={height}
       cursor="pointer"
       alignItems={"center"}
+      justifyContent={"center"}
       onMouseEnter={onMouseEnterHandler}
       onMouseOut={onMouseOutHandler}
     >
       <IconButton
+        color={color}
         icon={icons[category.icon]}
-        size={6}
+        size={size}
         isOnHover={isOnHover || isSelected}
-        hoverColor={"brand.regular"}
+        hoverColor={isHoverable && "brand.regular"}
       />
-      <Text
-        textAlign="center"
-        fontSize="xs"
-        width="100%"
-        color={isOnHover || isSelected ? "brand.regular" : "brand.heavy"}
-        pointerEvents="none"
-      >
-        {category.title}
-      </Text>
+      {showTitle && (
+        <Text
+          textAlign="center"
+          fontSize="xs"
+          width="100%"
+          color={(isOnHover && "brand.regular") || color}
+          pointerEvents="none"
+        >
+          {category.title}
+        </Text>
+      )}
     </Flex>
   );
 };

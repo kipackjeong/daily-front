@@ -3,18 +3,21 @@ const colors = {
   brand: {
     green: {
       200: "#d8f0df",
-      300: "#9df2b7",
-      600: "#132e1b",
+      300: " #7BB662",
+      600: "#0c451e",
     },
     red: {
       200: "#ffe3e0",
-      300: "#e0b0ab",
+      300: "#E03C32",
       600: "#b0554c",
     },
+    yellow: {
+      200: "#FAF9F2",
+      300: "#FFD301",
+    },
     lightGray: "rgba(56, 145, 173, 0.11)",
-    lightYellow: "#FAF9F2",
     light: "#748CAB",
-    regular: "#5091b3",
+    regular: "#81ade6",
     heavy: "#1D2D44",
   },
 };
