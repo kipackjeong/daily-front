@@ -1,16 +1,20 @@
 import MainLayout from "../core/layouts/MainLayout";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, Flex, Spinner } from "@chakra-ui/react";
 import theme from "../themes/index";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { FiHome } from "react-icons/fi";
 import { MdCalendarToday } from "react-icons/md";
-import SideBar, { LinkItemProps } from "../lib/component/task/TaskForm/atoms/nav/SideBar";
+import SideBar, {
+  LinkItemProps,
+} from "../lib/component/task/TaskForm/atoms/nav/SideBar";
 import "./styles.css";
-import { appStoreWrapper } from "../lib/redux/stores/app.store";
+import { useEffect } from "react";
+import { db } from "../lib/localdb/db";
+import { useAppStatus } from "../lib/hooks/useAppStatus";
 
 function MyApp({ Component, pageProps }) {
-  // needed inorder for models to be registered before connection DB.
+  const { isOnline } = useAppStatus();
 
   const LinkItems: Array<LinkItemProps> = [
     { name: "Dashboard", icon: FiHome, link: "/dashboard" },
@@ -21,7 +25,7 @@ function MyApp({ Component, pageProps }) {
     },
   ];
 
-  return (
+  return isOnline != null ? (
     <ChakraProvider theme={theme}>
       <DndProvider backend={HTML5Backend}>
         <MainLayout>
@@ -30,6 +34,10 @@ function MyApp({ Component, pageProps }) {
         </MainLayout>
       </DndProvider>
     </ChakraProvider>
+  ) : (
+    <Flex w="100vw" h="100vh" justifyContent="center" alignItems="center">
+      <Spinner m="auto" height="100px" />
+    </Flex>
   );
 }
 

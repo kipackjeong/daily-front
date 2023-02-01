@@ -16,6 +16,8 @@ import {
 
 import { selectDate } from "../../redux/slices/date.slice";
 import { useUISetting } from "../../hooks/useUISettings";
+import { useAppStatus } from "../../hooks/useAppStatus";
+import taskLocalService from "../../models/task/task.local-service";
 
 type TimeTableProps = {
   flex?: number;
@@ -37,6 +39,7 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
   const [currentTime, setCurrentTime] = useState(new Date(Date.now()));
   const [showDeleteBtn, setShowDeleteBtn] = useState(false);
   const { incrementPixelPerHour, decrementPixelPerHour } = useUISetting();
+  const { isOnline } = useAppStatus();
 
   useEffect(() => {
     if (selectedTasks.length > 1) {
@@ -74,7 +77,9 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
 
   const detectKeydown = async (e) => {
     if (e.key == "Delete" && selectedTasks) {
-      await taskService.deleteMultipleTasksById(selectedTasks, dispatch);
+      isOnline
+        ? await taskService.deleteMultipleTasks(selectedTasks, dispatch)
+        : await taskLocalService.deleteMultipleTasks(selectedTasks, dispatch);
     }
   };
 
@@ -129,7 +134,9 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
 
   //#region Handlers
   async function onMultiDeleteClick() {
-    await taskService.deleteMultipleTasksById(selectedTasks, dispatch);
+    isOnline
+      ? await taskService.deleteMultipleTasks(selectedTasks, dispatch)
+      : await taskLocalService.deleteMultipleTasks(selectedTasks, dispatch);
   }
   //#endregion
 

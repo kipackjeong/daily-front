@@ -27,6 +27,8 @@ import TaskTypeRadio from "./atoms/TaskTypeRadio";
 import { selectDate } from "../../../redux/slices/date.slice";
 import { setFips } from "crypto";
 import { selectLatestTask } from "../../../redux/slices/task.slice";
+import taskLocalService from "../../../models/task/task.local-service";
+import { useAppStatus } from "../../../hooks/useAppStatus";
 
 export interface RadioRef extends HTMLDivElement {
   value: string;
@@ -51,8 +53,6 @@ const TaskForm = ({
   isUpdateForm = false,
 }: TaskFormProps) => {
   console.log("TaskForm - render");
-  console.log("task: ");
-  console.log(task);
 
   // #region Hooks
   const titleRef = useRef<HTMLInputElement>();
@@ -68,7 +68,8 @@ const TaskForm = ({
     new Date(task ? task.timeInterval.endTime : Date.now() + 10)
   );
 
-  const selectedDate = useSelector(selectDate);
+  const { isOnline } = useAppStatus();
+
   const dispatch = useDispatch();
 
   // #endregion
@@ -85,13 +86,14 @@ const TaskForm = ({
       startTime,
       endTime,
     };
+
     if (startTime > endTime) {
       const temp = startTime;
       timeInterval.startTime = endTime;
       timeInterval.endTime = temp;
     }
+    
     console.log("task: ");
-    console.log(task);
     const createPayload: ITask = {
       ...task,
       title: titleRef.current.value,
@@ -102,11 +104,13 @@ const TaskForm = ({
       category: selectedCategory,
     };
 
-    if (isUpdateForm) {
-      await taskService.updateTask(createPayload, dispatch);
-    } else {
-      await taskService.createTask(createPayload, selectedDate, dispatch);
-    }
+    isUpdateForm
+      ? isOnline
+        ? await taskService.update(createPayload, dispatch)
+        : await taskLocalService.update(createPayload, dispatch)
+      : isOnline
+      ? await taskService.create(createPayload, dispatch)
+      : await taskLocalService.create(createPayload, dispatch);
 
     onSubmit();
   }

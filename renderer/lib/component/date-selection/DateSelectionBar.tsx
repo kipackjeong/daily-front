@@ -3,13 +3,22 @@ import React, { MouseEventHandler, useMemo, useState } from "react";
 import { AddIcon, ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import DateBox from "./atoms/DateBox";
 import TaskForm from "../task/TaskForm/TaskForm";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useRouter } from "next/router";
-import { getMonthInStr, getNowHour, getNowMinute } from "../../utils/helper";
+import {
+  getMonthInStr,
+  getNowHour,
+  getNowMinute,
+  isThisDateToday,
+} from "../../utils/helper";
 import { selectLatestTask } from "../../redux/slices/task.slice";
 import { ITask } from "../../models/task";
-import { selectDate, selectDates } from "../../redux/slices/date.slice";
+import {
+  dateActions,
+  selectDate,
+  selectDates,
+} from "../../redux/slices/date.slice";
 import TaskFactory from "../../models/task/task.factory";
 
 type DateSelectionBarProps = {
@@ -29,6 +38,8 @@ const DateSelectionBar = ({ isMini, onDateSelect }: DateSelectionBarProps) => {
   const [newTask, setNewTask] = useState(null);
   const [showItemForm, setShowItemForm] = useState(false);
   const router = useRouter();
+  const dispatch = useDispatch();
+
   // #endregion
 
   // #region Styles
@@ -48,21 +59,31 @@ const DateSelectionBar = ({ isMini, onDateSelect }: DateSelectionBarProps) => {
     ];
   }, [date]);
 
+  console.log("nextWeekDateStr: " + nextWeekDateStr);
   //#region Handler
 
   function onAddTodoClickHandler(e) {
     setShowItemForm(true);
 
-    const hourNow = getNowHour();
-    const minNow = getNowMinute();
+    let defaultHr;
+    let defaultMin;
+
+    if (isThisDateToday(date)) {
+      defaultHr = getNowHour();
+      defaultMin = getNowMinute();
+    } else {
+      defaultHr = 6;
+      defaultMin = 0;
+    }
 
     const startTime = new Date(date);
     const endTime = new Date(date);
-    startTime.setHours(hourNow);
-    startTime.setMinutes(minNow);
 
-    endTime.setHours(hourNow);
-    endTime.setMinutes(minNow + 10);
+    startTime.setHours(defaultHr);
+    startTime.setMinutes(defaultMin);
+
+    endTime.setHours(defaultHr);
+    endTime.setMinutes(defaultMin + 10);
 
     setNewTask(TaskFactory.createEmptyTodo(startTime, endTime));
   }
@@ -70,17 +91,25 @@ const DateSelectionBar = ({ isMini, onDateSelect }: DateSelectionBarProps) => {
   function onAddDidClickHandler(e) {
     setShowItemForm(true);
 
-    const hourNow = getNowHour();
-    const minNow = getNowMinute();
+    let defaultHr;
+    let defaultMin;
+
+    if (isThisDateToday(date)) {
+      defaultHr = getNowHour();
+      defaultMin = getNowMinute();
+    } else {
+      defaultHr = 6;
+      defaultMin = 0;
+    }
 
     const startTime = new Date(date);
     const endTime = new Date(date);
 
-    startTime.setHours(hourNow);
-    startTime.setMinutes(minNow - 10);
+    startTime.setHours(defaultHr);
+    startTime.setMinutes(defaultMin - 10);
 
-    endTime.setHours(hourNow);
-    endTime.setMinutes(minNow);
+    endTime.setHours(defaultHr);
+    endTime.setMinutes(defaultMin);
 
     setNewTask(TaskFactory.createEmptyDid(startTime, endTime));
   }
@@ -125,9 +154,9 @@ const DateSelectionBar = ({ isMini, onDateSelect }: DateSelectionBarProps) => {
             <ArrowBackIcon
               cursor={"pointer"}
               onClick={() => {
-                router
-                  .replace(`/dailyboard/${prevWeekDateStr}`)
-                  .then(() => router.reload());
+                const prevWeekDate = new Date(prevWeekDateStr);
+                dispatch(dateActions.setDate(prevWeekDate));
+                dispatch(dateActions.setDates(prevWeekDate));
               }}
             />
           )}
@@ -169,9 +198,10 @@ const DateSelectionBar = ({ isMini, onDateSelect }: DateSelectionBarProps) => {
             <ArrowForwardIcon
               cursor={"pointer"}
               onClick={() => {
-                router
-                  .replace(`/dailyboard/${nextWeekDateStr}`)
-                  .then(() => router.reload());
+                // click next week
+                const nextWeekDate = new Date(nextWeekDateStr);
+                dispatch(dateActions.setDate(nextWeekDate));
+                dispatch(dateActions.setDates(nextWeekDate));
               }}
             />
           )}

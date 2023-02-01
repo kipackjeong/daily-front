@@ -18,6 +18,8 @@ import ICategory from "../../models/category/category.interface";
 import List from "../../../core/components/List";
 import IconButton from "../../../core/components/IconButton";
 import icons from "../../../themes/icons";
+import { useAppStatus } from "../../hooks/useAppStatus";
+import categoryLocalService from "../../models/category/category.local-service";
 
 type CategoryFormProps = {
   onSubmit;
@@ -28,6 +30,7 @@ const CategoryForm = ({ onSubmit, onCancel, category }: CategoryFormProps) => {
   //#region Hooks
   const titleRef = useRef<HTMLInputElement>();
   const [selectedIcon, setSelectedIcon] = useState(null);
+  const { isOnline } = useAppStatus();
 
   //#endregion
 
@@ -37,6 +40,7 @@ const CategoryForm = ({ onSubmit, onCancel, category }: CategoryFormProps) => {
 
     e.preventDefault();
     e.stopPropagation();
+    onSubmit();
 
     const payload = {
       title: titleRef.current.value,
@@ -46,15 +50,15 @@ const CategoryForm = ({ onSubmit, onCancel, category }: CategoryFormProps) => {
     // to update category
 
     if (category) {
-      await categoryService.updateById(category._id, payload);
+      if (isOnline) await categoryService.updateById(category._id, payload);
+      else await categoryLocalService.updateById(category._id, payload);
     } else {
       // to create category
-      await categoryService.create(payload);
+      if (isOnline) await categoryService.create(payload);
+      else await categoryLocalService.create(payload);
     }
 
     console.log("service call success");
-
-    onSubmit();
   }
   function onClose() {
     onCancel();

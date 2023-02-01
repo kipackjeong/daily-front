@@ -26,30 +26,31 @@ const TimeInputBlock = ({ time, onChange }: TimeInputBlockType) => {
   const [isAM, setIsAM] = useState(null);
   const [madeChange, setMadeChange] = useState(false);
 
+  // this effect is needed for the prev/next task's time matching.
   useEffect(() => {
-    setHour(time.getHours() > 12 ? time.getHours() - 12 : time.getHours());
+    setHour(
+      time.getHours() > 12 && time.getHours() != 13
+        ? time.getHours() - 12
+        : time.getHours()
+    );
     setMinute(time.getMinutes());
-    setIsAM(time.getHours() < 12 ? true : false);
+    setIsAM(time.getHours() < 12);
   }, [time]);
 
-  // updating the actual data which comes from the parent.
-  useEffect(() => {
-    if (madeChange) {
-      onChange(
-        hour != 13 && hour != 12 && hour >= 2 && !isAM ? hour + 12 : hour,
-        minute
-      );
-      setMadeChange(false);
-    }
-  }, [hour, minute, isAM]);
-
   function handleHourChange(str: string, num: number) {
+    if (!str) {
+      setHour(0);
+    }
     if (str.length > 2) {
       str = str.substring(str.length - 2, str.length);
       num = Number(str);
     }
 
     if ((hour == 11 && num == 12) || (hour == 12 && num == 11)) {
+      console.log(
+        "  if ((hour == 11 && num == 12) || (hour == 12 && num == 11)) {"
+      );
+
       setIsAM((prev) => !prev);
 
       if (!isAM) {
@@ -67,11 +68,19 @@ const TimeInputBlock = ({ time, onChange }: TimeInputBlockType) => {
   }
 
   function handleMinuteChange(str, num) {
-    if (minute == 59 && num == 60) {
+    if (!str) {
+      setHour(0);
+    }
+    if (str.length > 2) {
+      str = str.substring(str.length - 2, str.length);
+      num = Number(str);
+    }
+
+    if (num == 60) {
       setHour((prev) => prev + 1);
       num = 0;
     }
-    if (minute == 0 && num == -1) {
+    if (num == -1) {
       setHour((prev) => prev - 1);
       num = 59;
     }
@@ -130,6 +139,12 @@ const TimeInputBlock = ({ time, onChange }: TimeInputBlockType) => {
         clampValueOnBlur={true}
         value={hrFormat(hour)}
         onChange={handleHourChange}
+        onBlur={(e) => {
+          const newHour =
+            hour != 13 && hour != 12 && hour >= 1 && !isAM ? hour + 12 : hour;
+          onChange(newHour, minute);
+          setMadeChange(false);
+        }}
       >
         <NumberInputField sx={numberInputFieldStyle} />
       </NumberInput>
@@ -144,6 +159,12 @@ const TimeInputBlock = ({ time, onChange }: TimeInputBlockType) => {
         h={heightPerBlock}
         clampValueOnBlur={true}
         onChange={handleMinuteChange}
+        onBlur={(e) => {
+          const newHour =
+            hour != 13 && hour != 12 && hour >= 1 && !isAM ? hour + 12 : hour;
+          onChange(newHour, minute);
+          setMadeChange(false);
+        }}
       >
         <NumberInputField sx={numberInputFieldStyle} />
       </NumberInput>

@@ -35,7 +35,12 @@ export function getNowMinute() {
 export function getMinuteDiffForTimeInterval(timeInterval) {
   const { startTime, endTime } = timeInterval;
 
-  return Math.abs(Number(endTime) - Number(startTime)) / (1000 * 60);
+  return Math.abs(
+    toPrecision(
+      toPrecision(Number(endTime) - Number(startTime), 100) / (1000 * 60),
+      100
+    )
+  );
 }
 
 export function getPositionFromStartTime(
@@ -43,7 +48,12 @@ export function getPositionFromStartTime(
   pixelPerHour
 ) {
   const startTimeMinute = timeInterval.startTime.getMinutes();
-  return Math.round(((startTimeMinute * 1.0) / 60) * pixelPerHour);
+  return Math.round(
+    toPrecision(
+      toPrecision((startTimeMinute * 1.0) / 60, 100) * pixelPerHour,
+      100
+    )
+  );
 }
 export function getPositionFromTheDate(date: Date, pixelPerHour) {
   const minute = date.getMinutes();
@@ -81,7 +91,7 @@ export function roundToIntervalFive(number: number) {
 }
 
 export function addSeconds(date: Date, seconds: number) {
-  date.setSeconds(date.getSeconds() + seconds);
+  date.setUTCSeconds(date.getSeconds() + seconds);
 }
 
 export function findOverlappedTask(tasks: ITask[], task: ITask) {
@@ -100,13 +110,6 @@ export function findOverlappedTask(tasks: ITask[], task: ITask) {
         closestTask = { ...current };
         closestTaskIndex = i;
       } else {
-        console.log("current: ");
-        console.log(current);
-        console.log("task: ");
-        console.log(task);
-        console.log("closestTask: ");
-        console.log(closestTask);
-
         const closestMedian = findMedianTime(
           closestTask.timeInterval.startTime,
           closestTask.timeInterval.endtime
@@ -213,22 +216,19 @@ export function getOffset(el) {
 export function getHeight(el: HTMLDivElement): number {
   return el.clientHeight;
 }
+export function toPrecision(number, precision) {
+  return parseFloat(number.toPrecision(precision));
+}
 
 export function convertPXtoMinute(px: number, pixelPerHour) {
-  return Math.round(((px * 1.0) / pixelPerHour) * 60);
+  return toPrecision(toPrecision((px * 1.0) / pixelPerHour, 100) * 60, 100);
 }
-export function convertPXtoSeconds(px: number, pixelPerHour) {
-  return (
-    parseFloat(
-      (
-        parseFloat(((px * 1.0) / pixelPerHour).toPrecision(100)) * 60
-      ).toPrecision(100)
-    ) * 60
-  );
+export function convertPXtoSeconds(px: number, pixelPerMinute) {
+  return toPrecision(toPrecision((px * 1.0) / pixelPerMinute, 100) * 60, 100);
 }
 
 export function convertMinuteToPx(minute: number, pixelPerHour) {
-  return Math.round(((minute * 1.0) / 60) * pixelPerHour);
+  return toPrecision(toPrecision((minute * 1.0) / 60, 100) * pixelPerHour, 100);
 }
 
 export function convertTimeIntervalToPxHeight(
@@ -327,4 +327,11 @@ export function getOneWeekDates(date: Date) {
 
 export function findMedianTime(start: Date, end: Date) {
   return (end.getTime() - start.getTime()) / 2 + start.getTime();
+}
+
+export function isThisDateToday(date: Date) {
+  const today = new Date();
+  return (
+    date.getMonth() == today.getMonth() && date.getDate() == today.getDate()
+  );
 }

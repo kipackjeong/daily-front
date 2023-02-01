@@ -1,3 +1,5 @@
+import electron from "electron";
+import { useEffect, useState } from "react";
 import PageLayout from "../core/layouts/PageLayout";
 import DailyBoard from "../lib/component/dailyboard";
 import { appStoreWrapper } from "../lib/redux/stores/app.store";

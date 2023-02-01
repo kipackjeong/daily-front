@@ -14,9 +14,11 @@ import { FaPlus } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import IconButton from "../../../../core/components/IconButton";
 import ModalLayout from "../../../../core/layouts/ModalLayout";
-import ICategory from "../../../models/category/category.interface";
+import { useAppStatus } from "../../../hooks/useAppStatus";
+import categoryLocalService from "../../../models/category/category.local-service";
 import categoryService from "../../../models/category/category.service";
 import { ITask, taskService } from "../../../models/task";
+import taskLocalService from "../../../models/task/task.local-service";
 import Category from "../../category/Category";
 
 import { FocusLevelSlider, TimePicker } from "../TaskForm/atoms";
@@ -33,6 +35,7 @@ type TaskDescriptionProps = {
 
 const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
   console.log("TaskDescription renders");
+  const { isOnline } = useAppStatus();
 
   const dispatch = useDispatch();
 
@@ -145,12 +148,22 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
   const [category, setCategory] = useState(null);
 
   useEffect(() => {
+
     async function fetchCategory() {
-      const category = await categoryService.findById(task.category);
+      
+      let category;
+
+      category = isOnline
+        ? await categoryService.findById(task.category)
+        : await categoryLocalService.findById(task.category);
+      console.log("category: ");
+      console.log(category);
       setCategory(category);
     }
+
+    console.log("task.category: ");
+    console.log(task.category);
     if (task.category) fetchCategory();
-    
   }, []);
 
   function onCategoryPlusClicked() {
@@ -161,7 +174,11 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
   }
   async function onCategorySelectHandler(categoryId) {
     setShowCategorySelection(false);
-    const newlySelectedCategory = await categoryService.findById(categoryId);
+    let newlySelectedCategory;
+
+    newlySelectedCategory = isOnline
+      ? await categoryService.findById(categoryId)
+      : await categoryLocalService.findById(categoryId);
 
     setCategory(newlySelectedCategory);
   }
@@ -240,7 +257,9 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
       focusLevel: Number(focusLevelRef.current.value),
     };
 
-    await taskService.updateTask(payload, dispatch);
+    isOnline
+      ? await taskService.update(payload, dispatch)
+      : await taskLocalService.update(payload, dispatch);
 
     setShow(false);
   }

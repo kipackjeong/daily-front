@@ -21,7 +21,9 @@ import { Scrollbars } from "react-custom-scrollbars";
 import { FaPencilAlt, FaPlus } from "react-icons/fa";
 import IconButton from "../../../../../core/components/IconButton";
 import List from "../../../../../core/components/List";
+import { useAppStatus } from "../../../../hooks/useAppStatus";
 import ICategory from "../../../../models/category/category.interface";
+import categoryLocalService from "../../../../models/category/category.local-service";
 import categoryService from "../../../../models/category/category.service";
 import Category from "../../../category/Category";
 import CategoryForm from "../../../category/CategoryForm";
@@ -49,11 +51,15 @@ const CategorySelection = ({
   const [targetCategory, setTargetCategory] = useState<ICategory>(null);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOnline } = useAppStatus();
+
   const cancelRef = React.useRef();
 
   useEffect(() => {
     async function fetchCategories() {
-      let categoryModels = await categoryService.findAll();
+      let categoryModels = isOnline
+        ? await categoryService.findAll()
+        : await categoryLocalService.findAll();
 
       setCategoryModels(categoryModels);
       setIsLoading(false);
@@ -109,7 +115,10 @@ const CategorySelection = ({
 
   async function onCategoryDeleteConfirmed() {
     onClose();
-    await categoryService.deleteById(targetCategory._id);
+
+    isOnline
+      ? await categoryService.deleteById(targetCategory._id)
+      : await categoryLocalService.delete(targetCategory._id);
     setShouldRefresh(true);
     setTargetCategory(null);
   }
@@ -231,7 +240,13 @@ const CategorySelection = ({
           autoHide={true}
         >
           <Flex flexDirection="row" flexWrap={"wrap"} alignItems="center">
-            {categoryList}
+            {!isLoading ? (
+              categoryList
+            ) : (
+              <Flex w="100%" justifyContent="center">
+                <Spinner />
+              </Flex>
+            )}
           </Flex>
         </Scrollbars>
       </Flex>

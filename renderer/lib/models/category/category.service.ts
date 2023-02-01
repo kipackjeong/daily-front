@@ -6,6 +6,7 @@ class CategoryService implements IService {
   public async findById(id: string) {
     return await categoryApi.get(id);
   }
+
   public async findAll() {
     const categories = await categoryApi.get();
     return categories;

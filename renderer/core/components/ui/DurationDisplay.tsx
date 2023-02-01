@@ -5,6 +5,7 @@ import { toAppTimeString } from "../../../lib/utils/helper";
 type DurationDisplayProps = {
   startTime: Date;
   endTime: Date;
+  width?;
   bold?: boolean;
   onClick?: MouseEventHandler<HTMLParagraphElement>;
 } & FlexProps;
@@ -12,12 +13,14 @@ const DurationDisplay = ({
   startTime,
   endTime,
   fontSize,
+  width,
   bold = false,
   style,
   onClick,
 }: DurationDisplayProps) => {
   return (
     <Flex
+      width={width}
       style={style}
       cursor="pointer"
       onClick={onClick}

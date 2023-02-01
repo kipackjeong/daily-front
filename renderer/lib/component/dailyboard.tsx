@@ -1,7 +1,9 @@
 import { Flex, Spinner } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { Provider, useDispatch, useSelector } from "react-redux";
+import { useAppStatus } from "../hooks/useAppStatus";
 import { taskService } from "../models/task";
+import taskLocalService from "../models/task/task.local-service";
 import {
   dateActions,
   selectDate,
@@ -19,6 +21,7 @@ const DailyBoard = ({ isMini = false }: DailyBoardProps) => {
   console.log("DailyBoard renders");
 
   const { store } = appStoreWrapper.useWrappedStore({});
+  const { isOnline } = useAppStatus();
 
   const dispatch = store.dispatch;
   const storeState = store.getState();
@@ -31,7 +34,11 @@ const DailyBoard = ({ isMini = false }: DailyBoardProps) => {
     console.log(" Refreshing tasks...");
 
     async function refreshTasks() {
-      await taskService.refreshTasksByDate(date, dispatch);
+
+      
+      isOnline
+        ? await taskService.refreshTasksByDate(date, dispatch)
+        : await taskLocalService.findAllByDate(date, dispatch);
     }
 
     if (date) {
@@ -42,7 +49,9 @@ const DailyBoard = ({ isMini = false }: DailyBoardProps) => {
   async function onDateSelectHandler(date) {
     dispatch(dateActions.setDate(date));
 
-    await taskService.refreshTasksByDate(date, dispatch);
+    isOnline
+      ? await taskService.refreshTasksByDate(date, dispatch)
+      : await taskLocalService.findAllByDate(date, dispatch);
   }
 
   return date ? (
