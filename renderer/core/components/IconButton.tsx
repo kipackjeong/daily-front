@@ -1,4 +1,4 @@
-import { Box, Flex, Text, Tooltip } from "@chakra-ui/react";
+import { Box, chakra, Flex, Text, Tooltip } from "@chakra-ui/react";
 import React, { PropsWithChildren, useState } from "react";
 import IconWrapper from "./IconWrapper";
 
@@ -33,6 +33,8 @@ const IconButton = ({
   function onMouseOutHandler() {
     if (onHover && isOnHover === null) setOnHover(false);
   }
+
+  const Icon = chakra(icon);
 
   return (
     <Flex

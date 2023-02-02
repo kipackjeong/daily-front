@@ -277,7 +277,7 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
     task && (
       <>
         <ModalLayout
-          detail="Description"
+          title="Description"
           width="550px"
           height="650px"
           haveButton={false}

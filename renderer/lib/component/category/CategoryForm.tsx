@@ -13,7 +13,6 @@ import { Scrollbars } from "react-custom-scrollbars";
 import React, { MouseEventHandler, useMemo, useRef, useState } from "react";
 import ModalLayout from "../../../core/layouts/ModalLayout";
 import categoryService from "../../models/category/category.service";
-import IconWrapper from "../../../core/components/IconWrapper";
 import ICategory from "../../models/category/category.interface";
 import List from "../../../core/components/List";
 import IconButton from "../../../core/components/IconButton";

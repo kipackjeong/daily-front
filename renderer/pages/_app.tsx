@@ -10,12 +10,14 @@ import SideBar, {
 } from "../lib/component/task/TaskForm/atoms/nav/SideBar";
 import "./styles.css";
 import { useAppStatus } from "../lib/hooks/useAppStatus";
+import { FaUser } from "react-icons/fa";
 
 function MyApp({ Component, pageProps }) {
   const { isOnline } = useAppStatus();
 
   const LinkItems: Array<LinkItemProps> = [
     { name: "Home", icon: FiHome, link: "/home" },
+    { name: "Login", icon: FaUser, link: "/login" },
     // {
     //   name: "Daily",
     //   icon: MdCalendarToday,
