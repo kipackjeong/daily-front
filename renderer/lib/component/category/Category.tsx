@@ -46,8 +46,6 @@ const Category = ({
     return;
   }
   //#endregion
-  console.log("category: ");
-  console.log(category);
 
   return category ? (
     <Flex

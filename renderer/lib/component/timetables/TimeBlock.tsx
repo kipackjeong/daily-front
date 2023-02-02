@@ -26,16 +26,16 @@ const TimeBlock = ({ id, time, tasksArr, isMini }: TimeBlockProps) => {
   // console.log("TimeBlock - render");
 
   //#region Hooks
-  const [tasks, setTasks] = useState(tasksArr);
+  // const [tasksInThisBlock, setTasksInThisBLock] = useState(tasksArr);
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [newTask, setNewTask] = useState(null);
   const { pixelPerHour } = useUISetting();
 
   //#endregion
 
-  useEffect(() => {
-    setTasks(tasksArr);
-  }, [tasksArr]);
+  // useEffect(() => {
+  //   setTasksInThisBLock(tasksArr);
+  // }, [tasksArr]);
 
   //#region Handlers
   async function onClickHandler(e) {
@@ -87,14 +87,14 @@ const TimeBlock = ({ id, time, tasksArr, isMini }: TimeBlockProps) => {
 
   const taskBlocks = useMemo(() => {
     return (
-      tasks.length != 0 &&
-      tasks.map((task, i) => {
+      tasksArr.length != 0 &&
+      tasksArr.map((task, i) => {
         if (task.timeInterval.startTime.getHours() == time.getHours()) {
           return <TaskBlock key={i} task={task} isMini={isMini} />;
         }
       })
     );
-  }, [tasks]);
+  }, [tasksArr]);
 
   //#endregion
 

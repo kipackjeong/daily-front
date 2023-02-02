@@ -1,11 +1,14 @@
 import React from "react";
 import PageLayout from "../core/layouts/PageLayout";
-import DashBoard from "../lib/component/dashboard";
+import DailyBoard from "../lib/component/dailyboard";
 
 function home() {
   return (
+    // <PageLayout>
+    //   <DashBoard />
+    // </PageLayout>
     <PageLayout>
-      <DashBoard />
+      <DailyBoard />
     </PageLayout>
   );
 }

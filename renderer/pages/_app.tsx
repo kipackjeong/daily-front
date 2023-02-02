@@ -16,11 +16,11 @@ function MyApp({ Component, pageProps }) {
 
   const LinkItems: Array<LinkItemProps> = [
     { name: "Home", icon: FiHome, link: "/home" },
-    {
-      name: "Daily",
-      icon: MdCalendarToday,
-      link: `/dailyboard`,
-    },
+    // {
+    //   name: "Daily",
+    //   icon: MdCalendarToday,
+    //   link: `/dailyboard`,
+    // },
   ];
 
   return isOnline != null ? (

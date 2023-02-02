@@ -50,22 +50,52 @@ const CurrentTimeLine = ({ isMini = false }: CurrentTimeLineProps) => {
       ? "-25px"
       : "5px";
   }, [currentTime]);
-  const { isMD } = useMediaSize();
+  const { isBase, isSM, isMD, isLG, isXL } = useMediaSize();
   //#endregion
+  let width = useMemo(() => {
+    if (isXL) {
+      return isMini ? "92.5%" : "94.7%";
+    }
+    if (isLG) {
+      return isMini ? "91.5%" : "93.5%";
+    }
+    if (isMD) {
+      return isMini ? "88%" : "90.7%";
+    }
+    if (isSM) {
+      return isMini ? "86%" : "88%";
+    }
+    if (isBase) {
+      return "88%";
+    }
+    return "95%";
+  }, [isBase, isSM, isMD, isLG, isXL]);
 
   return (
     <Flex
       w={isMini && isMD ? "88%" : "99%"}
       position="absolute"
-      left={8}
+      left={9}
       zIndex={10}
       className="curtime-markline-cont"
       pointerEvents={"none"}
       top={`${position}px`}
     >
-      <Flex __css={textBoxStyle} bottom={timeStrPosition}>
-        {currentTimeString}
+      <Flex position="relative">
+        <Flex
+          color="brand.regular"
+          w="100px"
+          textAlign="center"
+          position="absolute"
+          left={isMD ? "-15%" : "-5%"}
+          bottom={timeStrPosition}
+          fontSize={isMini ? "xs" : "sm"}
+          textOverflow="ellipsis"
+        >
+          {currentTimeString}
+        </Flex>
       </Flex>
+
       <Divider __css={dividerStyle} />
     </Flex>
   );

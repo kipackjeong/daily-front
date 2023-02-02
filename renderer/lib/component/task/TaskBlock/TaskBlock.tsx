@@ -1,13 +1,5 @@
-import {
-  Box,
-  Flex,
-  position,
-  Tooltip,
-  useMediaQuery,
-  useStyleConfig,
-} from "@chakra-ui/react";
+import { Flex, useStyleConfig } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { FaCheck } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { DraggableData, Rnd } from "react-rnd";
 import CheckButton from "../../../../core/components/CheckButton";
