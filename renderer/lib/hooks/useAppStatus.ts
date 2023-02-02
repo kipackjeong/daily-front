@@ -4,25 +4,20 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { singletonHook } from "react-singleton-hook";
-import { db } from "../localdb/db";
+import { db } from "../db/localdb";
 
 const isOnline = null;
 
 const initSetting = {
   isOnline,
+  setIsOnline: () => {},
 };
-
 export const useAppStatus = singletonHook(initSetting, () => {
-  console.log("useAppStatus");
-
   const [isOnline, setIsOnline] = useState(initSetting.isOnline);
-
   useEffect(() => {
     async function checkConnectionWithAPI() {
       try {
         const res = await axios.get(process.env.apiurl);
-        console.log("res: ");
-        console.log(res);
         setIsOnline(true);
       } catch (error) {
         console.log("error: " + error);
@@ -34,5 +29,5 @@ export const useAppStatus = singletonHook(initSetting, () => {
     checkConnectionWithAPI();
   }, []);
 
-  return { isOnline };
+  return { isOnline, setIsOnline };
 });

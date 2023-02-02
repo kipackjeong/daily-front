@@ -11,27 +11,33 @@ import SideBar, {
 import "./styles.css";
 import { useAppStatus } from "../lib/hooks/useAppStatus";
 import { FaUser } from "react-icons/fa";
+import { appStoreWrapper } from "../lib/redux/stores/app.store";
+import { Provider } from "react-redux";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import axiosInstance from "../lib/utils/axios";
+import { userActions } from "../lib/redux/slices/user.slice";
 
 function MyApp({ Component, pageProps }) {
   const { isOnline } = useAppStatus();
+  const { store } = appStoreWrapper.useWrappedStore({});
 
-  const LinkItems: Array<LinkItemProps> = [
-    { name: "Home", icon: FiHome, link: "/home" },
-    { name: "Login", icon: FaUser, link: "/login" },
-    // {
-    //   name: "Daily",
-    //   icon: MdCalendarToday,
-    //   link: `/dailyboard`,
-    // },
-  ];
+  const user = store.getState().user.user;
+
+  const dispatch = store.dispatch;
+
+  const router = useRouter();
+
+
 
   return isOnline != null ? (
     <ChakraProvider theme={theme}>
       <DndProvider backend={HTML5Backend}>
-        <MainLayout>
-          <SideBar linkItems={LinkItems} />
-          <Component {...pageProps} />
-        </MainLayout>
+        <Provider store={store}>
+          <MainLayout>
+            <Component {...pageProps} />
+          </MainLayout>
+        </Provider>{" "}
       </DndProvider>
     </ChakraProvider>
   ) : (

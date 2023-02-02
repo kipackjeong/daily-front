@@ -1,5 +1,5 @@
 import { IndexableType } from "dexie";
-import { db } from "../../localdb/db";
+import { db } from "../../db/localdb";
 import ICategory from "./category.interface";
 
 class categoryLocalService {

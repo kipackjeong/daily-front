@@ -1,15 +1,15 @@
-import axios from "axios";
 import IApi from "../../../core/interfaces/api.interface";
 import logger from "../../../utils/logger";
+import axiosInstance from "../../utils/axios";
 import ICategory from "./category.interface";
 
 class CategoryApi implements IApi {
-  url = process.env.apiurl + "/categories";
+  url = "/categories";
 
   public async post(payload: ICategory) {
     logger.info("categoryApi.post()");
 
-    const res = await axios.post(this.url, payload);
+    const res = await axiosInstance.post(this.url, payload);
 
     if (res.status == 201) {
       const data = res.data;
@@ -20,7 +20,7 @@ class CategoryApi implements IApi {
   public async put(id: string, payload: ICategory, query?) {
     logger.info("categoryApi.put()");
 
-    const res = await axios.put(this.url + "/" + id, payload);
+    const res = await axiosInstance.put(this.url + "/" + id, payload);
 
     if (res.status == 201) {
       return;
@@ -37,7 +37,7 @@ class CategoryApi implements IApi {
       url += "/" + query;
     }
 
-    const res = await axios.get(url);
+    const res = await axiosInstance.get(url);
 
     if (res.status == 200) {
       return res.data.data;
@@ -49,7 +49,7 @@ class CategoryApi implements IApi {
   public async delete(query: string) {
     logger.info("categoryApi.delete()");
 
-    const res = await axios.delete(this.url + "/" + query);
+    const res = await axiosInstance.delete(this.url + "/" + query);
 
     if (res.status == 200) {
       return res.data.data;

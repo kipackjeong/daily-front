@@ -1,6 +1,6 @@
 import { Flex, FlexProps, Stack, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import DurationDisplay from "../../../../../core/components/ui/DurationDisplay";
+import DurationDisplay from "../../../../../core/components/DurationDisplay";
 import { useAppStatus } from "../../../../hooks/useAppStatus";
 import categoryLocalService from "../../../../models/category/category.local-service";
 import categoryService from "../../../../models/category/category.service";

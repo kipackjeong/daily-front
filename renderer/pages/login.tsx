@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Flex,
   Heading,
@@ -10,19 +10,83 @@ import {
   chakra,
   Box,
   Link,
-  Avatar,
   FormControl,
   FormHelperText,
   InputRightElement,
+  FormErrorMessage,
 } from "@chakra-ui/react";
-import { FaUserAlt, FaLock } from "react-icons/fa";
-
-const CFaUserAlt = chakra(FaUserAlt);
-const CFaLock = chakra(FaLock);
+import { FaUserAlt, FaLock, FaMailBulk } from "react-icons/fa";
+import axios from "axios";
+import { useRouter } from "next/router";
+import IUser from "../lib/models/user/user";
+import { useDispatch } from "react-redux";
+import { userActions } from "../lib/redux/slices/user.slice";
+import IconWrapper from "../core/components/IconWrapper";
+import axiosInstance from "../lib/utils/axios";
+import { useAppStatus } from "../lib/hooks/useAppStatus";
 
 const login = () => {
+  const CFaLock = chakra(FaLock);
+  const CFaEmail = chakra(FaMailBulk);
+
   const [showPassword, setShowPassword] = useState(false);
-  const handleShowClick = () => setShowPassword(!showPassword);
+  const [isValid, setIsValid] = useState(true);
+
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+  const router = useRouter();
+
+  const dispatch = useDispatch();
+
+  const { setIsOnline } = useAppStatus();
+
+  function showClickHandler() {
+    setShowPassword(!showPassword);
+  }
+
+  async function onSubmitHandler(e) {
+    e.preventDefault();
+    const email = emailRef!.current.value;
+    const password = passwordRef!.current.value;
+
+    // #region call api to /login
+    // TODO: handle cors error.
+    try {
+      // the cookie will get setted
+      setIsOnline(true);
+      const res = await axiosInstance.post(
+        "/login",
+        {
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
+
+      const user: IUser = res.data.data;
+
+      dispatch(userActions.setUser(user));
+
+      router.push("/home");
+    } catch (error) {
+      setIsValid(false);
+    }
+    // #endregion
+  }
+
+  function useLocalClickHandler(e) {
+    setIsOnline(false);
+    dispatch(
+      userActions.setUser({
+        _id: "",
+        email: "",
+        password: "",
+        firstname: "",
+        lastname: "",
+      })
+    );
+    router.push("/home");
+  }
 
   return (
     <Flex
@@ -39,26 +103,36 @@ const login = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <Avatar bg="teal.500" />
-        <Heading color="teal.400">Welcome</Heading>
+        // TODO: logo goes here
+        <Heading color="brand.heavy">Welcome</Heading>
         <Box minW={{ base: "90%", md: "468px" }}>
-          <form>
+          <form onSubmit={onSubmitHandler}>
             <Stack
               spacing={4}
-              p="1rem"
+              p="2rem"
               backgroundColor="whiteAlpha.900"
               boxShadow="md"
             >
-              <FormControl>
+              {/* email */}
+              <FormControl isRequired isInvalid={!isValid}>
+                <FormErrorMessage>
+                  The user with given email and password does not exist.
+                </FormErrorMessage>
+
                 <InputGroup>
                   <InputLeftElement
                     pointerEvents="none"
-                    children={<CFaUserAlt color="gray.300" />}
+                    children={<CFaEmail color="gray.300" />}
                   />
-                  <Input type="email" placeholder="email address" />
+                  <Input
+                    ref={emailRef}
+                    type="email"
+                    placeholder="email address"
+                  />
                 </InputGroup>
               </FormControl>
-              <FormControl>
+              {/* email */}
+              <FormControl isRequired isInvalid={!isValid}>
                 <InputGroup>
                   <InputLeftElement
                     pointerEvents="none"
@@ -66,11 +140,12 @@ const login = () => {
                     children={<CFaLock color="gray.300" />}
                   />
                   <Input
+                    ref={passwordRef}
                     type={showPassword ? "text" : "password"}
                     placeholder="Password"
                   />
                   <InputRightElement width="4.5rem">
-                    <Button h="1.75rem" size="sm" onClick={handleShowClick}>
+                    <Button h="1.75rem" size="sm" onClick={showClickHandler}>
                       {showPassword ? "Hide" : "Show"}
                     </Button>
                   </InputRightElement>
@@ -83,7 +158,8 @@ const login = () => {
                 borderRadius={0}
                 type="submit"
                 variant="solid"
-                colorScheme="teal"
+                backgroundColor={"brand.heavy"}
+                _hover={{ backgroundColor: "brand.regular" }}
                 width="full"
               >
                 Login
@@ -94,8 +170,13 @@ const login = () => {
       </Stack>
       <Box>
         New to us?{" "}
-        <Link color="teal.500" href="#">
+        <Link color="teal.500" href="/signup">
           Sign Up
+        </Link>
+      </Box>
+      <Box>
+        <Link color="teal.500" onClick={useLocalClickHandler}>
+          Use local
         </Link>
       </Box>
     </Flex>

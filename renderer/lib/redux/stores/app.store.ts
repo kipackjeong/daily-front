@@ -3,12 +3,14 @@ import { createWrapper } from "next-redux-wrapper";
 import { taskSlice } from "../slices/task.slice";
 import { logger } from "redux-logger";
 import { dateSlice } from "../slices/date.slice";
+import { userSlice } from "../slices/user.slice";
 
 const makeStore = () =>
   configureStore({
     reducer: {
       [taskSlice.name]: taskSlice.reducer,
       [dateSlice.name]: dateSlice.reducer,
+      [userSlice.name]: userSlice.reducer,
     },
 
     devTools: true,

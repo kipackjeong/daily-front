@@ -4,11 +4,7 @@ import { Provider, useDispatch, useSelector } from "react-redux";
 import { useAppStatus } from "../hooks/useAppStatus";
 import { taskService } from "../models/task";
 import taskLocalService from "../models/task/task.local-service";
-import {
-  dateActions,
-  selectDate,
-  selectDates,
-} from "../redux/slices/date.slice";
+import { dateActions, selectDate } from "../redux/slices/date.slice";
 import { appStoreWrapper } from "../redux/stores/app.store";
 import DateSelectionBar from "./date-selection/DateSelectionBar";
 import TimeTable from "./timetables/TimeTable";
@@ -24,10 +20,7 @@ const DailyBoard = ({ isMini = false }: DailyBoardProps) => {
   const { isOnline } = useAppStatus();
 
   const dispatch = store.dispatch;
-  const storeState = store.getState();
-
-  const date = storeState.date.date;
-  const dates = storeState.date.dates;
+  const date = useSelector(selectDate);
 
   useEffect(() => {
     console.log("DailyBoard - useEffect - refreshTasks()");
@@ -53,12 +46,10 @@ const DailyBoard = ({ isMini = false }: DailyBoardProps) => {
   }
 
   return date ? (
-    <Provider store={store}>
-      <Flex className="dailyboard" h="100%" flexDir="column">
-        <DateSelectionBar onDateSelect={onDateSelectHandler} isMini={isMini} />
-        <TimeTable isMini={isMini} />
-      </Flex>
-    </Provider>
+    <Flex className="dailyboard" h="100%" flexDir="column">
+      <DateSelectionBar onDateSelect={onDateSelectHandler} isMini={isMini} />
+      <TimeTable isMini={isMini} />
+    </Flex>
   ) : (
     <Spinner />
   );

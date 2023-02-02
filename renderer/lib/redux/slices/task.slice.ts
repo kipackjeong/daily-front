@@ -1,10 +1,10 @@
-import { useFocusEffect } from "@chakra-ui/react";
 import { createSlice } from "@reduxjs/toolkit";
 
 import { HYDRATE } from "next-redux-wrapper";
 import indexReducer from "../stores";
 import { AppState } from "../stores/app.store";
 import ITask from "../../models/task/task.interface";
+import { stat } from "fs";
 
 type SetTaskAction = {
   payload: ITask[];
@@ -99,8 +99,12 @@ export const taskSlice = createSlice({
       orderTasksByEndTime(state.tasks);
       refreshLatestTask(state);
     },
+    deleteAll(state) {
+      state.tasks = [];
 
-    deleteTask(state, action: DeleteTaskAction) {
+      return state;
+    },
+    deleteTask(state, action) {
       state.tasks = state.tasks.filter((t) => t._id != action.payload);
 
       orderTasksByEndTime(state.tasks);

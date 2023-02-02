@@ -5,8 +5,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Box,
-  BoxProps,
   Button,
   Flex,
   FormControl,

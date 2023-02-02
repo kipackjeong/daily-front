@@ -1,18 +1,19 @@
-import { Icon } from "@chakra-ui/react";
+import { Icon, IconProps } from "@chakra-ui/react";
 
 type IconWrapperProps = {
   as;
   hoverColor?;
   color?;
   size?;
-};
-const IconWrapper = ({ as, color, size }: IconWrapperProps) => (
+} & IconProps;
+const IconWrapper = ({ as, color, size, ...rest }: IconWrapperProps) => (
   <Icon
     as={as}
     mb={2}
     boxSize={size ? size : 6}
     pointerEvents="none"
     color={color}
+    {...rest}
   ></Icon>
 );
 

@@ -11,11 +11,10 @@ import {
 import React from "react";
 import BarChart from "../../core/components/BarChart";
 import DoughnutChart from "../../core/components/DoughnutChart";
-import DailyBoard from "./dailyboard";
-
 import Scrollbars from "react-custom-scrollbars";
 import ModalLayout from "../../core/layouts/ModalLayout";
 import useMediaSize from "../hooks/useMediaSize";
+import DailyBoard from "./Dailyboard";
 
 const DashBoard = () => {
   console.log("DashBoard renders");
