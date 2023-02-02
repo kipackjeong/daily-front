@@ -1,11 +1,7 @@
 import { Text, Flex, IconButtonProps, FlexProps } from "@chakra-ui/react";
 import mongoose, { ObjectId } from "mongoose";
-import React, {
-  MouseEventHandler,
-  ReactElement,
-  useEffect,
-  useState,
-} from "react";
+import React, { MouseEventHandler, useState } from "react";
+import { FaQuestionCircle } from "react-icons/fa";
 import IconButton from "../../../core/components/IconButton";
 import icons from "../../../themes/icons";
 import ICategory from "../../models/category/category.interface";
@@ -50,8 +46,10 @@ const Category = ({
     return;
   }
   //#endregion
+  console.log("category: ");
+  console.log(category);
 
-  return (
+  return category ? (
     <Flex
       id={category._id}
       key={category.title}
@@ -82,6 +80,26 @@ const Category = ({
           {category.title}
         </Text>
       )}
+    </Flex>
+  ) : (
+    <Flex
+      id={Math.random().toString()}
+      flexDir="column"
+      w="50px"
+      h={height}
+      cursor="pointer"
+      alignItems={"center"}
+      justifyContent={"center"}
+      onMouseEnter={onMouseEnterHandler}
+      onMouseOut={onMouseOutHandler}
+    >
+      <IconButton
+        color={color}
+        icon={FaQuestionCircle}
+        size={size}
+        isOnHover={isOnHover || isSelected}
+        hoverColor={isHoverable && "brand.regular"}
+      />
     </Flex>
   );
 };

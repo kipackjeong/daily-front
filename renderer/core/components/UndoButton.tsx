@@ -9,7 +9,6 @@ const UndoButton = ({ style, onClick, ...rest }: ButtonProps) => {
       color={rest.color ? rest.color : "white"}
       backgroundColor="none"
       border="none"
-      _hover={{ color: "brand.green.300" }}
       onClick={onClick}
       size={rest.size ? rest.size : "md"}
       {...rest}

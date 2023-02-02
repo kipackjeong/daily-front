@@ -9,15 +9,13 @@ import SideBar, {
   LinkItemProps,
 } from "../lib/component/task/TaskForm/atoms/nav/SideBar";
 import "./styles.css";
-import { useEffect } from "react";
-import { db } from "../lib/localdb/db";
 import { useAppStatus } from "../lib/hooks/useAppStatus";
 
 function MyApp({ Component, pageProps }) {
   const { isOnline } = useAppStatus();
 
   const LinkItems: Array<LinkItemProps> = [
-    { name: "Dashboard", icon: FiHome, link: "/dashboard" },
+    { name: "Home", icon: FiHome, link: "/home" },
     {
       name: "Daily",
       icon: MdCalendarToday,

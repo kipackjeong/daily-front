@@ -101,15 +101,15 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
   const titleSection = task != null && (
     <FormControl
       {...style.formControl}
-      id="title"
-      className="title-input"
+      id="detail"
+      className="detail-input"
       isRequired
     >
       <FormLabel fontSize="lg">Title</FormLabel>
       <Editable
         fontSize="lg"
         textAlign={"center"}
-        defaultValue={task.title}
+        defaultValue={task.detail}
         ref={titleRef}
       >
         <EditablePreview />
@@ -125,8 +125,8 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
   const descriptionSection = task && (
     <FormControl
       {...style.formControl}
-      id="title"
-      className="description-input"
+      id="detail"
+      className="reflection-input"
     >
       <FormLabel>Description</FormLabel>
       <Editable
@@ -134,7 +134,7 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
         fontSize="lg"
         w="100%"
         textAlign={"center"}
-        defaultValue={task.description ? task.description : "---"}
+        defaultValue={task.reflection ? task.reflection : "---"}
       >
         <EditablePreview />
         <EditableInput />
@@ -148,9 +148,7 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
   const [category, setCategory] = useState(null);
 
   useEffect(() => {
-
     async function fetchCategory() {
-      
       let category;
 
       category = isOnline
@@ -186,8 +184,8 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
   const categorySelection = (
     <FormControl
       {...style.formControl}
-      id="title"
-      className="description-input"
+      id="detail"
+      className="reflection-input"
     >
       <FormLabel>Category</FormLabel>
       <Flex alignItems="center" justifyContent="center">
@@ -249,8 +247,8 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
 
     const payload = {
       ...task,
-      title: titleRef.current.textContent,
-      description: descriptionRef.current.textContent,
+      detail: titleRef.current.textContent,
+      reflection: descriptionRef.current.textContent,
       timeInterval,
       taskType: taskType,
       category: category && category._id,
@@ -279,7 +277,7 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
     task && (
       <>
         <ModalLayout
-          title="Description"
+          detail="Description"
           width="550px"
           height="650px"
           haveButton={false}

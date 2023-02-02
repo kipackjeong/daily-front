@@ -26,9 +26,6 @@ const TimeBlock = ({ id, time, tasksArr, isMini }: TimeBlockProps) => {
   // console.log("TimeBlock - render");
 
   //#region Hooks
-  const dispatch = useDispatch();
-  const selectedDate = useSelector(selectDate);
-
   const [tasks, setTasks] = useState(tasksArr);
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [newTask, setNewTask] = useState(null);
@@ -43,23 +40,11 @@ const TimeBlock = ({ id, time, tasksArr, isMini }: TimeBlockProps) => {
   //#region Handlers
   async function onClickHandler(e) {
     const blockHeight = getHeight(e.target as HTMLDivElement);
-    console.log("blockHeight: " + blockHeight);
     const blockLocY = getOffset(e.target).y;
     const clickedLocY = e.clientY;
-    console.log("blockLocY: " + blockLocY);
-    console.log("clickedLocY: " + clickedLocY);
 
     const yDiff = clickedLocY - blockLocY;
 
-    let position: number;
-
-    if (yDiff == 0) {
-      position = 0;
-    } else if (blockHeight === 0) {
-      return;
-    } else {
-      position = yDiff * 1.0;
-    }
     const taskStartTime = new Date(time);
 
     const minuteToAdd = roundToIntervalFive(
@@ -74,6 +59,7 @@ const TimeBlock = ({ id, time, tasksArr, isMini }: TimeBlockProps) => {
 
     const payload: ITask = {
       timeInterval: { startTime: taskStartTime, endTime: taskEndTime },
+      taskType: "DID",
     };
 
     setShowTaskForm(true);
@@ -104,7 +90,7 @@ const TimeBlock = ({ id, time, tasksArr, isMini }: TimeBlockProps) => {
       tasks.length != 0 &&
       tasks.map((task, i) => {
         if (task.timeInterval.startTime.getHours() == time.getHours()) {
-          return <TaskBlock key={i} task={task} />;
+          return <TaskBlock key={i} task={task} isMini={isMini} />;
         }
       })
     );

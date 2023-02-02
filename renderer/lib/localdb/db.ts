@@ -11,7 +11,7 @@ export class MySubClassedDexie extends Dexie {
   constructor() {
     super("daily");
     this.version(1).stores({
-      tasks: "++_id, title, date", // Primary key and indexed props
+      tasks: "++_id, detail, date", // Primary key and indexed props
       categories: "++_id, title, icon",
     });
   }

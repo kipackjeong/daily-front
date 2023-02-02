@@ -6,16 +6,15 @@ import {
   useInterval,
 } from "@chakra-ui/react";
 import React, { useEffect, useMemo, useState } from "react";
+import useMediaSize from "../../hooks/useMediaSize";
 import { useUISetting } from "../../hooks/useUISettings";
 import {
   getAbsolutePositionFromDate,
   toAppTimeString,
 } from "../../utils/helper";
 
-type CurrentTimeLineProps = {
-  currentTime: Date;
-};
-const CurrentTimeLine = ({}: CurrentTimeLineProps) => {
+type CurrentTimeLineProps = { isMini: boolean };
+const CurrentTimeLine = ({ isMini = false }: CurrentTimeLineProps) => {
   const { pixelPerHour } = useUISetting();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [position, setPosition] = useState(
@@ -43,9 +42,6 @@ const CurrentTimeLine = ({}: CurrentTimeLineProps) => {
     variant: "currentTimeLine",
   });
 
-  const containerStyle = useStyleConfig("Flex", {
-    variant: "curTimeMarkLineContainer",
-  });
   const textBoxStyle = useStyleConfig("Flex", {
     variant: "curTimeMarkLineTextBox",
   });
@@ -54,14 +50,17 @@ const CurrentTimeLine = ({}: CurrentTimeLineProps) => {
       ? "-25px"
       : "5px";
   }, [currentTime]);
-
+  const { isMD } = useMediaSize();
   //#endregion
 
   return (
     <Flex
+      w={isMini && isMD ? "88%" : "99%"}
+      position="absolute"
+      left={8}
+      zIndex={10}
       className="curtime-markline-cont"
       pointerEvents={"none"}
-      __css={containerStyle}
       top={`${position}px`}
     >
       <Flex __css={textBoxStyle} bottom={timeStrPosition}>

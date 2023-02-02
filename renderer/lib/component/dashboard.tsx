@@ -15,11 +15,13 @@ import DailyBoard from "./dailyboard";
 
 import Scrollbars from "react-custom-scrollbars";
 import ModalLayout from "../../core/layouts/ModalLayout";
+import useMediaSize from "../hooks/useMediaSize";
 
 const DashBoard = () => {
   console.log("DashBoard renders");
-  const [isLargerThan30EM] = useMediaQuery("(min-width: 30em)");
-  console.log("isLargerThan30EM: " + isLargerThan30EM);
+
+  const { isSM } = useMediaSize();
+
   return (
     <Scrollbars
       className="category-selection__selectedIcon-select-scrollbar"
@@ -27,8 +29,8 @@ const DashBoard = () => {
       autoHide={false}
       overFlowX="hidden"
     >
-      <Flex flexDirection={{ sm: "column", md: "row", lg:"row" }}>
-        <Flex flex={1} h="100%" flexDir="column">
+      <Flex flexDirection={{ sm: "column", md: "row", lg: "row" }}>
+        <Flex flex={1} h={{ base: "100%", sm: "61em" }} flexDir="column">
           <Heading>Dashboard</Heading>
           <Grid
             w="100%"
@@ -71,7 +73,7 @@ const DashBoard = () => {
           flexDir={"column"}
           ml={{ base: 5, sm: 0 }}
         >
-          {!isLargerThan30EM ? (
+          {isSM ? (
             <ModalLayout
               onClose={function (): void {
                 throw new Error("Function not implemented.");
@@ -84,7 +86,7 @@ const DashBoard = () => {
               </Card>
             </ModalLayout>
           ) : (
-            <Card w="100%" h={{ base: "100%", sm: "800px" }}>
+            <Card w="100%" h={{ base: "100%", sm: "61em" }}>
               <CardBody p={0}>
                 <DailyBoard isMini={true} />
               </CardBody>

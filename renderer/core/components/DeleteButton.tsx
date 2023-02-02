@@ -1,22 +1,23 @@
 import { DeleteIcon } from "@chakra-ui/icons";
-import { Button, Tooltip } from "@chakra-ui/react";
+import { Button, ButtonProps, Tooltip } from "@chakra-ui/react";
 import React from "react";
 
 type DeleteButtonProps = {
   style?;
   onClick;
-} & Record<string, any>;
+} & ButtonProps;
 
-const DeleteButton = ({ style, onClick, ...rest }: DeleteButtonProps) => {
+const DeleteButton = ({
+  style,
+  color = "white",
+  ...rest
+}: DeleteButtonProps) => {
   return (
     <Button
       style={style}
-      color={rest.color ? rest.color : "white"}
+      color={color}
       backgroundColor="none"
       border="none"
-      _hover={{ color: "brand.red.600" }}
-      onClick={onClick}
-      size={rest.size ? rest.size : "md"}
       {...rest}
     >
       <Tooltip label="Delete" shouldWrapChildren={true}>

@@ -11,7 +11,13 @@ type TaskBlockLabelProps = {
   task: ITask;
   height;
 } & FlexProps;
-const TaskBlockLabel = ({ task, height, color }: TaskBlockLabelProps) => {
+const TaskBlockLabel = ({
+  task,
+  height,
+  color,
+  columnGap,
+  fontSize,
+}: TaskBlockLabelProps) => {
   const heightInNumber = height;
   const shouldLabelBeSmall = heightInNumber < 75;
 
@@ -25,6 +31,7 @@ const TaskBlockLabel = ({ task, height, color }: TaskBlockLabelProps) => {
         const cat = isOnline
           ? await categoryService.findById(task.category)
           : await categoryLocalService.findById(task.category);
+
         setCategory(cat);
       }
     }
@@ -39,7 +46,7 @@ const TaskBlockLabel = ({ task, height, color }: TaskBlockLabelProps) => {
       alignItems="center"
       justifyContent="flex"
       flexDirection={"row"}
-      columnGap={{ base: "11%", md: "15%", lg: "25%" }}
+      columnGap={columnGap}
     >
       {shouldLabelBeSmall ? (
         // small text
@@ -48,8 +55,9 @@ const TaskBlockLabel = ({ task, height, color }: TaskBlockLabelProps) => {
             width={{ sm: "40%", md: "50%", lg: "40%" }}
             startTime={task.timeInterval.startTime}
             endTime={task.timeInterval.endTime}
+            fontSize={fontSize}
           />
-          {category && (
+          <Flex w="30%" alignItems="center">
             <Flex w="2em">
               <Category
                 color={color}
@@ -59,17 +67,17 @@ const TaskBlockLabel = ({ task, height, color }: TaskBlockLabelProps) => {
                 isHoverable={false}
               />
             </Flex>
-          )}
-          <Flex w="7em" margin="0" pb={2}>
-            <Text
-              display="flex"
-              alignItems={"center"}
-              fontWeight={"bold"}
-              textAlign={"center"}
-              fontSize="sm"
-            >
-              {task.title}
-            </Text>
+            <Flex w="7em" margin="0" pb={2}>
+              <Text
+                display="flex"
+                alignItems={"center"}
+                fontWeight={"bold"}
+                textAlign={"center"}
+                fontSize="sm"
+              >
+                {task.detail}
+              </Text>
+            </Flex>
           </Flex>
         </>
       ) : (
@@ -83,19 +91,18 @@ const TaskBlockLabel = ({ task, height, color }: TaskBlockLabelProps) => {
             endTime={task.timeInterval.endTime}
           />
           <Flex w="30%" alignItems="center">
-            {category && (
-              <Flex w="2em" display="flex" justifyContent={"flex-end"}>
-                <Category
-                  color={color}
-                  size={4}
-                  category={category}
-                  showTitle={false}
-                  isHoverable={false}
-                />
-              </Flex>
-            )}
+            <Flex w="2em" display="flex" justifyContent={"flex-end"}>
+              <Category
+                color={color}
+                size={4}
+                category={category}
+                showTitle={false}
+                isHoverable={false}
+              />
+            </Flex>
+
             <Flex w={"60%"} margin="0" pb={2}>
-              <Text fontWeight={"bold"}>{task.title}</Text>
+              <Text fontWeight={"bold"}>{task.detail}</Text>
             </Flex>
           </Flex>
         </>

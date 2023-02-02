@@ -4,9 +4,9 @@ import ICategory from "../category/category.interface";
 
 interface ITask {
   _id?: string;
-  title?: string;
+  detail?: string;
   date?: Date;
-  description?: string;
+  reflection?: string;
   focusLevel?: number;
   position?: number;
   timeInterval?: TimeInterval;

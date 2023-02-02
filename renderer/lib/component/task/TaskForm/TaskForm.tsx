@@ -92,12 +92,12 @@ const TaskForm = ({
       timeInterval.startTime = endTime;
       timeInterval.endTime = temp;
     }
-    
+
     console.log("task: ");
     const createPayload: ITask = {
       ...task,
-      title: titleRef.current.value,
-      description: descriptionRef.current.value,
+      detail: titleRef.current.value,
+      reflection: descriptionRef.current.value,
       focusLevel: Number(focusLevelRef.current.value),
       timeInterval,
       taskType: taskType,
@@ -176,22 +176,22 @@ const TaskForm = ({
       <FormControl
         {...style.formControl}
         variant="floating"
-        id="title"
-        className="title-input"
+        id="detail"
+        className="detail-input"
         isRequired
       >
         <Input
           ref={titleRef}
           width="100%"
           placeholder=" "
-          defaultValue={task.title}
+          defaultValue={task.detail}
         />
         <FormLabel>Title</FormLabel>
       </FormControl>
       <FormControl
         {...style.formControl}
-        id="description"
-        className="description-input"
+        id="reflection"
+        className="reflection-input"
         variant="floating"
         isInvalid={false}
       >
@@ -199,7 +199,7 @@ const TaskForm = ({
           ref={descriptionRef}
           width="100%"
           placeholder=" "
-          defaultValue={task.description}
+          defaultValue={task.reflection}
         />
         <FormLabel>Description </FormLabel>
       </FormControl>

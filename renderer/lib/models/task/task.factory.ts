@@ -4,7 +4,7 @@ export default class TaskFactory {
   public static createEmptyDid(startTime: Date, endTime: Date): ITask {
     return {
       taskType: "DID",
-      title: "",
+      detail: "",
       focusLevel: 50,
       timeInterval: {
         startTime: startTime,
@@ -12,11 +12,11 @@ export default class TaskFactory {
       },
     };
   }
-  
+
   public static createEmptyTodo(startTime: Date, endTime: Date): ITask {
     return {
       taskType: "TODO",
-      title: "",
+      detail: "",
       focusLevel: 50,
       timeInterval: {
         startTime: startTime,

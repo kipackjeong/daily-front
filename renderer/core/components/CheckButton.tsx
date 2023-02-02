@@ -2,14 +2,17 @@ import { Button, ButtonProps, Tooltip } from "@chakra-ui/react";
 import React, { PropsWithoutRef, ReactPropTypes } from "react";
 import { FaCheck } from "react-icons/fa";
 
-const CheckButton = ({ style, onClick, ...rest }: ButtonProps) => {
+const CheckButton = ({
+  style,
+  color = "white",
+  onClick,
+  ...rest
+}: ButtonProps) => {
   return (
     <Button
-      style={style}
-      color={rest.color ? rest.color : "white"}
+      color={color}
       backgroundColor="none"
       border="none"
-      _hover={{ color: "brand.heavy" }}
       onClick={onClick}
       size={rest.size ? rest.size : "md"}
       {...rest}

@@ -12,9 +12,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { DraggableData, Rnd } from "react-rnd";
 import CheckButton from "../../../../core/components/CheckButton";
 import DeleteButton from "../../../../core/components/DeleteButton";
-import IconButton from "../../../../core/components/IconButton";
 import UndoButton from "../../../../core/components/UndoButton";
 import { useAppStatus } from "../../../hooks/useAppStatus";
+import useMediaSize from "../../../hooks/useMediaSize";
 import { useUISetting } from "../../../hooks/useUISettings";
 import {
   ITask,
@@ -40,6 +40,7 @@ import TaskBlockLabel from "./atoms/TaskBlockLabel";
 
 type TaskBlockProps = {
   task: ITask;
+  isMini: boolean;
 };
 
 const TaskBlock =
@@ -49,14 +50,14 @@ const TaskBlock =
    * @param {TaskBlockProps} { task }
    * @returns {*}
    */
-  ({ task }: TaskBlockProps) => {
+  ({ task, isMini = false }: TaskBlockProps) => {
     // console.log("TaskBlock render");
 
     const dispatch = useDispatch();
     const selectedTasks = useSelector(selectSelectedTasks);
     const tasks = useSelector(selectTasks);
     const { isOnline } = useAppStatus();
-
+    const { isBase, isSM, isMD, isLG, isXL } = useMediaSize();
     const { pixelPerHour, pixelPerMinute } = useUISetting();
 
     const [height, setHeight] = useState<number>(
@@ -64,12 +65,18 @@ const TaskBlock =
         ? 1
         : convertTimeIntervalToPxHeight(task.timeInterval, pixelPerHour)
     );
-
-    const [heightDiff, setHeightDiff] = useState(0);
+    // sets block's height by task's timeinterval
+    useEffect(() => {
+      setHeight(convertTimeIntervalToPxHeight(task.timeInterval, pixelPerHour));
+    }, [tasks, pixelPerHour]);
 
     const [positionY, setPositionY] = useState(
       getPositionFromStartTime(task.timeInterval, pixelPerHour)
     );
+
+    useEffect(() => {
+      setPositionY(getPositionFromStartTime(task.timeInterval, pixelPerHour));
+    }, [tasks, pixelPerHour]);
 
     const taskSelected = selectedTasks.includes(task._id);
 
@@ -100,7 +107,8 @@ const TaskBlock =
     const checkBtn =
       task.taskType == "TODO" ? (
         <CheckButton
-          style={{ padding: 0 }}
+          padding={0}
+          size={isMini && isMD ? "xs" : "sm"}
           onClick={async (e) => {
             e.stopPropagation();
 
@@ -109,11 +117,13 @@ const TaskBlock =
               ? await taskService.update(payload, dispatch)
               : await taskLocalService.update(payload, dispatch);
           }}
-          _hover={{ color: "brand.light" }}
+          color={isMini ? "brand.heavy" : "white"}
+          _hover={{ color: isMini ? "brand.green.300" : "brand.green.200" }}
         />
       ) : (
         <UndoButton
-          style={{ padding: 0 }}
+          padding={0}
+          size={isMini && isMD ? "xs" : "sm"}
           onClick={async (e) => {
             const payload = { ...task, taskType: "TODO" };
 
@@ -123,10 +133,18 @@ const TaskBlock =
               : await taskLocalService.update(payload, dispatch);
             dispatch(taskActions.resetSelectedTask);
           }}
+          color={isMini ? "brand.heavy" : "white"}
+          _hover={{ color: "brand.green.300" }}
         />
       );
     const deleteBtn = (
-      <DeleteButton style={{ padding: 0 }} onClick={onDeleteBtnClickHandler} />
+      <DeleteButton
+        style={{ padding: 0 }}
+        size={isMini && isMD ? "xs" : "sm"}
+        color={isMini ? "brand.heavy" : "white"}
+        _hover={{ color: "brand.red.600" }}
+        onClick={onDeleteBtnClickHandler}
+      />
     );
 
     const buttons = (
@@ -134,7 +152,8 @@ const TaskBlock =
         style={{
           position: "absolute",
           height: "100%",
-          right: "2%",
+          right: isMini && isMD && isSM ? "-1%" : "2%",
+          bottom: isMini ? "115%" : "5%",
           border: "none",
           alignItems: "center",
           zIndex: 2,
@@ -173,20 +192,17 @@ const TaskBlock =
         task={task}
         height={height}
         color={(taskSelected && "white") || "brand.heavy"}
+        columnGap={{
+          base: "11%",
+          md: isMini ? "0" : "15%",
+          lg: isMini ? "10%" : "25%",
+        }}
+        fontSize={isMini ? "xs" : "md"}
       />
     );
     // #endregion
 
     // #region Block
-
-    useEffect(() => {
-      setPositionY(getPositionFromStartTime(task.timeInterval, pixelPerHour));
-    }, [tasks, pixelPerHour]);
-
-    // sets block's height by task's timeinterval
-    useEffect(() => {
-      setHeight(convertTimeIntervalToPxHeight(task.timeInterval, pixelPerHour));
-    }, [tasks, pixelPerHour]);
 
     const containerStyle = useStyleConfig("Flex", { variant: "taskBlockBox" });
 
@@ -224,7 +240,6 @@ const TaskBlock =
     }
 
     async function onResizeStopHandler(e, direction, ref, delta, position) {
-      setHeightDiff(0);
       isOnline
         ? await taskService.update(task, dispatch)
         : await taskLocalService.update(task, dispatch);
@@ -306,7 +321,7 @@ const TaskBlock =
           );
         }
         console.log("taskToAttachTo: ");
-        console.log(taskToAttachTo.title);
+        console.log(taskToAttachTo.detail);
       }
 
       // prevents onclick triggering ondragstop
@@ -358,8 +373,8 @@ const TaskBlock =
 
         if (e.detail == 2) {
           // double click
-          // show description/edit form
-          if (task.title) {
+          // show reflection/edit form
+          if (task.detail) {
             setShowDescriptionForm(true);
           } else {
             setShowTaskForm(true);
@@ -392,26 +407,19 @@ const TaskBlock =
       [task, selectedTasks]
     );
 
-    const [isBase, isSM, isMD, isLG, isXL] = useMediaQuery([
-      "(min-width: 0em) and (max-width: 29em)",
-      "(min-width: 30em) and (max-width: 47em)",
-      "(min-width: 48em) and (max-width: 61em)",
-      "(min-width: 62em) and (max-width: 79em)",
-      "(min-width: 80em) ",
-    ]);
-
+    // set width of the block per media's screen size.
     let width = useMemo(() => {
       if (isXL) {
-        return "94.7%";
+        return isMini ? "92.5%" : "94.7%";
       }
       if (isLG) {
-        return "93.5%";
+        return isMini ? "91.5%" : "93.5%";
       }
       if (isMD) {
-        return "90.7%";
+        return isMini ? "88%" : "90.7%";
       }
       if (isSM) {
-        return "88%";
+        return isMini ? "86%" : "88%";
       }
       if (isBase) {
         return "88%";
@@ -432,7 +440,7 @@ const TaskBlock =
           borderColor: "brand.heavy",
         }}
         size={{ width: width, height: `${height}px` }}
-        position={{ x: 60, y: positionY }}
+        position={{ x: isMini ? 35 : 60, y: positionY }}
         onResize={onResizeHandler}
         onResizeStop={onResizeStopHandler}
         onDrag={onDragHandler}
@@ -453,8 +461,7 @@ const TaskBlock =
           {blockDecorationLine}
           {label}
         </Flex>
-
-        {showButtons && buttons}
+        <Flex>{showButtons && buttons}</Flex>
       </Rnd>
     );
 

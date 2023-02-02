@@ -34,8 +34,6 @@ const DailyBoard = ({ isMini = false }: DailyBoardProps) => {
     console.log(" Refreshing tasks...");
 
     async function refreshTasks() {
-
-      
       isOnline
         ? await taskService.refreshTasksByDate(date, dispatch)
         : await taskLocalService.findAllByDate(date, dispatch);
@@ -56,7 +54,7 @@ const DailyBoard = ({ isMini = false }: DailyBoardProps) => {
 
   return date ? (
     <Provider store={store}>
-      <Flex h="100%" flexDir="column">
+      <Flex className="dailyboard" h="100%" flexDir="column">
         <DateSelectionBar onDateSelect={onDateSelectHandler} isMini={isMini} />
         <TimeTable isMini={isMini} />
       </Flex>

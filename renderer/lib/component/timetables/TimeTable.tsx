@@ -24,11 +24,6 @@ type TimeTableProps = {
   isMini: boolean;
 };
 
-type Payload = {
-  date: Date;
-  tasksArr: ITask[];
-};
-
 const TimeTable = ({ flex, isMini }: TimeTableProps) => {
   console.log("TimeTable - render");
 
@@ -36,7 +31,6 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
   const selectedDate = useSelector(selectDate);
   const tasks = useSelector(selectTasks);
   const selectedTasks = useSelector(selectSelectedTasks);
-  const [currentTime, setCurrentTime] = useState(new Date(Date.now()));
   const [showDeleteBtn, setShowDeleteBtn] = useState(false);
   const { incrementPixelPerHour, decrementPixelPerHour } = useUISetting();
   const { isOnline } = useAppStatus();
@@ -153,14 +147,7 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
           zIndex={3}
         />
       )}
-      <Flex
-        sx={{
-          position: "relative",
-          height: "100%",
-          width: "100%",
-        }}
-        flex={0.85}
-      >
+      <Flex position="relative" height="100%" flex={0.85}>
         <Scrollbars autoHide={true}>
           <Flex
             height="100%"
@@ -170,7 +157,7 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
             flexFlow={"wrap"}
           >
             {selectedDate.getDate() == new Date(Date.now()).getDate() && (
-              <CurrentTimeLine currentTime={currentTime} />
+              <CurrentTimeLine isMini={isMini} />
             )}
             {timeBlocks}
           </Flex>

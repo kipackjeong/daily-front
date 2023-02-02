@@ -59,12 +59,6 @@ const Flex = defineStyleConfig({
       },
     },
 
-    curTimeMarkLineContainer: {
-      w: "95%",
-      position: "absolute",
-      left: 8,
-      zIndex: 10,
-    },
 
     curTimeMarkLineTextBox: {
       color: "brand.regular",
