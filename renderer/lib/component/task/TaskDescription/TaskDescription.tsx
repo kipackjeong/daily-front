@@ -315,10 +315,12 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
               {titleSection}
               {descriptionSection}
               {categorySelection}
-              <PriorityRadioCard
-                onChange={priorityChangeHandler}
-                defaultValue={priority}
-              />
+              {taskType == "TODO" && (
+                <PriorityRadioCard
+                  onChange={priorityChangeHandler}
+                  defaultValue={priority}
+                />
+              )}
               {focusLevelSection}
               {buttons}
             </VStack>

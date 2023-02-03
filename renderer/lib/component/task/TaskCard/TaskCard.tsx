@@ -11,6 +11,8 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { taskService } from "../../../models/task";
 import { Scrollbars } from "react-custom-scrollbars";
+import { useAppStatus } from "../../../hooks/useAppStatus";
+import taskLocalService from "../../../models/task/task.local-service";
 
 const TaskCard = ({ task }) => {
   const dispatch = useDispatch();
@@ -18,6 +20,8 @@ const TaskCard = ({ task }) => {
   const [madeChanges, setMadeChanges] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [changedPriority, setChangedPriority] = useState(task.priority);
+
+  const { isOnline } = useAppStatus();
 
   // Sets the starting poisition of the scroll.
   useEffect(() => {
@@ -84,7 +88,9 @@ const TaskCard = ({ task }) => {
       // call api to update changes
       const payload = { ...task, priority: changedPriority };
 
-      await taskService.update(payload, dispatch);
+      isOnline
+        ? await taskService.update(payload, dispatch)
+        : await taskLocalService.update(payload, dispatch);
 
       setMadeChanges(false);
     }

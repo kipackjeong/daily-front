@@ -5,7 +5,16 @@ import { taskActions } from "../../redux/slices/task.slice";
 import ITask from "./task.interface";
 class TaskLocalService {
   private db = db;
-  public async findAll(query?): Promise<ITask[]> {
+  public async findTopNByPriorityDescOrder(n: number) {
+    let tasks = await this.db.tasks
+      .where("taskType")
+      .equals("TODO")
+      .sortBy("priority");
+    tasks = tasks.slice(0, 5);
+
+    return tasks;
+  }
+  public async findAll(): Promise<ITask[]> {
     await db.open();
     return await db.tasks.toArray();
   }

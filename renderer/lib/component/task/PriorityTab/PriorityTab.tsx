@@ -24,6 +24,7 @@ import { useAppStatus } from "../../../hooks/useAppStatus";
 import { selectTasks, taskService } from "../../../models/task";
 import { Scrollbars } from "react-custom-scrollbars";
 import TaskCard from "../TaskCard/TaskCard";
+import taskLocalService from "../../../models/task/task.local-service";
 
 type PriorityTabProps = {} & FlexProps;
 
@@ -44,12 +45,10 @@ const PriorityTab = (props) => {
       try {
         const tasks = isOnline
           ? await taskService.findTopNByPriorityDescOrder(5)
-          : [];
+          : await taskLocalService.findTopNByPriorityDescOrder(5);
         setTopPriorityTasks(tasks);
-        console.log("tasks: ");
-        console.log(tasks);
+        setIsLoading(false);
       } catch (error) {}
-      setIsLoading(false);
     }
 
     fetchTopFivePrioritizedTasks();

@@ -257,10 +257,12 @@ const TaskForm = ({
               {taskTypeRadio}
               {formInputs}
               {categorySelect}
-              <PriorityRadioCard
-                onChange={priorityChangeHandler}
-                defaultValue={task.priority}
-              />
+              {taskType == "TODO" && (
+                <PriorityRadioCard
+                  onChange={priorityChangeHandler}
+                  defaultValue={priority}
+                />
+              )}
               {focusLevelSlider}
               {buttons}
             </Flex>
