@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { TimeInterval } from "../../types";
-import ICategory from "../category/category.interface";
 
 interface ITask {
   _id?: string;
@@ -13,6 +12,7 @@ interface ITask {
   taskType?: string;
   category?: string;
   goal?: mongoose.Types.ObjectId;
+  priority?: number;
 }
 
 export default ITask;

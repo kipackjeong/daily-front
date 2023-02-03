@@ -1,13 +1,37 @@
 import IApi from "../../../core/interfaces/api.interface";
 import logger from "../../../utils/logger";
 import ITask from "./task.interface";
-import axios from "axios";
-import Cookies from "js-cookie";
 import axiosInstance from "../../utils/axios";
 
 class TaskApi implements IApi {
   url = "/tasks";
 
+  public async get(options?) {
+    console.log("taskApi.get()");
+    let id, query;
+    if (options) {
+      id = options.id;
+      query = options.query;
+    }
+
+    let url = this.url;
+
+    if (id) {
+      url += `/${id}`;
+    }
+    if (query) {
+      url += `/${query}`;
+    }
+
+    const res = await axiosInstance.get(url);
+    const data = await res.data;
+
+    if (res.status == 200) {
+      return data.data;
+    } else {
+      logger.error(res, data.message);
+    }
+  }
   public async post(payload: ITask, query?) {
     console.log("TaskApi.post()");
 
@@ -35,18 +59,6 @@ class TaskApi implements IApi {
     }
   }
 
-  public async get(query: string) {
-    console.log("taskApi.get()");
-
-    const res = await axiosInstance.get(this.url + "/" + query);
-    const data = await res.data;
-
-    if (res.status == 200) {
-      return data.data;
-    } else {
-      logger.error(res, data.message);
-    }
-  }
   public async delete(query: string) {
     console.log("taskApi.delete()");
 

@@ -28,7 +28,7 @@ const DailyBoard = ({ isMini = false }: DailyBoardProps) => {
 
     async function refreshTasks() {
       isOnline
-        ? await taskService.refreshTasksByDate(date, dispatch)
+        ? await taskService.findTasksByDate(date, dispatch)
         : await taskLocalService.findAllByDate(date, dispatch);
     }
 
@@ -41,7 +41,7 @@ const DailyBoard = ({ isMini = false }: DailyBoardProps) => {
     dispatch(dateActions.setDate(date));
 
     isOnline
-      ? await taskService.refreshTasksByDate(date, dispatch)
+      ? await taskService.findTasksByDate(date, dispatch)
       : await taskLocalService.findAllByDate(date, dispatch);
   }
 

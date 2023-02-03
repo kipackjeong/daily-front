@@ -1,36 +1,61 @@
 import {
   Flex,
+  Text,
   Heading,
   Grid,
   GridItem,
   Card,
   CardBody,
-  useMediaQuery,
-  Drawer,
+  chakra,
 } from "@chakra-ui/react";
 import React from "react";
 import BarChart from "../../core/components/BarChart";
 import DoughnutChart from "../../core/components/DoughnutChart";
 import Scrollbars from "react-custom-scrollbars";
-import ModalLayout from "../../core/layouts/ModalLayout";
-import useMediaSize from "../hooks/useMediaSize";
-import DailyBoard from "./Dailyboard";
+import { FaHome } from "react-icons/fa";
+import PriorityTab from "./task/PriorityTab/PriorityTab";
 
 const DashBoard = () => {
   console.log("DashBoard renders");
 
-  const { isSM } = useMediaSize();
+  const Section = ({ children }) => {
+    return (
+      <Flex my={5} flexDir={"column"}>
+        {children}
+      </Flex>
+    );
+  };
 
   return (
     <Scrollbars
       className="category-selection__selectedIcon-select-scrollbar"
       style={{ width: "100%", height: "100%" }}
       autoHide={false}
-      overFlowX="hidden"
+      overflowX="hidden"
     >
-      <Flex flexDirection={{ sm: "column", md: "row", lg: "row" }}>
+      <Flex flexDirection="column">
+        <Section>
+          <Text>Priority</Text>
+          <PriorityTab />
+        </Section>
+        <Section>
+          <Text>Recently Added</Text>
+        </Section>
+        <Section>
+          <Text>MyWork</Text>
+        </Section>
+        <Section>
+          <Text>Overdue</Text>
+        </Section>
+        <Section>
+          <Text>Next</Text>
+        </Section>
+        <Section>
+          <Text>Unscheduled</Text>
+        </Section>
+      </Flex>
+      {/* <Flex flexDirection={{ sm: "column", md: "row", lg: "row" }}>
         <Flex flex={1} h={{ base: "100%", sm: "61em" }} flexDir="column">
-          <Heading>Dashboard</Heading>
           <Grid
             w="100%"
             h="100%"
@@ -64,35 +89,7 @@ const DashBoard = () => {
             </GridItem>
           </Grid>
         </Flex>
-
-        <Flex
-          flex={1}
-          w="100%"
-          h="100%"
-          flexDir={"column"}
-          ml={{ base: 5, sm: 0 }}
-        >
-          {isSM ? (
-            <ModalLayout
-              onClose={function (): void {
-                throw new Error("Function not implemented.");
-              }}
-            >
-              <Card w="100%" h={{ base: "100%", sm: "800px" }}>
-                <CardBody p={0}>
-                  <DailyBoard isMini={true} />
-                </CardBody>
-              </Card>
-            </ModalLayout>
-          ) : (
-            <Card w="100%" h={{ base: "100%", sm: "61em" }}>
-              <CardBody p={0}>
-                <DailyBoard isMini={true} />
-              </CardBody>
-            </Card>
-          )}
-        </Flex>
-      </Flex>
+      </Flex> */}
     </Scrollbars>
   );
 };

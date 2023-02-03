@@ -4,7 +4,7 @@ import ICategory from "./category.interface";
 
 class CategoryService implements IService {
   public async findById(id: string) {
-    return await categoryApi.get(id);
+    return await categoryApi.get({ id });
   }
 
   public async findAll() {

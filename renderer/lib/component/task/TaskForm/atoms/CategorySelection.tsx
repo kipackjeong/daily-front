@@ -140,7 +140,6 @@ const CategorySelection = ({
     setTargetCategory(catId);
     setShowCategoryEditForm(true);
   }
-
   const categoryList =
     !isLoading || categoryViews ? (
       <List

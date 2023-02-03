@@ -6,6 +6,32 @@ import ICategory from "./category.interface";
 class CategoryApi implements IApi {
   url = "/categories";
 
+  public async get(options?) {
+    logger.info("categoryApi.get()");
+
+    let id, query;
+    if (options) {
+      id = options.id;
+      query = options.query;
+    }
+
+    let url = this.url;
+
+    if (id) {
+      url += `/${id}`;
+    }
+    if (query) {
+      url += `/${query}`;
+    }
+
+    const res = await axiosInstance.get(url);
+
+    if (res.status == 200) {
+      return res.data.data;
+    } else {
+      logger.error(res, res.data.message);
+    }
+  }
   public async post(payload: ICategory) {
     logger.info("categoryApi.post()");
 
@@ -26,23 +52,6 @@ class CategoryApi implements IApi {
       return;
     } else {
       logger.error(res);
-    }
-  }
-
-  public async get(query?: string) {
-    logger.info("categoryApi.get()");
-    let url = this.url;
-
-    if (query) {
-      url += "/" + query;
-    }
-
-    const res = await axiosInstance.get(url);
-
-    if (res.status == 200) {
-      return res.data.data;
-    } else {
-      logger.error(res, res.data.message);
     }
   }
 

@@ -4,18 +4,48 @@ import taskApi from "./task.api";
 import ITask from "./task.interface";
 import { taskActions } from "../../redux/slices/task.slice";
 import { getDateStr } from "../../utils/helper";
+import { ServiceErrorHandler } from "../../utils/decorators";
 
 class TaskService {
+  @ServiceErrorHandler
+  public async findTopNByPriorityDescOrder(n: number) {
+    let tasks = await taskApi.get({ query: `?sort=priority&top=${n}` });
+
+    tasks = this.populateTimeIntervalForTasks(tasks);
+
+    return tasks;
+  }
+  @ServiceErrorHandler
   public async findById(id: string, dispatch?: Dispatch) {
     logger.info("isOnline ? taskService.findById()");
-    const task = await taskApi.get(id);
+    let task = await taskApi.get({ id });
 
-    task.timeInterval.startTime = new Date(task.timeInterval.startTime);
-    task.timeInterval.endTime = new Date(task.timeInterval.endTime);
+    task = this.populateTimeIntervalForTask(task);
 
     return task;
   }
+  @ServiceErrorHandler
+  public async findTasksByDate(date: Date, dispatch: Dispatch) {
+    const dateStr = getDateStr(date);
 
+    let tasks: ITask[];
+    tasks = await taskApi.get({ query: `date/${dateStr}` });
+
+    // try {
+    // } catch (error) {
+    //   console.log("api not connected");
+    //   tasks = await taskLocalService.getAllTasks();
+    // }
+
+    if (!tasks) {
+      tasks = [];
+    }
+
+    tasks = this.populateTimeIntervalForTasks(tasks);
+
+    dispatch(taskActions.setTasks(tasks));
+  }
+  @ServiceErrorHandler
   public async create(payload: ITask, dispatch: Dispatch) {
     logger.info("create");
 
@@ -29,7 +59,7 @@ class TaskService {
 
     dispatch(taskActions.addTasks(payload));
   }
-
+  @ServiceErrorHandler
   public async update(payload: ITask, dispatch: Dispatch) {
     logger.info("isOnline ? taskService.update()");
 
@@ -43,37 +73,13 @@ class TaskService {
 
     dispatch(taskActions.updateTask(payload));
   }
-
-  public async refreshTasksByDate(date: Date, dispatch: Dispatch) {
-    const dateStr = getDateStr(date);
-
-    let tasks: ITask[];
-    tasks = await taskApi.get(`date/${dateStr}`);
-
-    // try {
-    // } catch (error) {
-    //   console.log("api not connected");
-    //   tasks = await taskLocalService.getAllTasks();
-    // }
-
-    if (!tasks) {
-      tasks = [];
-    }
-
-    tasks.map((task) => {
-      task.timeInterval.startTime = new Date(task.timeInterval.startTime);
-      task.timeInterval.endTime = new Date(task.timeInterval.endTime);
-    });
-
-    dispatch(taskActions.setTasks(tasks));
-  }
-
+  @ServiceErrorHandler
   public async delete(task: ITask, dispatch: Dispatch) {
     await taskApi.delete(task._id);
 
     dispatch(taskActions.deleteTask(task._id));
   }
-
+  @ServiceErrorHandler
   public async deleteMultipleTasks(taskIds: string[], dispatch: Dispatch) {
     for (var id of taskIds) {
       await taskApi.delete(id);
@@ -81,6 +87,17 @@ class TaskService {
     dispatch(taskActions.deleteMultipleTasks(taskIds));
 
     dispatch(taskActions.resetSelectedTask());
+  }
+  private populateTimeIntervalForTask(task: ITask) {
+    task.timeInterval.startTime = new Date(task.timeInterval.startTime);
+    task.timeInterval.endTime = new Date(task.timeInterval.endTime);
+    return task;
+  }
+  private populateTimeIntervalForTasks(tasks: ITask[]) {
+    tasks.map((t) => {
+      return this.populateTimeIntervalForTask(t);
+    });
+    return tasks;
   }
 }
 

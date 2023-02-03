@@ -144,8 +144,8 @@ const TaskBlock =
         style={{
           position: "absolute",
           height: "100%",
-          right: isMini && isMD && isSM ? "-1%" : "2%",
-          bottom: isMini ? "115%" : "5%",
+          right: isMini && isMD && isSM ? "-10em" : "2%",
+          top: isMini ? "-55%" : "0px",
           border: "none",
           alignItems: "center",
           zIndex: 2,

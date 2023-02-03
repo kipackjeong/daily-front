@@ -8,6 +8,7 @@ import {
   EditableInput,
   VStack,
   FormControl,
+  Spinner,
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -23,6 +24,7 @@ import Category from "../../category/Category";
 
 import { FocusLevelSlider, TimePicker } from "../TaskForm/atoms";
 import CategorySelection from "../TaskForm/atoms/CategorySelection";
+import PriorityRadioCard from "../TaskForm/atoms/PriorityRadioCard";
 import TaskTypeRadio from "../TaskForm/atoms/TaskTypeRadio";
 import style from "../TaskForm/style";
 import { FocusLevelRef } from "../TaskForm/TaskForm";
@@ -53,22 +55,20 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
   );
 
   function onStartTimeChangeHandler(hour, minute) {
-    console.log(hour);
-
     setStartTime((prev) => {
-      prev.setHours(hour);
-      prev.setMinutes(minute);
-      return prev;
+      const newState = new Date(prev);
+      newState.setHours(hour);
+      newState.setMinutes(minute);
+      return newState;
     });
   }
 
   function onEndTimeChangeHandler(hour, minute) {
-    console.log(hour);
-
     setEndTime((prev) => {
-      prev.setHours(hour);
-      prev.setMinutes(minute);
-      return prev;
+      const newState = new Date(prev);
+      newState.setHours(hour);
+      newState.setMinutes(minute);
+      return newState;
     });
   }
   const durationSection = task != null && (
@@ -119,6 +119,13 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
   );
   // #endregion
 
+  // #region Priority
+  const [priority, setPriority] = useState(task.priority);
+
+  function priorityChangeHandler(value) {
+    setPriority(value);
+  }
+  // #endregion
   // #region Description
   const descriptionRef = useRef<HTMLInputElement>();
 
@@ -146,6 +153,7 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
   // #region Category Selection
   const [showCategorySelection, setShowCategorySelection] = useState(false);
   const [category, setCategory] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
 
   useEffect(() => {
     async function fetchCategory() {
@@ -154,13 +162,11 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
       category = isOnline
         ? await categoryService.findById(task.category)
         : await categoryLocalService.findById(task.category);
-      console.log("category: ");
-      console.log(category);
-      setCategory(category);
-    }
 
-    console.log("task.category: ");
-    console.log(task.category);
+      setCategory(category);
+      setIsLoading(false);
+    }
+    setIsLoading(true);
     if (task.category) fetchCategory();
   }, []);
 
@@ -189,7 +195,9 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
     >
       <FormLabel>Category</FormLabel>
       <Flex alignItems="center" justifyContent="center">
-        {task && category ? (
+        {isLoading ? (
+          <Spinner />
+        ) : task && category ? (
           <Category category={category} />
         ) : (
           <>
@@ -250,9 +258,10 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
       detail: titleRef.current.textContent,
       reflection: descriptionRef.current.textContent,
       timeInterval,
-      taskType: taskType,
+      taskType,
       category: category && category._id,
       focusLevel: Number(focusLevelRef.current.value),
+      priority: Number(priority),
     };
 
     isOnline
@@ -279,7 +288,7 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
         <ModalLayout
           title="Description"
           width="550px"
-          height="650px"
+          height="750px"
           haveButton={false}
           show={true}
           onClose={onClose}
@@ -306,7 +315,10 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
               {titleSection}
               {descriptionSection}
               {categorySelection}
-
+              <PriorityRadioCard
+                onChange={priorityChangeHandler}
+                defaultValue={priority}
+              />
               {focusLevelSection}
               {buttons}
             </VStack>

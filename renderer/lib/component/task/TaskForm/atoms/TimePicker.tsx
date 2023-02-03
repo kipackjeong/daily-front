@@ -149,6 +149,7 @@ const TimeInputBlock = ({ time, onChange }: TimeInputBlockType) => {
         <NumberInputField sx={numberInputFieldStyle} />
       </NumberInput>
       <Text>:</Text>
+      
       <NumberInput
         allowMouseWheel
         defaultValue={minute}
@@ -168,6 +169,7 @@ const TimeInputBlock = ({ time, onChange }: TimeInputBlockType) => {
       >
         <NumberInputField sx={numberInputFieldStyle} />
       </NumberInput>
+
       <Text fontSize={fontSize} fontWeight="bold">
         {isAM ? "am" : "pm"}
       </Text>

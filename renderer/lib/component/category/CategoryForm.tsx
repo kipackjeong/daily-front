@@ -120,7 +120,7 @@ const CategoryForm = ({ onSubmit, onCancel, category }: CategoryFormProps) => {
         className="category-selection__selectedIcon-select-scrollbar"
         style={{ width: "100%", height: 120 }}
         autoHide={false}
-        overFlowX="hidden"
+        overflowX="hidden"
       >
         <List
           items={iconViews}

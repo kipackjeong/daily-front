@@ -5,14 +5,10 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Radio,
-  RadioGroup,
-  Stack,
-  useStyleConfig,
 } from "@chakra-ui/react";
 import { Scrollbars } from "react-custom-scrollbars";
 import React, { useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import ModalLayout from "../../../../core/layouts/ModalLayout";
 import { ITask, taskService } from "../../../models/task";
 import { FocusLevelSlider } from "./atoms";
@@ -24,11 +20,10 @@ import TimePicker from "./atoms/TimePicker";
 import CategorySelection from "./atoms/CategorySelection";
 import style from "./style";
 import TaskTypeRadio from "./atoms/TaskTypeRadio";
-import { selectDate } from "../../../redux/slices/date.slice";
-import { setFips } from "crypto";
-import { selectLatestTask } from "../../../redux/slices/task.slice";
 import taskLocalService from "../../../models/task/task.local-service";
 import { useAppStatus } from "../../../hooks/useAppStatus";
+import PriorityRadioCard from "./atoms/PriorityRadioCard";
+import { CopyIcon } from "@chakra-ui/icons";
 
 export interface RadioRef extends HTMLDivElement {
   value: string;
@@ -57,6 +52,7 @@ const TaskForm = ({
   // #region Hooks
   const titleRef = useRef<HTMLInputElement>();
   const descriptionRef = useRef<HTMLInputElement>();
+  const [priority, setPriority] = useState<number>(2);
   const focusLevelRef = useRef<FocusLevelRef>();
   const [taskType, setTaskType] = useState(task.taskType);
   const [selectedCategory, setSelectedCategory] = useState(task.category);
@@ -92,8 +88,8 @@ const TaskForm = ({
       timeInterval.startTime = endTime;
       timeInterval.endTime = temp;
     }
+    console.log("priority before submit: " + priority);
 
-    console.log("task: ");
     const createPayload: ITask = {
       ...task,
       detail: titleRef.current.value,
@@ -102,6 +98,7 @@ const TaskForm = ({
       timeInterval,
       taskType: taskType,
       category: selectedCategory,
+      priority: Number(priority),
     };
 
     isUpdateForm
@@ -151,9 +148,9 @@ const TaskForm = ({
   }
   // #endregion
 
-  //#region Styles
-  const flexStyle = useStyleConfig("Flex");
-  //#endregion
+  function priorityChangeHandler(option) {
+    setPriority(option);
+  }
 
   //#region Components
 
@@ -221,6 +218,7 @@ const TaskForm = ({
       />
     </FormControl>
   );
+
   const buttons = (
     <ButtonGroup pt={"45px"} width="22rem" justifyContent="space-evenly">
       <Button type="submit" variant="solid">
@@ -237,7 +235,7 @@ const TaskForm = ({
       <ModalLayout
         title="Create Task"
         width="550px"
-        height="650px"
+        height="750px"
         haveButton={false}
         show={true}
         onClose={onClose}
@@ -259,6 +257,10 @@ const TaskForm = ({
               {taskTypeRadio}
               {formInputs}
               {categorySelect}
+              <PriorityRadioCard
+                onChange={priorityChangeHandler}
+                defaultValue={task.priority}
+              />
               {focusLevelSlider}
               {buttons}
             </Flex>

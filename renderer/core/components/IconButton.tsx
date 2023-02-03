@@ -1,4 +1,4 @@
-import { Box, chakra, Flex, Text, Tooltip } from "@chakra-ui/react";
+import { chakra, Flex, Tooltip } from "@chakra-ui/react";
 import React, { PropsWithChildren, useState } from "react";
 import IconWrapper from "./IconWrapper";
 

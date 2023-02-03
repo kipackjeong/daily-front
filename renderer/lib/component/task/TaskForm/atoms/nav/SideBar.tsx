@@ -9,7 +9,7 @@ import {
   useStyleConfig,
   DrawerCloseButton,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { IconType } from "react-icons";
 import { FaUser } from "react-icons/fa";
 import { FiHome } from "react-icons/fi";
@@ -22,16 +22,6 @@ import NavItem from "./NavItem";
 const SideBar = () => {
   const user = useSelector(selectUser);
   const { isOnline } = useAppStatus();
-
-  const [hideSidebar, setHideSidebar] = useState(false);
-
-  useEffect(() => {
-    if (!user) {
-      setHideSidebar(true);
-    } else {
-      setHideSidebar(false);
-    }
-  }, []);
 
   const linkItems: Array<LinkItemProps> = [
     { name: "Home", icon: FiHome, link: "/home" },
