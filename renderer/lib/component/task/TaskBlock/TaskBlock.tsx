@@ -32,6 +32,7 @@ import TaskBlockLabel from "./atoms/TaskBlockLabel";
 
 type TaskBlockProps = {
   task: ITask;
+  q;
   isMini: boolean;
 };
 
@@ -419,6 +420,10 @@ const TaskBlock =
       return "95%";
     }, [isBase, isSM, isMD, isLG, isXL]);
 
+    // needed for long touch behavior
+    const [longTouch, setLongTouch] = useState(false);
+    let timerId;
+
     const block = (
       <Rnd
         className="task-block_rnd"
@@ -448,7 +453,16 @@ const TaskBlock =
             backgroundColor:
               task.taskType == "TODO" ? "brand.green.300" : "brand.regular",
           }}
-          onTouchEnd={onClickHandler}
+          onTouchStart={() => {
+            timerId = setTimeout(() => setLongTouch(true), 500);
+          }}
+          onTouchEnd={() => {
+            clearTimeout(timerId);
+            if (longTouch) {
+              setLongTouch(false);
+              setShowDescriptionForm(true);
+            }
+          }}
         >
           {blockDecorationLine}
           {label}

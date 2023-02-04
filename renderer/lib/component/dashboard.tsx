@@ -9,10 +9,7 @@ import {
   chakra,
 } from "@chakra-ui/react";
 import React from "react";
-import BarChart from "../../core/components/BarChart";
-import DoughnutChart from "../../core/components/DoughnutChart";
 import Scrollbars from "react-custom-scrollbars";
-import { FaHome } from "react-icons/fa";
 import PriorityTab from "./task/PriorityTab/PriorityTab";
 
 const DashBoard = () => {
@@ -38,7 +35,7 @@ const DashBoard = () => {
           <Text>Priority</Text>
           <PriorityTab />
         </Section>
-        <Section>
+        {/* <Section>
           <Text>Recently Added</Text>
         </Section>
         <Section>
@@ -52,7 +49,7 @@ const DashBoard = () => {
         </Section>
         <Section>
           <Text>Unscheduled</Text>
-        </Section>
+        </Section> */}
       </Flex>
       {/* <Flex flexDirection={{ sm: "column", md: "row", lg: "row" }}>
         <Flex flex={1} h={{ base: "100%", sm: "61em" }} flexDir="column">

@@ -45,6 +45,10 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
 
   useEffect(() => {
     document.addEventListener("keydown", detectKeydown, true);
+
+    return () => {
+      document.removeEventListener("keydown", detectKeydown);
+    };
   }, [selectedTasks]);
 
   useEffect(() => {
@@ -52,6 +56,7 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
       passive: false,
       capture: true,
     });
+    document.removeEventListener("mouseWheel", detectMouseWheel);
   });
 
   const detectMouseWheel = async (e) => {
