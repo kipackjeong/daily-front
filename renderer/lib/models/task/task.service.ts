@@ -8,6 +8,14 @@ import { ServiceErrorHandler } from "../../utils/decorators";
 
 class TaskService {
   @ServiceErrorHandler
+  public async findNextTodos() {
+    let tasks = await taskApi.get({ query: `?after=${new Date()}` });
+
+    tasks = this.populateTimeIntervalForTasks(tasks);
+
+    return tasks;
+  }
+  @ServiceErrorHandler
   public async findTopNByPriorityDescOrder(n: number) {
     let tasks = await taskApi.get({ query: `?sort=priority&top=${n}` });
 

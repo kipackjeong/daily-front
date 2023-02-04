@@ -1,8 +1,11 @@
 import {
   AbsoluteCenter,
+  Box,
+  Button,
   Card,
   CardBody,
   CardHeader,
+  chakra,
   Flex,
   FlexProps,
   HStack,
@@ -16,15 +19,18 @@ import {
   Tag,
   TagLabel,
   Text,
+  useDisclosure,
   VStack,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useAppStatus } from "../../../hooks/useAppStatus";
-import { selectTasks, taskService } from "../../../models/task";
+import { useAppStatus } from "../../hooks/useAppStatus";
+import { selectTasks, taskService } from "../../models/task";
 import { Scrollbars } from "react-custom-scrollbars";
-import TaskCard from "../TaskCard/TaskCard";
-import taskLocalService from "../../../models/task/task.local-service";
+import TaskCard from "../task/TaskCard/TaskCard";
+import taskLocalService from "../../models/task/task.local-service";
+import { FaCaretDown, FaCaretUp } from "react-icons/fa";
+import Tab from "../../../core/components/Tab";
 
 type PriorityTabProps = {} & FlexProps;
 
@@ -40,7 +46,9 @@ const PriorityTab = (props) => {
   // Calling api for top 5 may not be needed everytime there is an update on tasks.
   useEffect(() => {
     setIsLoading(true);
-    // GET tasks/sort=-priority&top=5
+    fetchTopFivePrioritizedTasks();
+
+    // GET tasks/?sort=priority&top=5
     async function fetchTopFivePrioritizedTasks() {
       try {
         const tasks = isOnline
@@ -50,18 +58,19 @@ const PriorityTab = (props) => {
         setIsLoading(false);
       } catch (error) {}
     }
-
-    fetchTopFivePrioritizedTasks();
   }, [tasks]);
 
-  return isLoading ? (
-    <Spinner />
-  ) : (
-    <VStack>
+  return (
+    <Tab
+      title={"Priority"}
+      isLoading={isLoading}
+      defaultIsOpen={true}
+      height="15em"
+    >
       {topPriorityTasks.map((t) => {
         return <TaskCard task={t} />;
       })}
-    </VStack>
+    </Tab>
   );
 };
 

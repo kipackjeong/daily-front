@@ -32,7 +32,6 @@ import TaskBlockLabel from "./atoms/TaskBlockLabel";
 
 type TaskBlockProps = {
   task: ITask;
-  q;
   isMini: boolean;
 };
 
@@ -184,7 +183,7 @@ const TaskBlock =
       <TaskBlockLabel
         task={task}
         height={height}
-        color={(taskSelected && "white") || "brand.heavy"}
+        color={"brand.heavy"}
         columnGap={{
           base: "11%",
           md: isMini ? "0" : "15%",
@@ -199,17 +198,21 @@ const TaskBlock =
 
     const containerStyle = useStyleConfig("Flex", { variant: "taskBlockBox" });
 
-    const blockBGColor = taskSelected
+    const bgColor = taskSelected
       ? task.taskType == "TODO"
-        ? "brand.green.600"
-        : "brand.heavy"
+        ? "brand.green.300"
+        : "brand.regular"
       : task.taskType == "TODO"
-      ? "brand.green.200"
+      ? "brand.green.100"
       : "brand.lightGray";
 
+    const borderColor =
+      task.taskType == "TODO" ? "brand.green.200" : "brand.light";
     const dynamicStyle = {
-      backgroundColor: blockBGColor,
-      color: taskSelected && "white",
+      backgroundColor: bgColor,
+      borderColor: borderColor,
+      borderWidth: 1,
+      boxShadow: "base",
     };
 
     async function onResizeHandler(e, direction, ref, delta, position) {
@@ -433,8 +436,6 @@ const TaskBlock =
           alignItems: "center",
           zIndex: 1,
           padding: 0,
-          borderBlockStyle: "solid",
-          borderColor: "brand.heavy",
         }}
         size={{ width: width, height: `${height}px` }}
         position={{ x: isMini ? 35 : 60, y: positionY }}

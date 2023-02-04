@@ -23,7 +23,7 @@ function home() {
           overflowX="hidden"
           overflowY="hidden"
         >
-          <Flex w="100%" h="100%">
+          <Flex w="100%" h="100%" gap={5}>
             <Flex flex={1}>
               <DashBoard />
             </Flex>

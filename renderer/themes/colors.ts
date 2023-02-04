@@ -2,6 +2,7 @@
 const colors = {
   brand: {
     green: {
+      100: "#FAFDFA",
       200: "#d8f0df",
       300: "#7BB662",
       600: "#0c451e",
@@ -16,7 +17,7 @@ const colors = {
       300: "#FFD301",
     },
     lightGray: "rgba(56, 145, 173, 0.11)",
-    light: "#748CAB",
+    light: "#F1F6FD",
     regular: "#81ade6",
     heavy: "#1D2D44",
   },

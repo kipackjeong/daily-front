@@ -10,7 +10,8 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import Scrollbars from "react-custom-scrollbars";
-import PriorityTab from "./task/PriorityTab/PriorityTab";
+import NextTab from "./next-tab/NextTab";
+import PriorityTab from "./priority-tab/PriorityTab";
 
 const DashBoard = () => {
   console.log("DashBoard renders");
@@ -32,8 +33,10 @@ const DashBoard = () => {
     >
       <Flex flexDirection="column">
         <Section>
-          <Text>Priority</Text>
           <PriorityTab />
+        </Section>
+        <Section>
+          <NextTab />
         </Section>
         {/* <Section>
           <Text>Recently Added</Text>
@@ -44,9 +47,7 @@ const DashBoard = () => {
         <Section>
           <Text>Overdue</Text>
         </Section>
-        <Section>
-          <Text>Next</Text>
-        </Section>
+
         <Section>
           <Text>Unscheduled</Text>
         </Section> */}
