@@ -1,5 +1,4 @@
 import { Flex, FlexProps } from "@chakra-ui/react";
-import electron from "electron";
 import React from "react";
 
 interface PageLayoutProps extends FlexProps {}

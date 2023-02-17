@@ -27,34 +27,26 @@ const TaskCard = ({ task }) => {
   useEffect(() => {
     setIsUpdating(true);
     setChangedPriority(task.priority);
+    // this is the actual div element of Scrollbars component
+    const parent = document.getElementById("t-priority-scrollbar-" + task._id);
 
-    // this is the actual div element of Scrollbars component.
-    // there are multiple of these because a single task may be shown on different tabs.
-    // const parent = document.getElementById("t-priority-scrollbar-" + task._id);
-    const scrollbars = document.getElementsByClassName(
-      "t-priority-scrollbar-" + task._id
-    );
-    for (var i = 0; i < scrollbars.length; i++) {
-      const parent = scrollbars[i];
-      // get it's child
-      const child = parent.firstChild as HTMLDivElement;
-      let thisPriorityTabPosition;
+    // get it's child
+    const child = parent.firstChild as HTMLDivElement;
+    let thisPriorityTabPosition;
 
-      switch (task.priority) {
-        case 3: // Low
-          thisPriorityTabPosition = 200;
-          break;
-        case 2: // Med
-          thisPriorityTabPosition = 99;
-          break;
-        case 1: // High
-          thisPriorityTabPosition = 0;
-          break;
-      }
-
-      child.scrollTo({ top: thisPriorityTabPosition, behavior: "smooth" });
+    switch (task.priority) {
+      case 3: // Low
+        thisPriorityTabPosition = 200;
+        break;
+      case 2: // Med
+        thisPriorityTabPosition = 99;
+        break;
+      case 1: // High
+        thisPriorityTabPosition = 0;
+        break;
     }
 
+    child.scrollTo({ top: thisPriorityTabPosition, behavior: "smooth" });
     setIsUpdating(false);
   }, [task.priority]);
 
@@ -129,7 +121,8 @@ const TaskCard = ({ task }) => {
       >
         {/* TODO: currently when I hover over the priority label it sets to Priority:High.  */}
         <Scrollbars
-          className={"t-priority-scrollbar-" + task._id}
+          id={"t-priority-scrollbar-" + task._id}
+          className={"task-priority-scrollbar"}
           style={{
             width: "3em",
             height: "1.5em",

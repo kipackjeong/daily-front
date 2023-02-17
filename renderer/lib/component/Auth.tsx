@@ -1,4 +1,4 @@
-import { useRouter } from "next/router";
+import Router from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import FullPageSpinner from "../../core/components/FullPageSpinner";
@@ -8,7 +8,7 @@ import axiosInstance from "../utils/axios";
 
 const Auth = ({ children }) => {
   const user = useSelector(selectUser);
-  const router = useRouter();
+  const router = Router;
 
   const { isOnline } = useAppStatus();
 

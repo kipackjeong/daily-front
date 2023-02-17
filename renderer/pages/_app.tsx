@@ -10,25 +10,12 @@ import SideBar, {
 } from "../lib/component/task/TaskForm/atoms/nav/SideBar";
 import "./styles.css";
 import { useAppStatus } from "../lib/hooks/useAppStatus";
-import { FaUser } from "react-icons/fa";
 import { appStoreWrapper } from "../lib/redux/stores/app.store";
 import { Provider } from "react-redux";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import axiosInstance from "../lib/utils/axios";
-import { userActions } from "../lib/redux/slices/user.slice";
 
 function MyApp({ Component, pageProps }) {
   const { isOnline } = useAppStatus();
   const { store } = appStoreWrapper.useWrappedStore({});
-
-  const user = store.getState().user.user;
-
-  const dispatch = store.dispatch;
-
-  const router = useRouter();
-
-
 
   return isOnline != null ? (
     <ChakraProvider theme={theme}>

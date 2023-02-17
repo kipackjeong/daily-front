@@ -1,15 +1,37 @@
-import { Dispatch } from "redux";
-import logger from "../../../utils/logger";
-import taskApi from "./task.api";
-import ITask from "./task.interface";
-import { taskActions } from "../../redux/slices/task.slice";
-import { getDateStr } from "../../utils/helper";
-import { ServiceErrorHandler } from "../../utils/decorators";
+import { Dispatch } from "@reduxjs/toolkit";
+import logger from "../../utils/logger";
+import { taskApi, ITask, taskActions } from "../models/task";
+import { ServiceErrorHandler } from "../utils/decorators";
+import { getDateStr } from "../utils/helper";
 
 class TaskService {
   @ServiceErrorHandler
+  public async findOverdueTodos() {
+    // TODO: implement this
+    let tasks = await taskApi.get({
+      query: `?taskType=To Do&before=${new Date()}`,
+    });
+    tasks = this.populateTimeIntervalForTasks(tasks);
+
+    return tasks;
+  }
+
+  @ServiceErrorHandler
+  public async findNextTodos() {
+    // TODO: fix query to folloqw the standard.
+    let tasks = await taskApi.get({
+      query: `?taskType=To Do&after=${new Date()}`,
+    });
+
+    tasks = this.populateTimeIntervalForTasks(tasks);
+
+    return tasks;
+  }
+  @ServiceErrorHandler
   public async findTopNByPriorityDescOrder(n: number) {
-    let tasks = await taskApi.get({ query: `?sort=priority&top=${n}` });
+    let tasks = await taskApi.get({
+      query: `?taskType=To Do&sort=priority&top=${n}`,
+    });
 
     tasks = this.populateTimeIntervalForTasks(tasks);
 

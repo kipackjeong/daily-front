@@ -5,7 +5,7 @@ import DateBox from "./atoms/DateBox";
 import TaskForm from "../task/TaskForm/TaskForm";
 import { useDispatch, useSelector } from "react-redux";
 
-import { useRouter } from "next/router";
+import Router from "next/router";
 import {
   getMonthInStr,
   getNowHour,
@@ -37,7 +37,7 @@ const DateSelectionBar = ({ isMini, onDateSelect }: DateSelectionBarProps) => {
 
   const [newTask, setNewTask] = useState(null);
   const [showItemForm, setShowItemForm] = useState(false);
-  const router = useRouter();
+  const router = Router;
   const dispatch = useDispatch();
 
   // #endregion

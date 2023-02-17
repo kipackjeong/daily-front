@@ -10,7 +10,7 @@ const NavItem = ({ link }: NavItemProps) => {
   const containerStyle = useStyleConfig("Flex", { variant: "navItem" });
   return (
     <Link href={link.link} style={{ textDecoration: "none" }}>
-      <Flex __css={containerStyle}>
+      <Flex __css={containerStyle} color={"brand.heavy"}>
         {link.icon && (
           <Icon
             mr="4"

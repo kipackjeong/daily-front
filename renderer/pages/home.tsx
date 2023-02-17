@@ -4,8 +4,8 @@ import { FiHome } from "react-icons/fi";
 import ModalLayout from "../core/layouts/ModalLayout";
 import PageLayout from "../core/layouts/PageLayout";
 import Auth from "../lib/component/Auth";
-import DailyBoard from "../lib/component/Dailyboard";
-import DashBoard from "../lib/component/Dashboard";
+import DailyBoard from "../lib/component/dailyboard";
+import DashBoard from "../lib/component/dashboard";
 import SideBar from "../lib/component/task/TaskForm/atoms/nav/SideBar";
 import useMediaSize from "../lib/hooks/useMediaSize";
 function home() {
@@ -23,7 +23,7 @@ function home() {
           overflowX="hidden"
           overflowY="hidden"
         >
-          <Flex w="100%" h="100%" gap={5}>
+          <Flex w="100%" h="100%">
             <Flex flex={1}>
               <DashBoard />
             </Flex>

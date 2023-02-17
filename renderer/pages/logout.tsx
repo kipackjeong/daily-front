@@ -1,6 +1,6 @@
 import { Spinner } from "@chakra-ui/react";
 import axios from "axios";
-import { useRouter } from "next/router";
+import Router from "next/router";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import FullPageSpinner from "../core/components/FullPageSpinner";
@@ -10,7 +10,7 @@ import { userActions } from "../lib/redux/slices/user.slice";
 import axiosInstance from "../lib/utils/axios";
 
 const logout = () => {
-  const router = useRouter();
+  const router = Router;
   const dispatch = useDispatch();
   const { setIsOnline } = useAppStatus();
 

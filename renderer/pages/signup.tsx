@@ -14,7 +14,7 @@ import { Flex, Stack, Heading, Box } from "@chakra-ui/layout";
 import { chakra } from "@chakra-ui/system";
 import axios from "axios";
 import Link from "next/link";
-import Router, { useRouter } from "next/router";
+import Router from "next/router";
 import { useState, useRef, useEffect } from "react";
 import { FaUserAlt, FaLock, FaMailBulk } from "react-icons/fa";
 
@@ -22,8 +22,7 @@ const signup = () => {
   const CFaUserAlt = chakra(FaUserAlt);
   const CFaLock = chakra(FaLock);
   const CFaEmail = chakra(FaMailBulk);
-
-  const router = useRouter();
+  const router = Router;
 
   const [showPassword, setShowPassword] = useState(false);
   const [isValid, setIsValid] = useState(true);

@@ -10,7 +10,7 @@ const Flex = defineStyleConfig({
   },
   variants: {
     dateSelectionBarBox: {
-      bg: colors.brand.light,
+      bg: colors.brand.lightGray,
       flexDir: "column",
       flex: 0.7,
       w: "100%",

@@ -28,7 +28,7 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
   console.log("TimeTable - render");
 
   const dispatch = useDispatch();
-  const date = useSelector(selectDate);
+  const selectedDate = useSelector(selectDate);
   const tasks = useSelector(selectTasks);
   const selectedTasks = useSelector(selectSelectedTasks);
   const [showDeleteBtn, setShowDeleteBtn] = useState(false);
@@ -84,7 +84,7 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
 
   const prePayloads = useMemo(() => {
     return Array.from({ length: 24 }, (_, i) => {
-      const newDate = new Date(date);
+      const newDate = new Date(selectedDate);
       newDate.setHours(0 + i);
       newDate.setMinutes(0);
       newDate.setSeconds(0);
@@ -94,7 +94,7 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
         tasksArr: [],
       };
     });
-  }, [date]);
+  }, []);
 
   const payloads = useMemo(() => {
     const result = [...prePayloads];
@@ -161,7 +161,7 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
             justifyContent="flex-start"
             flexFlow={"wrap"}
           >
-            {date.getDate() == new Date(Date.now()).getDate() && (
+            {selectedDate.getDate() == new Date(Date.now()).getDate() && (
               <CurrentTimeLine isMini={isMini} />
             )}
             {timeBlocks}

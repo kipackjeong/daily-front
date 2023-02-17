@@ -1,36 +1,12 @@
-import {
-  AbsoluteCenter,
-  Box,
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  chakra,
-  Flex,
-  FlexProps,
-  HStack,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Select,
-  Spinner,
-  Tag,
-  TagLabel,
-  Text,
-  useDisclosure,
-  VStack,
-} from "@chakra-ui/react";
+import { FlexProps } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useAppStatus } from "../../hooks/useAppStatus";
-import { selectTasks, taskService } from "../../models/task";
-import { Scrollbars } from "react-custom-scrollbars";
-import TaskCard from "../task/TaskCard/TaskCard";
-import taskLocalService from "../../models/task/task.local-service";
-import { FaCaretDown, FaCaretUp } from "react-icons/fa";
-import Tab from "../../../core/components/Tab";
+import { Tab } from "@chakra-ui/tabs";
+import { useAppStatus } from "../../../hooks/useAppStatus";
+import { selectTasks } from "../../../models/task";
+import taskLocalService from "../../../services/task.local-service";
+import taskService from "../../../services/task.service";
+import TaskCard from "../../task/TaskCard/TaskCard";
 
 type PriorityTabProps = {} & FlexProps;
 
@@ -62,13 +38,11 @@ const PriorityTab = (props) => {
 
   return (
     <Tab
+      w={{ base: "15em", sm: "100%", md: "22em", lg: "30em" }}
       title={"Priority"}
-      isLoading={isLoading}
-      defaultIsOpen={true}
-      height="15em"
     >
       {topPriorityTasks.map((t) => {
-        return <TaskCard task={t} />;
+        return <TaskCard key={t._id} task={t} />;
       })}
     </Tab>
   );

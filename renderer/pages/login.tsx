@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock, FaMailBulk } from "react-icons/fa";
 import axios from "axios";
-import { useRouter } from "next/router";
+import Router from "next/router";
 import IUser from "../lib/models/user/user";
 import { useDispatch } from "react-redux";
 import { userActions } from "../lib/redux/slices/user.slice";
@@ -34,7 +34,7 @@ const login = () => {
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
-  const router = useRouter();
+  const router = Router;
 
   const dispatch = useDispatch();
 
