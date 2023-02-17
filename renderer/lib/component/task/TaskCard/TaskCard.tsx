@@ -6,6 +6,7 @@ import {
   Tag,
   TagLabel,
   Spinner,
+  CardProps,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -13,8 +14,12 @@ import { taskService } from "../../../models/task";
 import { Scrollbars } from "react-custom-scrollbars";
 import { useAppStatus } from "../../../hooks/useAppStatus";
 import taskLocalService from "../../../models/task/task.local-service";
+import { Rnd } from "react-rnd";
+import TaskDescription from "../TaskDescription/TaskDescription";
 
-const TaskCard = ({ task }) => {
+type TaskCardProps = {} & CardProps;
+
+const TaskCard = ({ task, ...rest }) => {
   const dispatch = useDispatch();
 
   const [madeChanges, setMadeChanges] = useState(false);
@@ -95,6 +100,7 @@ const TaskCard = ({ task }) => {
       setMadeChanges(false);
     }
   }
+
   const colors = {
     1: "brand.red.200",
     2: "brand.yellow.200",
@@ -107,61 +113,89 @@ const TaskCard = ({ task }) => {
     { label: "Low", value: 3 },
   ];
 
+  const [timer, setTimer] = useState(null);
+  const [showTaskDescription, setShowTaskDescription] = useState(false);
+
+  const onClickHandler = () => {
+    setShowTaskDescription(true);
+  };
+
+  const onTouchStartHandler = () => {
+    setTimer(setTimeout(() => setShowTaskDescription(true), 1000));
+  };
+
+  const onTouchEndHandler = () => {
+    setShowTaskDescription(false);
+    clearTimeout(timer);
+  };
+
   return isUpdating ? (
     <Spinner />
   ) : (
-    <Card onMouseLeave={cardMouseLeaveHandler}>
-      <CardBody
-        p={2}
-        borderWidth={1}
-        borderColor={colors[task.priority]}
-        display="flex"
-        flexDir={"row"}
-        columnGap={5}
+    <>
+      {showTaskDescription && (
+        <TaskDescription task={task} setShow={setShowTaskDescription} />
+      )}
+      <Card
+        cursor="pointer"
+        onClick={onClickHandler}
+        onTouchStart={onTouchStartHandler}
+        onTouchEnd={onTouchEndHandler}
+        onMouseLeave={cardMouseLeaveHandler}
+        {...rest}
       >
-        {/* TODO: currently when I hover over the priority label it sets to Priority:High.  */}
-        <Scrollbars
-          id={"t-priority-scrollbar-" + task._id}
-          className={"task-priority-scrollbar"}
-          style={{
-            width: "3em",
-            height: "1.5em",
-            overflowX: "hidden",
-            overflowY: "hidden",
-          }}
-          thumbSize={1}
-          autoHide={true}
-          onScrollFrame={scrollBarsScrollFrameHandler}
+        <CardBody
+          p={2}
+          borderWidth={1}
+          borderColor={colors[task.priority]}
+          display="flex"
+          flexDir={"row"}
+          columnGap={5}
         >
-          <Flex
-            flexDir={"column"}
-            justifyContent="stretch"
-            height={"8em"}
-            w="100%"
-            cursor="pointer"
-            rowGap={"59%"}
+          {/* TODO: currently when I hover over the priority label it sets to Priority:High.  */}
+          <Scrollbars
+            id={"t-priority-scrollbar-" + task._id}
+            className={"task-priority-scrollbar"}
+            style={{
+              width: "3em",
+              height: "1.5em",
+              overflowX: "hidden",
+              overflowY: "hidden",
+            }}
+            thumbSize={1}
+            autoHide={true}
+            onScrollFrame={scrollBarsScrollFrameHandler}
           >
-            {options.map((o) => {
-              return (
-                <Tag
-                  h="100%"
-                  id={o.label}
-                  key={o.label}
-                  backgroundColor={colors[o.value]}
-                  onMouseOver={(e) => {
-                    setChangedPriority(o.value);
-                  }}
-                >
-                  <TagLabel>{o.label}</TagLabel>
-                </Tag>
-              );
-              // );
-            })}
-          </Flex>
-        </Scrollbars>
-        <Text fontSize={"sm"}>{task.detail}</Text>
-      </CardBody>
-    </Card>
+            <Flex
+              flexDir={"column"}
+              justifyContent="stretch"
+              height={"8em"}
+              w="100%"
+              cursor="pointer"
+              rowGap={"59%"}
+            >
+              {options.map((o) => {
+                return (
+                  <Tag
+                    h="100%"
+                    id={o.label}
+                    key={o.label}
+                    backgroundColor={colors[o.value]}
+                    onMouseOver={(e) => {
+                      setChangedPriority(o.value);
+                    }}
+                  >
+                    <TagLabel>{o.label}</TagLabel>
+                  </Tag>
+                );
+                // );
+              })}
+            </Flex>
+          </Scrollbars>
+          <Text fontSize={"sm"}>{task.detail}</Text>
+        </CardBody>
+      </Card>
+    </>
   );
 };
 

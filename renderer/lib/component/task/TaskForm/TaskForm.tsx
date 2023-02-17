@@ -257,7 +257,7 @@ const TaskForm = ({
               {taskTypeRadio}
               {formInputs}
               {categorySelect}
-              {taskType == "TODO" && (
+              {taskType == "To Do" && (
                 <PriorityRadioCard
                   onChange={priorityChangeHandler}
                   defaultValue={priority}

@@ -13,14 +13,11 @@ import React from "react";
 import { IconType } from "react-icons";
 import { FaUser } from "react-icons/fa";
 import { FiHome } from "react-icons/fi";
-import { useSelector } from "react-redux";
 import { useAppStatus } from "../../../../../hooks/useAppStatus";
-import { selectUser } from "../../../../../redux/slices/user.slice";
 import MobileNav from "./MobileNav";
 import NavItem from "./NavItem";
 
 const SideBar = () => {
-  const user = useSelector(selectUser);
   const { isOnline } = useAppStatus();
 
   const linkItems: Array<LinkItemProps> = [
@@ -38,43 +35,41 @@ const SideBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const containerStyle = useStyleConfig("Flex", { variant: "sideBar" });
   return (
-    user && (
-      <>
-        <Flex
-          className="side-bar"
-          display={{ base: "none", sm: "none", md: "flex" }}
-          __css={containerStyle}
-          borderRight="1px"
-          borderRightColor={useColorModeValue("gray.200", "gray.700")}
+    <>
+      <Flex
+        className="side-bar"
+        display={{ base: "none", sm: "none", md: "flex" }}
+        __css={containerStyle}
+        borderRight="1px"
+        borderRightColor={useColorModeValue("gray.200", "gray.700")}
+      >
+        <SidebarContent
+          linkItems={linkItems}
+          onClose={() => onClose}
+          display={{ base: "flex", md: "flex" }}
+        />
+      </Flex>
+
+      {/* mobilenav */}
+      <Flex>
+        <Drawer
+          autoFocus={false}
+          isOpen={isOpen}
+          placement="left"
+          onClose={onClose}
+          returnFocusOnClose={false}
+          onOverlayClick={onClose}
+          size="xs"
         >
-          <SidebarContent
-            linkItems={linkItems}
-            onClose={() => onClose}
-            display={{ base: "flex", md: "flex" }}
-          />
-        </Flex>
+          <DrawerContent className="side-bar-drawer-content">
+            <SidebarContent linkItems={linkItems} onClose={onClose} />
+            <DrawerCloseButton zIndex={1} onClick={onClose} />
+          </DrawerContent>
+        </Drawer>
 
-        {/* mobilenav */}
-        <Flex>
-          <Drawer
-            autoFocus={false}
-            isOpen={isOpen}
-            placement="left"
-            onClose={onClose}
-            returnFocusOnClose={false}
-            onOverlayClick={onClose}
-            size="xs"
-          >
-            <DrawerContent className="side-bar-drawer-content">
-              <SidebarContent linkItems={linkItems} onClose={onClose} />
-              <DrawerCloseButton zIndex={1} onClick={onClose} />
-            </DrawerContent>
-          </Drawer>
-
-          <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} />
-        </Flex>
-      </>
-    )
+        <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} />
+      </Flex>
+    </>
   );
 };
 

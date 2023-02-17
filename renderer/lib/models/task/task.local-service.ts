@@ -8,7 +8,7 @@ class TaskLocalService {
   public async findTopNByPriorityDescOrder(n: number) {
     let tasks = await this.db.tasks
       .where("taskType")
-      .equals("TODO")
+      .equals("To Do")
       .sortBy("priority");
     tasks = tasks.slice(0, 5);
 

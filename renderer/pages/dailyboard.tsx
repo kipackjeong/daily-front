@@ -1,4 +1,3 @@
-import electron from "electron";
 import { useEffect, useState } from "react";
 import PageLayout from "../core/layouts/PageLayout";
 import Auth from "../lib/component/Auth";
@@ -21,7 +20,6 @@ const dailyBoard = () => {
   return (
     <Auth>
       <SideBar />
-
       <PageLayout>
         <DailyBoard />
       </PageLayout>

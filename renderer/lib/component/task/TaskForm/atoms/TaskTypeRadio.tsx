@@ -9,11 +9,11 @@ const TaskTypeRadio = ({ value, onChange }: TaskTypeRadioProps) => {
   return (
     <RadioGroup mt={3} defaultValue={value} onChange={onChange}>
       <Stack spacing={5} direction="row">
-        <Radio colorScheme="green" value="TODO">
-          TODO
+        <Radio colorScheme="green" value="To Do">
+          To Do
         </Radio>
-        <Radio colorScheme="blue" value="DID">
-          DID
+        <Radio colorScheme="blue" value="Did">
+          Did
         </Radio>
       </Stack>
     </RadioGroup>

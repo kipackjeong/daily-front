@@ -1,6 +1,6 @@
 import { Flex, Spinner } from "@chakra-ui/react";
 import React, { useEffect } from "react";
-import { Provider, useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useAppStatus } from "../hooks/useAppStatus";
 import { taskService } from "../models/task";
 import taskLocalService from "../models/task/task.local-service";

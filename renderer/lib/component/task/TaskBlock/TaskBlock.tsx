@@ -97,14 +97,14 @@ const TaskBlock =
     }, [task]);
 
     const checkBtn =
-      task.taskType == "TODO" ? (
+      task.taskType == "To Do" ? (
         <CheckButton
           padding={0}
           size={isMini && isMD ? "xs" : "sm"}
           onClick={async (e) => {
             e.stopPropagation();
 
-            const payload = { ...task, taskType: "DID" };
+            const payload = { ...task, taskType: "Did" };
             isOnline
               ? await taskService.update(payload, dispatch)
               : await taskLocalService.update(payload, dispatch);
@@ -117,7 +117,7 @@ const TaskBlock =
           padding={0}
           size={isMini && isMD ? "xs" : "sm"}
           onClick={async (e) => {
-            const payload = { ...task, taskType: "TODO" };
+            const payload = { ...task, taskType: "To Do" };
 
             e.stopPropagation();
             isOnline
@@ -161,14 +161,14 @@ const TaskBlock =
 
     // #region Block Decoration Line
     const blockDecorationLineColor =
-      task.taskType == "TODO" ? "brand.green.600" : "brand.heavy";
+      task.taskType == "To Do" ? "brand.green.600" : "brand.xRegular";
 
     const blockDecorationLine = (
       /* TODO: Color should change per priority level */
       <Flex
         className="task-block_left-deco-line"
         height="100%"
-        width="1%"
+        width="0.2%"
         bg={blockDecorationLineColor}
         position="absolute"
         left={0}
@@ -183,7 +183,7 @@ const TaskBlock =
       <TaskBlockLabel
         task={task}
         height={height}
-        color={(taskSelected && "white") || "brand.heavy"}
+        color="brand.heavy"
         columnGap={{
           base: "11%",
           md: isMini ? "0" : "15%",
@@ -199,16 +199,20 @@ const TaskBlock =
     const containerStyle = useStyleConfig("Flex", { variant: "taskBlockBox" });
 
     const blockBGColor = taskSelected
-      ? task.taskType == "TODO"
-        ? "brand.green.600"
-        : "brand.heavy"
-      : task.taskType == "TODO"
-      ? "brand.green.200"
-      : "brand.lightGray";
+      ? task.taskType == "To Do"
+        ? "brand.green.250"
+        : "brand.regular"
+      : task.taskType == "To Do"
+      ? "brand.green.100"
+      : "brand.light";
 
     const dynamicStyle = {
       backgroundColor: blockBGColor,
-      color: taskSelected && "white",
+      color: "brand.heavy",
+      _hover: {
+        backgroundColor:
+          task.taskType == "To Do" ? "brand.green.250" : "brand.regular",
+      },
     };
 
     async function onResizeHandler(e, direction, ref, delta, position) {
@@ -448,10 +452,6 @@ const TaskBlock =
         <Flex
           __css={containerStyle}
           sx={dynamicStyle}
-          _hover={{
-            backgroundColor:
-              task.taskType == "TODO" ? "brand.green.300" : "brand.regular",
-          }}
           onTouchStart={() => {
             timerId = setTimeout(() => setLongTouch(true), 500);
           }}

@@ -7,6 +7,7 @@ import FullPageSpinner from "../core/components/FullPageSpinner";
 import { useAppStatus } from "../lib/hooks/useAppStatus";
 import { taskActions } from "../lib/models/task";
 import { userActions } from "../lib/redux/slices/user.slice";
+import authLocalService from "../lib/services/auth.local-service";
 import axiosInstance from "../lib/utils/axios";
 
 const logout = () => {
@@ -18,6 +19,8 @@ const logout = () => {
     async function logout() {
       try {
         setIsOnline(false);
+        await authLocalService.setOnlineStatus(false);
+
         dispatch(taskActions.deleteAll());
         dispatch(userActions.setUser(null));
 

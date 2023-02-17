@@ -157,16 +157,17 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
 
   useEffect(() => {
     async function fetchCategory() {
+      setIsLoading(true);
+
       let category;
 
       category = isOnline
         ? await categoryService.findById(task.category)
         : await categoryLocalService.findById(task.category);
-
       setCategory(category);
       setIsLoading(false);
     }
-    setIsLoading(true);
+
     if (task.category) fetchCategory();
   }, []);
 
@@ -187,7 +188,7 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
     setCategory(newlySelectedCategory);
   }
 
-  const categorySelection = (
+  const categorySection = (
     <FormControl
       {...style.formControl}
       id="detail"
@@ -314,8 +315,8 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
 
               {titleSection}
               {descriptionSection}
-              {categorySelection}
-              {taskType == "TODO" && (
+              {categorySection}
+              {taskType == "To Do" && (
                 <PriorityRadioCard
                   onChange={priorityChangeHandler}
                   defaultValue={priority}

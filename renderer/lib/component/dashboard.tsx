@@ -1,23 +1,16 @@
-import {
-  Flex,
-  Text,
-  Heading,
-  Grid,
-  GridItem,
-  Card,
-  CardBody,
-  chakra,
-} from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import React from "react";
 import Scrollbars from "react-custom-scrollbars";
-import PriorityTab from "./task/PriorityTab/PriorityTab";
+import NextTab from "./tabs/NextTab";
+import OverdueTab from "./tabs/OverdueTab";
+import PriorityTab from "./tabs/PriorityTab";
 
 const DashBoard = () => {
   console.log("DashBoard renders");
 
   const Section = ({ children }) => {
     return (
-      <Flex my={5} flexDir={"column"}>
+      <Flex my={3} flexDir={"column"}>
         {children}
       </Flex>
     );
@@ -32,8 +25,13 @@ const DashBoard = () => {
     >
       <Flex flexDirection="column">
         <Section>
-          <Text>Priority</Text>
           <PriorityTab />
+        </Section>
+        <Section>
+          <NextTab />
+        </Section>
+        <Section>
+          <OverdueTab />
         </Section>
         {/* <Section>
           <Text>Recently Added</Text>

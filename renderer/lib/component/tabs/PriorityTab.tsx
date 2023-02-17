@@ -1,16 +1,15 @@
-import { FlexProps } from "@chakra-ui/react";
+import { FlexProps, Spinner } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Tab } from "@chakra-ui/tabs";
-import { useAppStatus } from "../../../hooks/useAppStatus";
-import { selectTasks } from "../../../models/task";
-import taskLocalService from "../../../services/task.local-service";
-import taskService from "../../../services/task.service";
-import TaskCard from "../../task/TaskCard/TaskCard";
-
+import ExpandableTab from "../../../core/components/ExpandableTab";
+import { useAppStatus } from "../../hooks/useAppStatus";
+import { selectTasks } from "../../models/task";
+import taskLocalService from "../../services/task.local-service";
+import taskService from "../../services/task.service";
+import TaskCard from "../task/TaskCard/TaskCard";
 type PriorityTabProps = {} & FlexProps;
 
-const PriorityTab = (props) => {
+const PriorityTab = (props: PriorityTabProps) => {
   const tasks = useSelector(selectTasks);
 
   const [topPriorityTasks, setTopPriorityTasks] = useState([]);
@@ -30,6 +29,8 @@ const PriorityTab = (props) => {
         const tasks = isOnline
           ? await taskService.findTopNByPriorityDescOrder(5)
           : await taskLocalService.findTopNByPriorityDescOrder(5);
+        console.log("tasks: ");
+        console.log(tasks);
         setTopPriorityTasks(tasks);
         setIsLoading(false);
       } catch (error) {}
@@ -37,14 +38,16 @@ const PriorityTab = (props) => {
   }, [tasks]);
 
   return (
-    <Tab
+    <ExpandableTab
+      title="Priority"
+      isLoading={isLoading}
+      defaultIsOpen={true}
       w={{ base: "15em", sm: "100%", md: "22em", lg: "30em" }}
-      title={"Priority"}
     >
       {topPriorityTasks.map((t) => {
-        return <TaskCard key={t._id} task={t} />;
+        return <TaskCard task={t} width="100%" />;
       })}
-    </Tab>
+    </ExpandableTab>
   );
 };
 

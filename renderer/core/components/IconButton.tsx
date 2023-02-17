@@ -23,6 +23,7 @@ const IconButton = ({
   hoverMessage,
   size = 3.5,
   style,
+  ...rest
 }: IconButtonProps) => {
   const [onHover, setOnHover] = useState(isOnHover);
 
@@ -56,6 +57,7 @@ const IconButton = ({
         shouldWrapChildren={true}
       >
         <IconWrapper
+          margin="auto"
           size={size}
           as={icon}
           color={isOnHover || onHover || isSelected ? hoverColor : color}

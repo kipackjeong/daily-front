@@ -4,8 +4,8 @@ import { FiHome } from "react-icons/fi";
 import ModalLayout from "../core/layouts/ModalLayout";
 import PageLayout from "../core/layouts/PageLayout";
 import Auth from "../lib/component/Auth";
-import DailyBoard from "../lib/component/dailyboard";
-import DashBoard from "../lib/component/dashboard";
+import DailyBoard from "../lib/component/Dailyboard";
+import DashBoard from "../lib/component/Dashboard";
 import SideBar from "../lib/component/task/TaskForm/atoms/nav/SideBar";
 import useMediaSize from "../lib/hooks/useMediaSize";
 function home() {
@@ -28,7 +28,7 @@ function home() {
               <DashBoard />
             </Flex>
 
-            <Flex flex={0.5} flexDir={"column"} ml={{ base: 5, sm: 0 }}>
+            <Flex flex={1} flexDir={"column"} ml={{ base: 5, sm: 0 }}>
               {isSM ? (
                 <ModalLayout
                   onClose={function (): void {
@@ -59,4 +59,5 @@ function home() {
     </Auth>
   );
 }
+
 export default home;

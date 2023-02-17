@@ -59,7 +59,7 @@ const TimeBlock = ({ id, time, tasksArr, isMini }: TimeBlockProps) => {
 
     const payload: ITask = {
       timeInterval: { startTime: taskStartTime, endTime: taskEndTime },
-      taskType: "DID",
+      taskType: "Did",
     };
 
     setShowTaskForm(true);
@@ -105,7 +105,7 @@ const TimeBlock = ({ id, time, tasksArr, isMini }: TimeBlockProps) => {
       width={"100%"}
       height={`${pixelPerHour}px`}
       cursor={"pointer"}
-      _hover={{ backgroundColor: "brand.lightGray" }}
+      _hover={{ backgroundColor: "brand.light" }}
     >
       {showTaskForm && (
         <TaskForm

@@ -1,24 +1,31 @@
 // SECTION color theme
-const colors = {
+const AppColors = {
   brand: {
     green: {
-      200: "#d8f0df",
-      300: "#7BB662",
-      600: "#0c451e",
+      100: "#F4FAF2",
+      200: "#DFF0D8",
+      250: "#C4EAB5",
+      300: "#93D577",
+      600: "#317A1B",
     },
     red: {
+      100: "#FFF1EF",
       200: "#ffe3e0",
+      250: "#FFA59B",
       300: "#E03C32",
       600: "#b0554c",
     },
     yellow: {
+      100: "#FDFDF7",
       200: "#f7f0b7",
+      250: "#FBE644",
       300: "#FFD301",
     },
     lightGray: "rgba(56, 145, 173, 0.11)",
-    light: "#748CAB",
-    regular: "#81ade6",
-    heavy: "#1D2D44",
+    light: "#F4F9FD",
+    regular: "#9BCFF0",
+    xRegular: "#4B7087",
+    heavy: "#1B2830",
   },
 };
 
@@ -32,4 +39,4 @@ const colors = {
   },
  */
 
-export default colors;
+export default AppColors;

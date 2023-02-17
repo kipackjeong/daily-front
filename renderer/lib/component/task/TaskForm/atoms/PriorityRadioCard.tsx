@@ -18,16 +18,29 @@ const PriorityRadioCard = ({
     { label: "High", value: 1 },
   ];
   const styleOptions = [
-    { borderColor: "brand.red.300" },
-    { borderColor: "brand.yellow.300" },
     {
-      borderColor: "brand.green.300",
+      borderColor: "brand.red.200",
+      _hover: { bgColor: "brand.red.200" },
+      _checked: { bgColor: "brand.red.200" },
+      _focus: { bgColor: "brand.red.200" },
+    },
+    {
+      borderColor: "brand.yellow.200",
+      _hover: { bgColor: "brand.yellow.200" },
+      _checked: { bgColor: "brand.yellow.200" },
+      _focus: { bgColor: "brand.yellow.200" },
+    },
+    {
+      borderColor: "brand.green.200",
+      _hover: { bgColor: "brand.green.200" },
+      _checked: { bgColor: "brand.green.200" },
+      _focus: { bgColor: "brand.green.200" },
     },
   ];
   //   const [priority, setPriority] = useState(null);
 
   const { getRootProps, getRadioProps } = useRadioGroup({
-    name: "framework",
+    name: "priorities",
     defaultValue: defaultValue,
     onChange: onChangeFromParent,
   });

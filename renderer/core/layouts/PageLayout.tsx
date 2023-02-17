@@ -1,23 +1,26 @@
 import { Flex, FlexProps } from "@chakra-ui/react";
 import React from "react";
+import SideBar from "../../lib/component/task/TaskForm/atoms/nav/SideBar";
 
 interface PageLayoutProps extends FlexProps {}
 
 const PageLayout = ({ children }: PageLayoutProps) => {
   return (
-    <Flex
-      mt={{ base: "70px", md: 0 }}
-      className="page-layout"
-      height={{ sm: "90%", md: "100%" }}
-      width="100%"
-      py={{ base: 1, md: 5 }}
-      px={{ base: 1, md: 5 }}
-      flexDir="column"
-      position="relative"
-      overflowY="hidden"
-    >
-      {children}
-    </Flex>
+    <>
+      <Flex
+        mt={{ base: "70px", md: 0 }}
+        className="page-layout"
+        height={{ sm: "90%", md: "100%" }}
+        width="100%"
+        py={{ base: 1, md: 5 }}
+        px={{ base: 1, md: 5 }}
+        flexDir="column"
+        position="relative"
+        overflowY="hidden"
+      >
+        {children}
+      </Flex>
+    </>
   );
 };
 

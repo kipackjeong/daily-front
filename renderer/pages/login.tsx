@@ -24,6 +24,7 @@ import { userActions } from "../lib/redux/slices/user.slice";
 import IconWrapper from "../core/components/IconWrapper";
 import axiosInstance from "../lib/utils/axios";
 import { useAppStatus } from "../lib/hooks/useAppStatus";
+import authLocalService from "../lib/services/auth.local-service";
 
 const login = () => {
   const CFaLock = chakra(FaLock);
@@ -54,6 +55,8 @@ const login = () => {
     try {
       // the cookie will get setted
       setIsOnline(true);
+      await authLocalService.setOnlineStatus(true);
+
       const res = await axiosInstance.post(
         "/login",
         {
@@ -74,8 +77,10 @@ const login = () => {
     // #endregion
   }
 
-  function useLocalClickHandler(e) {
+  async function useLocalClickHandler(e) {
     setIsOnline(false);
+    await authLocalService.setOnlineStatus(false);
+
     dispatch(
       userActions.setUser({
         _id: "",

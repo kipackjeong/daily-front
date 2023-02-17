@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Tab } from "@chakra-ui/tabs";
-import { useAppStatus } from "../../../hooks/useAppStatus";
-import { selectTasks } from "../../../models/task";
-import taskLocalService from "../../../services/task.local-service";
-import taskService from "../../../services/task.service";
-import TaskCard from "../../task/TaskCard/TaskCard";
+import ExpandableTab from "../../../core/components/ExpandableTab";
+import { useAppStatus } from "../../hooks/useAppStatus";
+import { selectTasks } from "../../models/task";
+import taskLocalService from "../../services/task.local-service";
+import taskService from "../../services/task.service";
+import TaskCard from "../task/TaskCard/TaskCard";
 
 const OverdueTab = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -33,14 +33,16 @@ const OverdueTab = () => {
   }, [tasks]);
 
   return (
-    <Tab
+    <ExpandableTab
+      title="Overdue"
+      isLoading={isLoading}
+      defaultIsOpen={true}
       w={{ base: "15em", sm: "100%", md: "22em", lg: "30em" }}
-      title={"Overdue"}
     >
       {overdueTodos.map((t) => {
-        return <TaskCard key={t._id} task={t} />;
+        return <TaskCard key={t._id} task={t} width="100%" />;
       })}{" "}
-    </Tab>
+    </ExpandableTab>
   );
 };
 

@@ -1,11 +1,11 @@
-import { Tab } from "@chakra-ui/tabs";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useAppStatus } from "../../../hooks/useAppStatus";
-import { selectTasks } from "../../../models/task";
-import taskLocalService from "../../../services/task.local-service";
-import taskService from "../../../services/task.service";
-import TaskCard from "../../task/TaskCard/TaskCard";
+import ExpandableTab from "../../../core/components/ExpandableTab";
+import { useAppStatus } from "../../hooks/useAppStatus";
+import { selectTasks } from "../../models/task";
+import taskLocalService from "../../services/task.local-service";
+import taskService from "../../services/task.service";
+import TaskCard from "../task/TaskCard/TaskCard";
 
 const NextTab = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -33,14 +33,16 @@ const NextTab = () => {
   }, [tasks]);
 
   return (
-    <Tab
+    <ExpandableTab
+      title="Next"
+      isLoading={isLoading}
+      defaultIsOpen={true}
       w={{ base: "15em", sm: "100%", md: "22em", lg: "30em" }}
-      title={"Next"}
     >
       {nextTodos.map((t) => {
-        return <TaskCard key={t._id} task={t} />;
-      })}{" "}
-    </Tab>
+        return <TaskCard key={t._id} task={t} width="100%" />;
+      })}
+    </ExpandableTab>
   );
 };
 

@@ -5,6 +5,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { singletonHook } from "react-singleton-hook";
 import { db } from "../db/localdb";
+import authLocalService from "../services/auth.local-service";
 
 const isOnline = null;
 
@@ -13,12 +14,19 @@ const initSetting = {
   setIsOnline: () => {},
 };
 export const useAppStatus = singletonHook(initSetting, () => {
+  
   const [isOnline, setIsOnline] = useState(initSetting.isOnline);
+
   useEffect(() => {
     async function checkConnectionWithAPI() {
       try {
-        const res = await axios.get(process.env.apiurl);
-        setIsOnline(true);
+        const isOnline = await authLocalService.getOnlineStatus();
+
+        if (isOnline) {
+          setIsOnline(true);
+        } else {
+          setIsOnline(false);
+        }
       } catch (error) {
         console.log("error: " + error);
         db.open();
