@@ -10,7 +10,6 @@ const UndoButton = ({ style, onClick, ...rest }: ButtonProps) => {
       backgroundColor="none"
       border="none"
       onClick={onClick}
-      size={rest.size ? rest.size : "md"}
       {...rest}
     >
       <Tooltip label="Undo" shouldWrapChildren={true}>

@@ -1,11 +1,11 @@
-import MainLayout from "../core/layouts/MainLayout";
+import MainLayout from "@core/layouts/MainLayout";
 import { ChakraProvider, Flex, Spinner } from "@chakra-ui/react";
 import theme from "../themes/index";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import "./styles.css";
-import { useAppStatus } from "../lib/hooks/useAppStatus";
-import { appStoreWrapper } from "../lib/redux/stores/app.store";
+import "./global.css";
+import { useAppStatus } from "@lib/hooks/useAppStatus";
+import { appStoreWrapper } from "@lib/redux/stores/app.store";
 import { Provider } from "react-redux";
 
 function MyApp({ Component, pageProps }) {

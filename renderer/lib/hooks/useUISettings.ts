@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { singletonHook } from "react-singleton-hook";
-import { toPrecision } from "../utils/helper";
+import { toPrecision } from "@core//utils/helper";
 
 const pixelPerHour = 100;
 const pixelPerMinute = toPrecision((pixelPerHour * 1.0) / 60, 100);

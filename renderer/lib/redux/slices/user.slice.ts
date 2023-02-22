@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
-import IUser from "../../models/user/user";
+import IUser from "@lib/models/user/user";
 import indexReducer from "../stores";
 import { AppState } from "../stores/app.store";
 

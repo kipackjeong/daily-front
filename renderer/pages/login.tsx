@@ -18,15 +18,30 @@ import {
 import { FaUserAlt, FaLock, FaMailBulk } from "react-icons/fa";
 import axios from "axios";
 import Router from "next/router";
-import IUser from "../lib/models/user/user";
+import IUser from "@lib/models/user/user";
 import { useDispatch } from "react-redux";
-import { userActions } from "../lib/redux/slices/user.slice";
-import IconWrapper from "../core/components/IconWrapper";
-import axiosInstance from "../lib/utils/axios";
-import { useAppStatus } from "../lib/hooks/useAppStatus";
-import authLocalService from "../lib/services/auth.local-service";
+import { userActions } from "@lib/redux/slices/user.slice";
+import IconWrapper from "@core/components/IconWrapper";
+import axiosInstance from "@core/utils/axios";
+import { useAppStatus } from "@lib/hooks/useAppStatus";
+import authLocalService from "@lib/services/auth/auth.local-service";
+import { taskActions } from "@lib/redux/slices/task.slice";
 
 const login = () => {
+  useEffect(() => {
+    async function onPageLoad() {
+      try {
+        await authLocalService.setOnlineStatus(false);
+        dispatch(taskActions.deleteAll());
+        dispatch(userActions.setUser(null));
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    onPageLoad();
+  }, []);
+
   const CFaLock = chakra(FaLock);
   const CFaEmail = chakra(FaMailBulk);
 

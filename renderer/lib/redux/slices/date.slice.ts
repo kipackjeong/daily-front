@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
-import { getOneWeekDates, getTodayDate } from "../../utils/helper";
+import { getOneWeekDates, getTodayDate } from "@core/utils/helper";
 import indexReducer from "../stores";
 import { AppState } from "../stores/app.store";
 

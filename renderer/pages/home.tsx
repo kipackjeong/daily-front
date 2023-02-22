@@ -1,13 +1,13 @@
 import { Flex, Card, CardBody, chakra, Divider } from "@chakra-ui/react";
 import React from "react";
 import { FiHome } from "react-icons/fi";
-import ModalLayout from "../core/layouts/ModalLayout";
-import PageLayout from "../core/layouts/PageLayout";
-import Auth from "../lib/component/Auth";
-import DailyBoard from "../lib/component/Dailyboard";
-import DashBoard from "../lib/component/Dashboard";
-import SideBar from "../lib/component/task/TaskForm/atoms/nav/SideBar";
-import useMediaSize from "../lib/hooks/useMediaSize";
+import ModalLayout from "@core/layouts/ModalLayout";
+import PageLayout from "@core/layouts/PageLayout";
+import Auth from "@lib/components/Auth";
+import DailyBoard from "@lib/components/Dailyboard";
+import DashBoard from "@lib/components/Dashboard";
+import SideBar from "@lib/components/nav/SideBar";
+import useMediaSize from "@lib/hooks/useMediaSize";
 function home() {
   const HomeIcon = chakra(FiHome);
   const { isSM } = useMediaSize();

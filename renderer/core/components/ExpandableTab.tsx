@@ -3,7 +3,8 @@ import { ArrowDownIcon } from "@chakra-ui/icons";
 import { Flex, FlexProps, Grid, GridItem } from "@chakra-ui/layout";
 import { Text } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { FaAngleDown } from "react-icons/fa";
+import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+import { Rnd } from "react-rnd";
 import IconButton from "./IconButton";
 
 type ExpandableTabProps = {
@@ -17,6 +18,7 @@ const ExpandableTab = ({
   isLoading,
   defaultIsOpen,
   children,
+  className,
   ...rest
 }) => {
   const [showItems, setShowItems] = useState(defaultIsOpen);
@@ -26,14 +28,22 @@ const ExpandableTab = ({
   }
 
   return (
-    <Card width="30em" paddingY={2} paddingX={2} {...rest}>
-      <Flex gap={2}>
+    <Card className={className} paddingY={2} paddingX={1} {...rest}>
+      <Flex className={className + "__title-icon-cont"} gap={2}>
         <Text>{title}</Text>
-        <IconButton icon={FaAngleDown} onClick={onClickHandler}></IconButton>
+        {showItems ? (
+          <IconButton icon={FaAngleUp} onClick={onClickHandler} />
+        ) : (
+          <IconButton icon={FaAngleDown} onClick={onClickHandler} />
+        )}
       </Flex>
 
       {showItems && (
-        <CardBody width={"fit-content"} {...rest}>
+        <CardBody
+          className={className + "__card-body"}
+          width={"fit-content"}
+          {...rest}
+        >
           {children}
         </CardBody>
       )}

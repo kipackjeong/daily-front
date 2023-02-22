@@ -1,6 +1,6 @@
-import ITask from "./task.interface";
+import { ITask } from "./task.interface";
 
-export default class TaskFactory {
+export class TaskFactory {
   public static createEmptyDid(startTime: Date, endTime: Date): ITask {
     return {
       taskType: "Did",

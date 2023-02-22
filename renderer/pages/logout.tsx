@@ -3,12 +3,12 @@ import axios from "axios";
 import Router from "next/router";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import FullPageSpinner from "../core/components/FullPageSpinner";
-import { useAppStatus } from "../lib/hooks/useAppStatus";
-import { taskActions } from "../lib/models/task";
-import { userActions } from "../lib/redux/slices/user.slice";
-import authLocalService from "../lib/services/auth.local-service";
-import axiosInstance from "../lib/utils/axios";
+import FullPageSpinner from "@core/components/FullPageSpinner";
+import { useAppStatus } from "@lib/hooks/useAppStatus";
+import { taskActions } from "@lib/redux/slices/task.slice";
+import { userActions } from "@lib/redux/slices/user.slice";
+import authLocalService from "@lib/services/auth/auth.local-service";
+import axiosInstance from "@core/utils/axios";
 
 const logout = () => {
   const router = Router;
@@ -23,7 +23,7 @@ const logout = () => {
 
         dispatch(taskActions.deleteAll());
         dispatch(userActions.setUser(null));
-
+        
         await axiosInstance.post("/logout");
       } catch (error) {}
       router.push("/login");

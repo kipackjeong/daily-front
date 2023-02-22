@@ -3,6 +3,7 @@ import colors from "../colors";
 
 const Flex = defineStyleConfig({
   baseStyle: {
+    margin: 0,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

@@ -1,6 +1,6 @@
 import { Flex, FlexProps, Text } from "@chakra-ui/react";
 import React, { MouseEventHandler } from "react";
-import { toAppTimeString } from "../../lib/utils/helper";
+import { toAppTimeString } from "../utils/helper";
 
 type DurationDisplayProps = {
   startTime: Date;
