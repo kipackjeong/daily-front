@@ -46,8 +46,10 @@ const PriorityTab = (props: PriorityTabProps) => {
       defaultIsOpen={true}
       {...tabStyle}
     >
-      {topPriorityTasks.map((t) => {
-        return <TaskCard task={t} width="100%" />;
+      {topPriorityTasks.map((t, idx) => {
+        return (
+          <TaskCard key={idx} className="TaskCard" task={t} width="100%" />
+        );
       })}
     </ExpandableTab>
   );

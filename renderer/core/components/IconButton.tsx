@@ -1,8 +1,8 @@
-import { chakra, Flex, Tooltip } from "@chakra-ui/react";
+import { chakra, Flex, FlexProps, Tooltip } from "@chakra-ui/react";
 import React, { PropsWithChildren, useState } from "react";
 import IconWrapper from "./IconWrapper";
 
-interface IconButtonProps extends PropsWithChildren {
+type IconButtonProps = {
   onClick?;
   icon;
   color?;
@@ -12,7 +12,7 @@ interface IconButtonProps extends PropsWithChildren {
   style?;
   isSelected?;
   hoverMessage?;
-}
+} & FlexProps;
 const IconButton = ({
   onClick,
   icon,
@@ -49,6 +49,7 @@ const IconButton = ({
       pointerEvents={isOnHover == null ? "auto" : "none"}
       onMouseEnter={onMouseEnterHandler}
       onMouseOut={onMouseOutHandler}
+      {...rest}
     >
       <Tooltip
         bottom="75px"

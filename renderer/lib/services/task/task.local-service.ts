@@ -1,8 +1,8 @@
+import { ITask } from "@lib/models/task";
 import { Dispatch } from "@reduxjs/toolkit";
 import { IndexableType } from "dexie";
 import { db } from "../../db/localdb";
 import { taskActions } from "../../redux/slices/task.slice";
-import ITask from "@lib/models/task/task.interface";
 class TaskLocalService {
   private db = db;
 

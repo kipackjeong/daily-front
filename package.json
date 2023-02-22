@@ -31,6 +31,7 @@
     "@types/react-icons": "^3.0.0",
     "axios": "^1.2.5",
     "chart.js": "^4.1.1",
+    "dayjs": "^1.11.7",
     "dexie": "^3.2.3",
     "dexie-react-hooks": "^1.1.1",
     "electron-is-dev": "^2.0.0",

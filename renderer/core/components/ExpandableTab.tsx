@@ -29,10 +29,14 @@ const ExpandableTab = ({
 
   return (
     <Card className={className} paddingY={2} paddingX={1} {...rest}>
-      <Flex className={className + "__title-icon-cont"} gap={2}>
-        <Text>{title}</Text>
+      <Flex className={className + "__title-icon-cont"} pl="1em" gap={2}>
+        <Text className={className + "__title-icon-cont__title"}>{title}</Text>
         {showItems ? (
-          <IconButton icon={FaAngleUp} onClick={onClickHandler} />
+          <IconButton
+            className={className + "__title-icon-cont__icon"}
+            icon={FaAngleUp}
+            onClick={onClickHandler}
+          />
         ) : (
           <IconButton icon={FaAngleDown} onClick={onClickHandler} />
         )}

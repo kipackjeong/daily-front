@@ -10,16 +10,16 @@ import {
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { taskService } from "@lib/models/task";
 import { Scrollbars } from "react-custom-scrollbars";
 import { useAppStatus } from "../../../hooks/useAppStatus";
-import { Rnd } from "react-rnd";
 import TaskDescription from "../TaskDescription/TaskDescription";
 import taskLocalService from "../../../services/task/task.local-service";
+import taskService from "@lib/services/task/task.service";
+import { getDateStr, getDMMMYYYY } from "@core/utils/helper";
 
 type TaskCardProps = {} & CardProps;
 
-const TaskCard = ({ task, ...rest }) => {
+const TaskCard = ({ task, className, ...rest }) => {
   const dispatch = useDispatch();
 
   const [madeChanges, setMadeChanges] = useState(false);
@@ -147,6 +147,7 @@ const TaskCard = ({ task, ...rest }) => {
         <TaskDescription task={task} setShow={setShowTaskDescription} />
       )}
       <Card
+        className={className}
         cursor="pointer"
         onClick={onClickHandler}
         onTouchStart={onTouchStartHandler}
@@ -155,6 +156,7 @@ const TaskCard = ({ task, ...rest }) => {
         {...rest}
       >
         <CardBody
+          className={className + "__body"}
           p={2}
           borderWidth={1}
           borderColor={colors[task.priority]}
@@ -197,11 +199,20 @@ const TaskCard = ({ task, ...rest }) => {
                     <TagLabel>{o.label}</TagLabel>
                   </Tag>
                 );
-                // );
               })}
             </Flex>
           </Scrollbars>
-          <Text fontSize={"sm"}>{task.detail}</Text>
+          <Text className={className + "__body" + "__date"} fontSize={"sm"}>
+            {getDMMMYYYY(task.timeInterval.startTime)}
+          </Text>
+          <Text
+            flex={1}
+            textAlign="center"
+            className={className + "__body" + "__detail"}
+            fontSize={"sm"}
+          >
+            {task.detail}
+          </Text>
         </CardBody>
       </Card>
     </>

@@ -1,6 +1,7 @@
 import { pixelPerHour } from "@lib/components/timetables/constant";
 import { ITask } from "@lib/models/task";
 import { TimeInterval } from "@lib/types";
+import dayjs, { Dayjs } from "dayjs";
 
 export function getTodayDate(): Date {
   const today = new Date(Date.now());
@@ -8,13 +9,20 @@ export function getTodayDate(): Date {
   today.setMinutes(0);
   return today;
 }
-
+/**
+ *
+ * @param date
+ * @returns gets "d Mmm YYYY" formatted date string
+ */
+export function getDMMMYYYY(date: Dayjs | Date): string {
+  return dayjs(date).format("d MMM YYYY");
+}
 /**
  *
  * @param date
  * @returns "yyyy-mm-dd" formatted today's date string
  */
-export function getTodayDateStr(date?): string {
+export function getTodayDateStr(): string {
   const todayDate = getTodayDate();
   return getDateStr(todayDate);
 }
