@@ -10,36 +10,6 @@ const Flex = defineStyleConfig({
     textAlign: "center",
   },
   variants: {
-    dateSelectionBarBox: {
-      bg: colors.brand.light,
-      flexDir: "column",
-      flex: 0.7,
-      w: "100%",
-      padding: 2,
-    },
-    dateBox: {
-      flexDir: "column",
-      borderRadius: "5px",
-      p: { base: 0, md: 1, lg: 2 },
-    },
-    "dateBox-highlight": {
-      flexDir: "column",
-      borderRadius: "5px",
-      p: 2,
-      bg: colors.brand.heavy,
-      color: "white",
-    },
-    taskBlockBox: {
-      zIndex: 2,
-      position: "absolute",
-      w: "100%",
-      height: "100%",
-      display: "flex",
-      flexDir: "column",
-      color: colors.brand.heavy,
-      cursor: "pointer",
-    },
-
     sideBar: {
       h: "100%",
       w: { base: "100px", md: "200px" },
@@ -68,7 +38,6 @@ const Flex = defineStyleConfig({
     },
 
     curTimeMarkLineTextBox: {
-      color: "brand.regular",
       w: "100%",
       textAlign: "center",
       position: "absolute",

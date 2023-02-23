@@ -104,7 +104,7 @@ const TimeBlock = ({ id, time, tasksArr, isMini }: TimeBlockProps) => {
       width={"100%"}
       height={`${pixelPerHour}px`}
       cursor={"pointer"}
-      _hover={{ backgroundColor: "brand.light" }}
+      _hover={{ backgroundColor: "brand.blue.50" }}
     >
       {showTaskForm && (
         <TaskForm

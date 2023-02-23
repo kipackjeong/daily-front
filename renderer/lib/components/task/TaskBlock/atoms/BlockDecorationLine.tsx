@@ -6,16 +6,16 @@ type BlockDecorationLineProps = {
 };
 const BlockDecorationLine = ({ taskType }: BlockDecorationLineProps) => {
   const blockDecorationLineColor =
-    taskType == "To Do" ? "brand.green.600" : "brand.xRegular";
+    taskType == "To Do" ? "brand.green.500" : "brand.blue.500";
 
   return (
     <Flex
       className="task-block_left-deco-line"
       height="100%"
-      width="0.2%"
+      width="0.2em"
       bg={blockDecorationLineColor}
       position="absolute"
-      left={0}
+      left={-0.5}
       borderRadius={2}
     />
   );

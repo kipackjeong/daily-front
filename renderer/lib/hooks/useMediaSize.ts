@@ -10,7 +10,9 @@ const useMediaSize = () => {
     "(min-width: 80em) ",
   ]);
 
-  return { isBase, isSM, isMD, isLG, isXL };
+  const smallerEqualToMD = isBase || isSM || isMD;
+
+  return { isBase, isSM, isMD, isLG, isXL, smallerEqualToMD };
 };
 
 export default useMediaSize;

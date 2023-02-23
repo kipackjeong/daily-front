@@ -1,13 +1,14 @@
 import { Flex } from "@chakra-ui/react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CurrentTimeLine from "./CurrentTimeLine";
 import TimeBlock from "./TimeBlock";
 import { Scrollbars } from "react-custom-scrollbars";
-import DeleteButton from "@core/components/DeleteButton";
+import DeleteButton from "@core/components/buttons/DeleteButton";
 import {
   selectTasks,
   selectSelectedTasks,
+  taskActions,
 } from "../../redux/slices/task.slice";
 
 import { selectDate } from "../../redux/slices/date.slice";
@@ -27,6 +28,7 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
   const dispatch = useDispatch();
   const selectedDate = useSelector(selectDate);
   const tasks = useSelector(selectTasks);
+  const timeTableRef = useRef(null);
   const selectedTasks = useSelector(selectSelectedTasks);
   const [showDeleteBtn, setShowDeleteBtn] = useState(false);
   const { incrementPixelPerHour, decrementPixelPerHour } = useUISetting();
@@ -42,9 +44,11 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
 
   useEffect(() => {
     document.addEventListener("keydown", detectKeydown, true);
+    document.addEventListener("mousedown", handleOutsideClick);
 
     return () => {
       document.removeEventListener("keydown", detectKeydown);
+      document.removeEventListener("mousedown", handleOutsideClick);
     };
   }, [selectedTasks]);
 
@@ -71,6 +75,12 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
     }
   };
 
+  const handleOutsideClick = (event) => {
+    if (timeTableRef.current && !timeTableRef.current.contains(event.target)) {
+      // If the user clicks outside of the selectable div, unselect all items
+      dispatch(taskActions.resetSelectedTask());
+    }
+  };
   const detectKeydown = async (e) => {
     if (e.key == "Delete" && selectedTasks) {
       isOnline
@@ -138,18 +148,19 @@ const TimeTable = ({ flex, isMini }: TimeTableProps) => {
 
   return (
     <>
-      {showDeleteBtn && (
-        <DeleteButton
-          position="absolute"
-          top="21%"
-          right="4%"
-          color="brand.heavy"
-          onClick={onMultiDeleteClick}
-          border="none"
-          zIndex={3}
-        />
-      )}
-      <Flex position="relative" height="100%" flex={0.85}>
+      <Flex position="relative" height="100%" flex={0.85} ref={timeTableRef}>
+        {showDeleteBtn && (
+          <DeleteButton
+            position="absolute"
+            top={0}
+            right={0}
+            color={"brand.heavy"}
+            _hover={{ color: "brand.red.300" }}
+            onClick={onMultiDeleteClick}
+            border="none"
+            zIndex={3}
+          />
+        )}
         <Scrollbars autoHide={true}>
           <Flex
             height="100%"

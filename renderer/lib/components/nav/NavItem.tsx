@@ -7,7 +7,20 @@ interface NavItemProps extends FlexProps {
 }
 
 const NavItem = ({ link }: NavItemProps) => {
-  const containerStyle = useStyleConfig("Flex", { variant: "navItem" });
+  const containerStyle = {
+    alignItems: "center",
+    justifyContent: "flex-start",
+    p: "4",
+    mx: "4",
+    borderRadius: "lg",
+    role: "group",
+    cursor: "pointer",
+    _hover: {
+      bg: "brand.blue.400",
+      color: "white",
+    },
+  };
+
   return (
     <Link href={link.link} style={{ textDecoration: "none" }}>
       <Flex __css={containerStyle} color={"brand.heavy"}>

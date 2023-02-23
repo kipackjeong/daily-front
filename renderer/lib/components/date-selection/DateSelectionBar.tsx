@@ -42,12 +42,6 @@ const DateSelectionBar = ({ isMini, onDateSelect }: DateSelectionBarProps) => {
 
   // #endregion
 
-  // #region Styles
-  const containerStyle = useStyleConfig("Flex", {
-    variant: "dateSelectionBarBox",
-  });
-  // #endregion
-
   const [prevWeekDateStr, nextWeekDateStr] = useMemo(() => {
     const oneDayInMS = 86400000;
 
@@ -116,7 +110,14 @@ const DateSelectionBar = ({ isMini, onDateSelect }: DateSelectionBarProps) => {
 
   //#endregion
 
-  const dateBoxFontSizes = isMini ? ["1rem", "0.7rem"] : ["1.5rem", "1rem"];
+  const contStyle = {
+    backgroundColor: "brand.blue.50",
+    flexDir: "column",
+    paddingX: { base: 1, lg: 5 },
+    paddingY: 2,
+  };
+
+  const dateBoxFontSizes = isMini ? ["1em", "0.6em"] : ["1.5rem", "1rem"];
 
   return (
     <>
@@ -130,8 +131,8 @@ const DateSelectionBar = ({ isMini, onDateSelect }: DateSelectionBarProps) => {
       )}
       <Flex
         flex={0.15}
-        className="date-selection"
-        __css={containerStyle}
+        className="date-selection-cont"
+        sx={contStyle}
         flexDir="column"
       >
         <Flex p={5} width="100%" justifyContent={"space-between"}>
@@ -139,11 +140,21 @@ const DateSelectionBar = ({ isMini, onDateSelect }: DateSelectionBarProps) => {
             {getMonthInStr(date)}
           </Text>
           <HStack spacing={1}>
-            <Button p={2} border="none" onClick={onAddTodoClickHandler}>
+            <Button
+              variant="nakedBlue"
+              p={2}
+              border="none"
+              onClick={onAddTodoClickHandler}
+            >
               <AddIcon m={1} />
               Todo
             </Button>
-            <Button p={2} border="none" onClick={onAddDidClickHandler}>
+            <Button
+              variant="nakedGreen"
+              p={2}
+              border="none"
+              onClick={onAddDidClickHandler}
+            >
               <AddIcon m={1} />
               Did
             </Button>

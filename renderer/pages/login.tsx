@@ -179,7 +179,7 @@ const login = () => {
                 type="submit"
                 variant="solid"
                 backgroundColor={"brand.heavy"}
-                _hover={{ backgroundColor: "brand.regular" }}
+                _hover={{ backgroundColor: "brand.blue.200" }}
                 width="full"
               >
                 Login

@@ -1,4 +1,3 @@
-import { useStyleConfig } from "@chakra-ui/react";
 import {
   convertTimeIntervalToPxHeight,
   getPositionFromStartTime,
@@ -17,11 +16,10 @@ import {
 } from "@lib/redux/slices/task.slice";
 import taskLocalService from "@lib/services/task/task.local-service";
 import taskService from "@lib/services/task/task.service";
-import { useRef, useState, useEffect, useCallback, useMemo } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DraggableData } from "react-rnd";
 import { useAppStatus } from "./useAppStatus";
-import useMediaSize from "./useMediaSize";
 import { useUISetting } from "./useUISettings";
 
 type useTaskBlockParameter = {
@@ -33,9 +31,8 @@ const useTaskBlock = ({ task, isMini }: useTaskBlockParameter) => {
   const selectedTasks = useSelector(selectSelectedTasks);
   const tasks = useSelector(selectTasks);
   const { isOnline } = useAppStatus();
-  const { isBase, isSM, isMD, isLG, isXL } = useMediaSize();
   const { pixelPerHour, pixelPerMinute } = useUISetting();
-  const taskBlockRef = useRef();
+  const taskBlockRef = useRef(null);
   const [height, setHeight] = useState<number>(
     convertTimeIntervalToPxHeight(task.timeInterval, pixelPerHour) == 0
       ? 1
@@ -68,7 +65,8 @@ const useTaskBlock = ({ task, isMini }: useTaskBlockParameter) => {
     getPositionFromStartTime(task.timeInterval, pixelPerHour)
   );
 
-  const onMouseOverHandler = () => {
+  const onMouseOverHandler = (e) => {
+    e.stopPropagation();
     setShowSideButtons(true);
   };
 
@@ -219,7 +217,6 @@ const useTaskBlock = ({ task, isMini }: useTaskBlockParameter) => {
 
   const onClickHandler = useCallback(
     async (e) => {
-      console.log("TaskBlock -- onClickHandler");
       e.preventDefault();
       e.stopPropagation();
 
@@ -240,14 +237,11 @@ const useTaskBlock = ({ task, isMini }: useTaskBlockParameter) => {
         // if selected with ctr key down, that means selecting multiple.
         if (e.nativeEvent.ctrlKey) {
           dispatch(taskActions.multiSelectTask(task._id));
-
           return;
         }
 
         // update redux
         if (!taskSelected) {
-          console.log("-- TaskBlock clicked when is not selected.");
-
           dispatch(taskActions.selectTask(task._id));
         } else {
           console.log("-- TaskBlock clicked when is selected.");
@@ -259,10 +253,14 @@ const useTaskBlock = ({ task, isMini }: useTaskBlockParameter) => {
     [task, selectedTasks]
   );
 
-  const onTaskFormSubmit = useCallback(() => {
+  const onTaskFormSubmit = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
     setShowTaskForm(false);
   }, []);
-  const onTaskFormCancel = useCallback(() => {
+  const onTaskFormCancel = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
     setShowTaskForm(false);
   }, []);
 
@@ -282,46 +280,6 @@ const useTaskBlock = ({ task, isMini }: useTaskBlockParameter) => {
 
   // #region Block
 
-  const containerStyle = useStyleConfig("Flex", {
-    variant: "taskBlockBox",
-  });
-
-  const blockBGColor = taskSelected
-    ? task.taskType == "To Do"
-      ? "brand.green.250"
-      : "brand.regular"
-    : task.taskType == "To Do"
-    ? "brand.green.100"
-    : "brand.light";
-
-  const dynamicStyle = {
-    backgroundColor: blockBGColor,
-    color: "brand.heavy",
-    _hover: {
-      backgroundColor:
-        task.taskType == "To Do" ? "brand.green.250" : "brand.regular",
-    },
-  };
-
-  let width = useMemo(() => {
-    if (isXL) {
-      return isMini ? "95%" : "94.7%";
-    }
-    if (isLG) {
-      return isMini ? "94.5%" : "91.5%";
-    }
-    if (isMD) {
-      return isMini ? "90%" : "90.7%";
-    }
-    if (isSM) {
-      return isMini ? "86%" : "88%";
-    }
-    if (isBase) {
-      return "88%";
-    }
-    return "95%";
-  }, [isBase, isSM, isMD, isLG, isXL]);
-
   return {
     onMouseOverHandler,
     onMouseOutHandler,
@@ -335,12 +293,9 @@ const useTaskBlock = ({ task, isMini }: useTaskBlockParameter) => {
     onTouchEndHandler,
     onTouchStartHandler,
     setShowDescriptionForm,
-    containerStyle,
-    blockBGColor,
-    dynamicStyle,
+    taskSelected,
     positionY,
     height,
-    width,
     taskBlockRef,
     showSideButtons,
     showTaskForm,

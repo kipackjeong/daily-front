@@ -12,9 +12,9 @@ import DeleteButton from "@core/components/buttons/DeleteButton";
 import UndoButton from "@core/components/buttons/UndoButton";
 import { useAppStatus } from "@lib/hooks//useAppStatus";
 import useMediaSize from "@lib/hooks//useMediaSize";
-import { taskActions } from "@lib/models/task";
 import taskLocalService from "../../../../services/task/task.local-service";
 import taskService from "@lib/services/task/task.service";
+import { taskActions } from "@lib/redux/slices/task.slice";
 
 type HoverButtonsProps = { parentHeight; task; isOpen; isMini? } & ButtonProps;
 
@@ -78,7 +78,7 @@ const HoverButtons = ({
       style={{ padding: 0 }}
       size={isMini && isMD ? "xs" : "sm"}
       color={isMini ? "brand.heavy" : "white"}
-      _hover={{ color: "brand.red.600" }}
+      _hover={{ color: "brand.red.300" }}
       onClick={onDeleteBtnClickHandler}
     />
   );

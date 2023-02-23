@@ -77,7 +77,7 @@ const CurrentTimeLine = ({ isMini = false }: CurrentTimeLineProps) => {
     >
       <Flex position="relative">
         <Flex
-          color="brand.regular"
+          color="brand.blue.200"
           w="100px"
           textAlign="center"
           position="absolute"

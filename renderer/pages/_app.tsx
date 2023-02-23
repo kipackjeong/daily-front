@@ -7,6 +7,7 @@ import "./global.css";
 import { useAppStatus } from "@lib/hooks/useAppStatus";
 import { appStoreWrapper } from "@lib/redux/stores/app.store";
 import { Provider } from "react-redux";
+import ModalLayout from "@core/layouts/ModalLayout";
 
 function MyApp({ Component, pageProps }) {
   const { isOnline } = useAppStatus();
@@ -17,6 +18,7 @@ function MyApp({ Component, pageProps }) {
       <DndProvider backend={HTML5Backend}>
         <Provider store={store}>
           <MainLayout>
+
             <Component {...pageProps} />
           </MainLayout>
         </Provider>{" "}

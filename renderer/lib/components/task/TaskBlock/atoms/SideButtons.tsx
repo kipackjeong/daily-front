@@ -1,7 +1,7 @@
 import { Portal, SlideFade, Card, Flex, Text } from "@chakra-ui/react";
-import CheckButton from "@core/components/CheckButton";
-import DeleteButton from "@core/components/DeleteButton";
-import UndoButton from "@core/components/UndoButton";
+import CheckButton from "@core/components/buttons/CheckButton";
+import DeleteButton from "@core/components/buttons/DeleteButton";
+import UndoButton from "@core/components/buttons/UndoButton";
 import { useAppStatus } from "@lib/hooks/useAppStatus";
 import { ITask } from "@lib/models/task";
 import { taskActions } from "@lib/redux/slices/task.slice";
@@ -114,7 +114,7 @@ const SideButtons = ({ taskBlockRef, task, isMini }: SideButtonsProps) => {
           dispatch(taskActions.resetSelectedTask);
         }}
         color="brand.heavy"
-        _hover={{ color: "brand.regular" }}
+        _hover={{ color: "brand.blue.200" }}
       />
     );
   const deleteBtn = (
@@ -123,7 +123,7 @@ const SideButtons = ({ taskBlockRef, task, isMini }: SideButtonsProps) => {
       top={-0.3}
       size={isMini ? "xs" : "sm"}
       color={"brand.heavy"}
-      _hover={{ color: "brand.red.600" }}
+      _hover={{ color: "brand.red.300" }}
       onClick={onDeleteBtnClickHandler}
     />
   );
@@ -133,7 +133,7 @@ const SideButtons = ({ taskBlockRef, task, isMini }: SideButtonsProps) => {
       className="TaskBlock__side-buttons"
       style={{
         position: "absolute",
-        right: "-1%",
+        right: "0.5%",
         top: "-30px",
         border: "none",
         alignItems: "center",

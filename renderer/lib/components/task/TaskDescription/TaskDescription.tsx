@@ -13,7 +13,6 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import IconButton from "@core/components/IconButton";
 import ModalLayout from "@core/layouts/ModalLayout";
 import { useAppStatus } from "../../../hooks/useAppStatus";
 import categoryLocalService from "@lib/services/category/category.local-service";
@@ -29,6 +28,7 @@ import TaskTypeRadio from "../TaskForm/atoms/TaskTypeRadio";
 import style from "../TaskForm/style";
 import { FocusLevelRef } from "../TaskForm/TaskForm";
 import taskService from "@lib/services/task/task.service";
+import IconButton from "@core/components/buttons/IconButton";
 
 type TaskDescriptionProps = {
   task: ITask;
@@ -208,7 +208,12 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
           />
         ) : (
           <>
-            <IconButton icon={FaPlus} onClick={onCategoryPlusClicked} />
+            <IconButton
+              icon={FaPlus}
+              onClick={onCategoryPlusClicked}
+              color="brand.heavy"
+              hoverColor="brand.blue.200"
+            />
           </>
         )}
       </Flex>
@@ -270,6 +275,7 @@ const TaskDescription = ({ task, setShow }: TaskDescriptionProps) => {
       focusLevel: Number(focusLevelRef.current.value),
       priority: Number(priority),
     };
+    console.log(payload.focusLevel);
 
     isOnline
       ? await taskService.update(payload, dispatch)

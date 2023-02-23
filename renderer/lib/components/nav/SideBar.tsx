@@ -9,6 +9,7 @@ import {
   useStyleConfig,
   DrawerCloseButton,
 } from "@chakra-ui/react";
+import AppColorPanel from "@core/components/AppColorPanel";
 import React from "react";
 import { IconType } from "react-icons";
 import { FaUser } from "react-icons/fa";
@@ -33,7 +34,13 @@ const SideBar = () => {
   ];
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const containerStyle = useStyleConfig("Flex", { variant: "sideBar" });
+
+  const containerStyle = {
+    h: "100%",
+    w: { base: "100px", md: "200px" },
+    color: "brand.heavy",
+  };
+
   return (
     <>
       <Flex
@@ -104,6 +111,7 @@ const SidebarContent = ({ linkItems, onClose }: SidebarProps) => {
       {linkItems.map((link) => (
         <NavItem key={link.name} link={link} />
       ))}
+      <AppColorPanel />
     </Flex>
   );
 };

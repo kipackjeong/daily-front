@@ -15,7 +15,7 @@ import ModalLayout from "@core/layouts/ModalLayout";
 import categoryService from "@lib/services/category/category.service";
 import { ICategory } from "@lib/models/category";
 import List from "@core/components/List";
-import IconButton from "@core/components/IconButton";
+import IconButton from "@core/components/buttons/IconButton";
 import icons from "../../../themes/icons";
 import { useAppStatus } from "../../hooks/useAppStatus";
 import categoryLocalService from "@lib/services/category/category.local-service";
@@ -103,7 +103,7 @@ const CategoryForm = ({ onSubmit, onCancel, category }: CategoryFormProps) => {
               <IconButton
                 icon={iconModel[1]}
                 size={6}
-                hoverColor="brand.regular"
+                hoverColor="brand.blue.200"
                 isSelected={iconModel[0] == selectedIcon}
               />
             </Box>

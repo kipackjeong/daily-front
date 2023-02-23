@@ -13,7 +13,7 @@ import {
   ResponsiveValue,
 } from "@chakra-ui/react";
 import { number } from "prop-types";
-import React, { MutableRefObject, useMemo } from "react";
+import React, { MutableRefObject, useEffect, useMemo } from "react";
 import { boolean } from "webidl-conversions";
 import { ITask } from "@lib/models/task/task.interface";
 import { FocusLevelRef } from "../TaskForm";
@@ -25,6 +25,7 @@ type FocusLevelSliderProps = {
   levelLabelSize?;
   focusLevelRef?: MutableRefObject<FocusLevelRef>;
   defaultValue: number;
+  value?: number;
   disabled?: boolean;
   isReadOnly?: boolean;
   onChangeEnd?;
@@ -44,15 +45,19 @@ function FocusLevelSlider({
   ...rest
 }: FocusLevelSliderProps) {
   const [sliderValue, setSliderValue] = React.useState(defaultValue);
+
+  useEffect(() => {
+    setSliderValue(defaultValue);
+  }, [defaultValue]);
   const [showTooltip, setShowTooltip] = React.useState(false);
 
   let color = useMemo(() => {
     if (sliderValue < 35) {
-      return "brand.red.250";
+      return "brand.red.150";
     } else if (35 < sliderValue && sliderValue < 65) {
-      return "brand.yellow.250";
+      return "brand.yellow.150";
     } else {
-      return "brand.green.250";
+      return "brand.green.150";
     }
   }, [sliderValue]);
 

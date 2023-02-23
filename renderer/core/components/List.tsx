@@ -1,7 +1,7 @@
 import { Box, Flex } from "@chakra-ui/react";
 import React from "react";
 import { FaTrash, FaPencilAlt } from "react-icons/fa";
-import IconButton from "./IconButton";
+import IconButton from "./buttons/IconButton";
 
 type listProps = {
   items: any[];
@@ -53,8 +53,8 @@ const List = ({
                 />
                 <IconButton
                   icon={FaPencilAlt}
-                  color={"brand.light"}
-                  hoverColor={"brand.regular"}
+                  color={"brand.blue.50"}
+                  hoverColor={"brand.blue.200"}
                   size={3}
                   onClick={() => {
                     onEditClick(item.data);

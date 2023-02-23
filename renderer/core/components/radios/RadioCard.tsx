@@ -21,26 +21,26 @@ const RadioCard = ({
         return {
           bgColor: "brand.green.200",
           _hover: { bg: "brand.green.250" },
-          _checked: { bg: "brand.regular" },
+          _checked: { bg: "brand.blue.200" },
         };
       case "red":
         return {
           bgColor: "brand.red.200",
           _hover: { bg: "brand.red.250" },
-          _checked: { bg: "brand.regular" },
+          _checked: { bg: "brand.blue.200" },
         };
       case "yellow":
         return {
           bgColor: "brand.yellow.200",
           _hover: { bg: "brand.yellow.250" },
-          _checked: { bg: "brand.regular" },
+          _checked: { bg: "brand.blue.200" },
         };
       case "blue":
         return {
-          // bgColor: isChecked ? "brand.regular" : "brand.light",
-          bgColor: "brand.light",
-          _hover: { bg: "brand.regular" },
-          _checked: { bg: "brand.regular" },
+          // bgColor: isChecked ? "brand.blue.200" : "brand.blue.50",
+          bgColor: "brand.blue.50",
+          _hover: { bg: "brand.blue.200" },
+          _checked: { bg: "brand.blue.200" },
         };
     }
   }, [colorScheme]);

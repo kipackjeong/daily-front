@@ -19,22 +19,22 @@ const PriorityRadioCard = ({
   ];
   const styleOptions = [
     {
-      borderColor: "brand.red.200",
-      _hover: { bgColor: "brand.red.200" },
-      _checked: { bgColor: "brand.red.200" },
-      _focus: { bgColor: "brand.red.200" },
+      borderColor: "brand.red.150",
+      _hover: { bgColor: "brand.red.150" },
+      _checked: { bgColor: "brand.red.150" },
+      _focus: { bgColor: "brand.red.150" },
     },
     {
-      borderColor: "brand.yellow.200",
-      _hover: { bgColor: "brand.yellow.200" },
-      _checked: { bgColor: "brand.yellow.200" },
-      _focus: { bgColor: "brand.yellow.200" },
+      borderColor: "brand.yellow.150",
+      _hover: { bgColor: "brand.yellow.150" },
+      _checked: { bgColor: "brand.yellow.150" },
+      _focus: { bgColor: "brand.yellow.150" },
     },
     {
-      borderColor: "brand.green.200",
-      _hover: { bgColor: "brand.green.200" },
-      _checked: { bgColor: "brand.green.200" },
-      _focus: { bgColor: "brand.green.200" },
+      borderColor: "brand.green.150",
+      _hover: { bgColor: "brand.green.150" },
+      _checked: { bgColor: "brand.green.150" },
+      _focus: { bgColor: "brand.green.150" },
     },
   ];
   //   const [priority, setPriority] = useState(null);

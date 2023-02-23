@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useMemo, useState } from "react";
 import { FaRegClock } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import IconButton from "@core/components/IconButton";
+import IconButton from "@core/components/buttons/IconButton";
 import { selectTasks } from "@lib/redux/slices/task.slice";
 import { ITask } from "@lib/models/task";
 

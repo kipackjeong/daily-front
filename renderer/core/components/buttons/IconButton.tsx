@@ -1,31 +1,25 @@
-import { chakra, Flex, FlexProps, IconProps, Tooltip } from "@chakra-ui/react";
+import { chakra, Flex, FlexProps, Tooltip } from "@chakra-ui/react";
 import React, { PropsWithChildren, useState } from "react";
 import IconWrapper from "../IconWrapper";
-
-type IconColors = {
-  color: string | any;
-  hoverColor: string;
-};
 
 type IconButtonProps = {
   onClick?;
   icon;
-  iconColors: IconColors;
+  color?;
+  hoverColor?;
   isOnHover?: boolean;
   size?;
   style?;
   isSelected?;
   hoverMessage?;
-};
+} & FlexProps;
 const IconButton = ({
   onClick,
   icon,
-  iconColors = {
-    color: "brand.heavy",
-    hoverColor: "brand.regular",
-  },
   isOnHover = null,
   isSelected,
+  color = "brand.heavy",
+  hoverColor = "brand.blue.200",
   hoverMessage,
   size = 3.5,
   style,
@@ -40,6 +34,8 @@ const IconButton = ({
   function onMouseOutHandler() {
     if (onHover && isOnHover === null) setOnHover(false);
   }
+
+  const Icon = chakra(icon);
 
   return (
     <Flex
@@ -62,17 +58,10 @@ const IconButton = ({
         shouldWrapChildren={true}
       >
         <IconWrapper
+          margin="auto"
           size={size}
           as={icon}
-          color={
-            isOnHover || onHover || isSelected
-              ? iconColors.hoverColor
-              : iconColors.color
-          }
-          _checked={{
-            color: iconColors.hoverColor,
-          }}
-          {...rest}
+          color={isOnHover || onHover || isSelected ? hoverColor : color}
         />
       </Tooltip>
     </Flex>

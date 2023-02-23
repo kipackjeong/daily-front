@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 import indexReducer from "../stores";
 import { AppState } from "../stores/app.store";
-import ITask from "@lib/models/task/task.interface";
 import { stat } from "fs";
+import { ITask } from "@lib/models/task";
 
 type SetTaskAction = {
   payload: ITask[];

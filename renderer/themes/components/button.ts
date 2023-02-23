@@ -33,12 +33,28 @@ const Button = defineStyleConfig({
       },
     },
     solid: {
-      bg: colors.brand.regular,
+      bg: colors.brand.blue[300],
       color: "white",
     },
     solidRed: {
       bg: colors.brand.red[600],
       color: "white",
+    },
+    naked: {},
+    nakedBlue: {
+      _hover: {
+        color: colors.brand.blue[300],
+      },
+    },
+    nakedGreen: {
+      _hover: {
+        color: colors.brand.green[300],
+      },
+    },
+    nakedRed: {
+      _hover: {
+        color: colors.brand.red[300],
+      },
     },
   },
   // The default size and variant values

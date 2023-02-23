@@ -112,9 +112,17 @@ const TaskCard = ({ task, ...rest }) => {
   }
 
   const colors = {
-    1: "brand.red.200",
-    2: "brand.yellow.200",
-    3: "brand.green.200",
+    1: { dark: "brand.red.150", med: "brand.red.50", light: "white" },
+    2: {
+      dark: "brand.yellow.150",
+      med: "brand.yellow.50",
+      light: "white",
+    },
+    3: {
+      dark: "brand.green.150",
+      med: "brand.green.50",
+      light: "white",
+    },
   };
 
   const options = [
@@ -159,7 +167,11 @@ const TaskCard = ({ task, ...rest }) => {
           className={"TaskCard" + "__body"}
           p={2}
           borderWidth={1}
-          borderColor={colors[task.priority]}
+          backgroundColor={colors[task.priority].light}
+          borderColor={colors[task.priority].dark}
+          _hover={{
+            backgroundColor: colors[task.priority].med,
+          }}
           display="flex"
           flexDir={"row"}
           columnGap={5}
@@ -191,7 +203,7 @@ const TaskCard = ({ task, ...rest }) => {
                     h="100%"
                     id={o.label}
                     key={o.label}
-                    backgroundColor={colors[o.value]}
+                    backgroundColor={colors[o.value].dark}
                     onMouseOver={(e) => {
                       setChangedPriority(o.value);
                     }}

@@ -1,6 +1,6 @@
 import { useDisclosure, Button, Card } from "@chakra-ui/react";
 
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import {
   Drawer,
   DrawerBody,
@@ -28,21 +28,27 @@ const ModalLayout = ({
   direction,
   noHeader = false,
   show = false,
-  onClose = null,
+  onClose: onCloseFromParent = null,
   haveButton = false,
   children,
 }: ModalLayoutProps) => {
-  const { isOpen, onOpen } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(show);
+
+  const { onOpen, onClose } = useDisclosure({
+    onClose: () => {
+      onCloseFromParent && onCloseFromParent();
+
+      setIsOpen(false);
+    },
+    onOpen: () => {
+      setIsOpen(true);
+    },
+  });
 
   return (
     <>
       {haveButton && <Button onClick={onOpen}>Open Modal</Button>}
-      <Drawer
-        size="full"
-        isOpen={show ? show : isOpen}
-        placement="top"
-        onClose={onClose}
-      >
+      <Drawer size="full" isOpen={isOpen} placement="top" onClose={onClose}>
         <DrawerOverlay>
           <DrawerContent
             width={`${width ? width : "100%"}`}

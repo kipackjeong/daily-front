@@ -2,7 +2,7 @@ import { Text, Flex, IconButtonProps, FlexProps } from "@chakra-ui/react";
 import mongoose, { ObjectId } from "mongoose";
 import React, { MouseEventHandler, useState } from "react";
 import { FaQuestionCircle } from "react-icons/fa";
-import IconButton from "@core/components/IconButton";
+import IconButton from "@core/components/buttons/IconButton";
 import icons from "../../../themes/icons";
 import { ICategory } from "@lib/models/category";
 
@@ -66,14 +66,14 @@ const Category = ({
         icon={icons[category.icon]}
         size={size}
         isOnHover={isOnHover || isSelected}
-        hoverColor={isHoverable && "brand.regular"}
+        hoverColor={isHoverable && "brand.blue.200"}
       />
       {showTitle && (
         <Text
           textAlign="center"
           fontSize="xs"
           width="100%"
-          color={(isOnHover && "brand.regular") || color}
+          color={(isOnHover && "brand.blue.200") || color}
           pointerEvents="none"
         >
           {category.title}
@@ -96,7 +96,7 @@ const Category = ({
         icon={FaQuestionCircle}
         size={size}
         isOnHover={isOnHover || isSelected}
-        hoverColor={isHoverable && "brand.regular"}
+        hoverColor={isHoverable && "brand.blue.200"}
       />
     </Flex>
   );

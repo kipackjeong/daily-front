@@ -221,10 +221,10 @@ const TaskForm = ({
 
   const buttons = (
     <ButtonGroup pt={"45px"} width="22rem" justifyContent="space-evenly">
-      <Button type="submit" variant="solid">
+      <Button type="submit" variant="nakedblue">
         Save
       </Button>
-      <Button variant="unstyled" onClick={onCancelClickHandler}>
+      <Button variant="nakedRed" onClick={onCancelClickHandler}>
         Cancel
       </Button>
     </ButtonGroup>

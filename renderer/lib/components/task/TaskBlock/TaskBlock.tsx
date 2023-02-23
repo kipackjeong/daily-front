@@ -69,18 +69,56 @@ const TaskBlock =
       onTouchStartHandler,
       onTouchEndHandler,
       setShowDescriptionForm,
-      containerStyle,
-      blockBGColor,
-      dynamicStyle,
+      taskSelected,
       positionY,
       height,
-      width,
       taskBlockRef,
       showSideButtons,
       showTaskForm,
       showDescriptionForm,
     } = useTaskBlock({ task, isMini });
 
+    const { isBase, isSM, isMD, isLG, isXL } = useMediaSize();
+
+    const containerStyle = {
+      zIndex: 2,
+      position: "absolute",
+      w: "100%",
+      height: "100%",
+      display: "flex",
+      flexDir: "column",
+      color: "brand.heavy",
+      cursor: "pointer",
+      boxShadow: "0 1px 3px rgba(0, 0, 0, 0.2)",
+      backgroundColor: taskSelected
+        ? task.taskType == "To Do"
+          ? "brand.green.100"
+          : "brand.blue.100"
+        : "white",
+      _hover: {
+        backgroundColor:
+          task.taskType == "To Do" ? "brand.green.100" : "brand.blue.100",
+      },
+    };
+
+    let width = useMemo(() => {
+      if (isXL) {
+        return isMini ? "95%" : "94.7%";
+      }
+      if (isLG) {
+        return isMini ? "94.5%" : "91.5%";
+      }
+      if (isMD) {
+        return isMini ? "90%" : "90.7%";
+      }
+      if (isSM) {
+        return isMini ? "86%" : "88%";
+      }
+      if (isBase) {
+        return "88%";
+      }
+      return "95%";
+    }, [isBase, isSM, isMD, isLG, isXL]);
     return (
       <>
         {showTaskForm && (
@@ -105,7 +143,6 @@ const TaskBlock =
             zIndex: 1,
             padding: 0,
             borderBlockStyle: "solid",
-            borderColor: "brand.heavy",
           }}
           size={{ width: width, height: `${height}px` }}
           position={{ x: isMini ? 35 : 60, y: positionY }}
@@ -121,8 +158,7 @@ const TaskBlock =
             className="TaskBlock__rnd__body"
             id={"task-block-" + task._id}
             ref={taskBlockRef}
-            __css={containerStyle}
-            sx={dynamicStyle}
+            sx={containerStyle}
             onTouchStart={onTouchStartHandler}
             onTouchEnd={onTouchEndHandler}
           >

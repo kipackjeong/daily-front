@@ -25,6 +25,7 @@ const TaskBlockLabel = ({
   const shouldLabelBeSmall = heightInNumber < 75;
 
   const [category, setCategory] = useState(null);
+  const [render, setRender] = useState(false);
 
   const { isOnline } = useAppStatus();
 
@@ -38,8 +39,18 @@ const TaskBlockLabel = ({
         setCategory(cat);
       }
     }
+
     fetchCategory();
   }, [task.category]);
+
+  useEffect(() => {
+    console.log("focuslevel changed,,");
+    console.log(task.focusLevel);
+    setRender(true);
+    return () => {
+      setRender(false);
+    };
+  }, [task.focusLevel]);
 
   return (
     <Flex

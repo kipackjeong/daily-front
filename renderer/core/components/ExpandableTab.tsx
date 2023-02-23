@@ -5,7 +5,7 @@ import { Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { Rnd } from "react-rnd";
-import IconButton from "./IconButton";
+import IconButton from "./buttons/IconButton";
 
 type ExpandableTabProps = {
   title: string;
@@ -33,12 +33,16 @@ const ExpandableTab = ({
         <Text className={className + "__title-icon-cont__title"}>{title}</Text>
         {showItems ? (
           <IconButton
-            className={className + "__title-icon-cont__icon"}
+            className={className + "__title-icon-cont__up-icon"}
             icon={FaAngleUp}
             onClick={onClickHandler}
           />
         ) : (
-          <IconButton icon={FaAngleDown} onClick={onClickHandler} />
+          <IconButton
+            className={className + "__title-icon-cont__down-icon"}
+            icon={FaAngleDown}
+            onClick={onClickHandler}
+          />
         )}
       </Flex>
 

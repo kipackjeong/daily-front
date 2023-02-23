@@ -17,7 +17,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
 import { FaPencilAlt, FaPlus } from "react-icons/fa";
-import IconButton from "@core/components/IconButton";
+import IconButton from "@core/components/buttons/IconButton";
 import List from "@core/components/List";
 import { useAppStatus } from "@lib/hooks//useAppStatus";
 import { ICategory } from "@lib/models/category";
@@ -219,14 +219,14 @@ const CategorySelection = ({
               icon={FaPlus}
               size={3}
               color={"black"}
-              hoverColor={"brand.regular"}
+              hoverColor={"brand.blue.200"}
             />
             <IconButton
               onClick={onPencilClicked}
               icon={FaPencilAlt}
               size={3}
               color={"black"}
-              hoverColor={"brand.regular"}
+              hoverColor={"brand.blue.200"}
             />
           </HStack>
         </HStack>

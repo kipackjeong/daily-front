@@ -15,10 +15,10 @@ const Divider = defineStyleConfig({
       bottom: "0px",
       left: "0px",
       borderBottomWidth: "5px",
-      borderColor: colors.brand.regular,
+      borderColor: colors.brand.blue[50],
       cursor: "pointer",
       _hover: {
-        borderColor: colors.brand.light,
+        borderColor: colors.brand.blue[50],
       },
     },
     timeBlockDivider: {
@@ -30,7 +30,7 @@ const Divider = defineStyleConfig({
     currentTimeLine: {
       left: "0px",
       borderBottomWidth: "5px",
-      borderColor: colors.brand.regular,
+      borderColor: colors.brand.blue[200],
       cursor: "pointer",
     },
   },

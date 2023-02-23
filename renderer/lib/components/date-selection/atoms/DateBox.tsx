@@ -1,6 +1,13 @@
-import { Box, Flex, Text, useStyleConfig } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  SystemStyleObject,
+  Text,
+  useStyleConfig,
+} from "@chakra-ui/react";
 import React, { MouseEventHandler } from "react";
 import { getDayInStr } from "@core/utils/helper";
+import useMediaSize from "@lib/hooks/useMediaSize";
 
 type DateProp = {
   date: Date;
@@ -16,12 +23,35 @@ const DateBox = ({
   isHighlight = false,
   onClick,
 }: DateProp) => {
-  const containerStyle = useStyleConfig("Flex", {
-    variant: isHighlight ? "dateBox-highlight" : "dateBox",
-  });
+  let containerStyle: SystemStyleObject = {
+    margin: 0,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+    flexDir: "column",
+    borderRadius: "10%",
+    p: { base: 0, md: 1, lg: 3 },
+    w: { base: "3em", lg: "4em" },
+    bg: isHighlight
+      ? "blackAlpha.800"
+      : { base: "transparent", md: "transparent", lg: "transparent" },
 
-  const dateSize = fontSizes ? fontSizes[0] : "1.5rem";
-  const daySize = fontSizes ? fontSizes[1] : "1rem";
+    color: isHighlight ? "white" : { base: "black", md: "black", lg: "black" },
+
+    transition: "color 0.4s ease, background-color 0.4s ease",
+
+    _hover: {
+      bg: isHighlight ? "blackAlpha.600" : { base: "gray.100", md: "gray.200" },
+    },
+  };
+
+  let dateFontStyle: SystemStyleObject = {
+    fontSize: { base: "s", md: "md", lg: "lg" },
+  };
+  let dayFontStyle: SystemStyleObject = {
+    fontSize: { base: "xs", md: "s", lg: "md" },
+  };
 
   return (
     <Flex
@@ -31,16 +61,12 @@ const DateBox = ({
       cursor={isShallow ? "default" : "pointer"}
       onClick={() => onClick(date)}
     >
-      <Text fontWeight="bold" fontSize={{ base: "s ", md: dateSize }}>
+      <Text fontWeight="bold" sx={dateFontStyle}>
         {date.getDate()}
       </Text>
 
-      <Text
-        fontSize={{ base: "xs ", md: daySize }}
-        w={{ base: "50px", md: "100%" }}
-        noOfLines={1}
-      >
-        {getDayInStr(date)}
+      <Text sx={dayFontStyle} noOfLines={1}>
+        {getDayInStr(date).substring(0, 3)}
       </Text>
     </Flex>
   );

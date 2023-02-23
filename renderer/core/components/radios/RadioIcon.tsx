@@ -29,7 +29,7 @@ const RadioIcon = ({ colorScheme, icon, ...rest }: RadioIconProps) => {
         };
       case "blue":
         return {
-          color: "brand.regular",
+          color: "brand.blue.200",
           hoverColor: "brand.xRegular",
         };
       default:
@@ -53,7 +53,8 @@ const RadioIcon = ({ colorScheme, icon, ...rest }: RadioIconProps) => {
         icon={icon}
         isSelected={checkbox["data-hover"] === ""}
         {...checkbox}
-        iconColors={iconColors}
+        color={iconColors.color}
+        hoverColor={iconColors.hoverColor}
       />
     </Box>
   );
