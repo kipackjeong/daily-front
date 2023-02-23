@@ -19,7 +19,7 @@ import { getDateStr, getDMMMYYYY } from "@core/utils/helper";
 
 type TaskCardProps = {} & CardProps;
 
-const TaskCard = ({ task, className, ...rest }) => {
+const TaskCard = ({ task, ...rest }) => {
   const dispatch = useDispatch();
 
   const [madeChanges, setMadeChanges] = useState(false);
@@ -147,7 +147,7 @@ const TaskCard = ({ task, className, ...rest }) => {
         <TaskDescription task={task} setShow={setShowTaskDescription} />
       )}
       <Card
-        className={className}
+        className={"TaskCard"}
         cursor="pointer"
         onClick={onClickHandler}
         onTouchStart={onTouchStartHandler}
@@ -156,7 +156,7 @@ const TaskCard = ({ task, className, ...rest }) => {
         {...rest}
       >
         <CardBody
-          className={className + "__body"}
+          className={"TaskCard" + "__body"}
           p={2}
           borderWidth={1}
           borderColor={colors[task.priority]}
@@ -202,13 +202,13 @@ const TaskCard = ({ task, className, ...rest }) => {
               })}
             </Flex>
           </Scrollbars>
-          <Text className={className + "__body" + "__date"} fontSize={"sm"}>
+          <Text className={"TaskCard" + "__body" + "__date"} fontSize={"sm"}>
             {getDMMMYYYY(task.timeInterval.startTime)}
           </Text>
           <Text
             flex={1}
             textAlign="center"
-            className={className + "__body" + "__detail"}
+            className={"TaskCard" + "__body" + "__detail"}
             fontSize={"sm"}
           >
             {task.detail}

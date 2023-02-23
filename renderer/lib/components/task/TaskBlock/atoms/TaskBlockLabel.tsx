@@ -11,8 +11,10 @@ import FocusLevelSlider from "../../TaskForm/atoms/FocusLevelSlider";
 type TaskBlockLabelProps = {
   task: ITask;
   height;
+  isMini: boolean;
 } & FlexProps;
 const TaskBlockLabel = ({
+  isMini,
   task,
   height,
   color,
@@ -41,98 +43,76 @@ const TaskBlockLabel = ({
 
   return (
     <Flex
+      className="TaskBlockLabel"
       w="100%"
       h={height}
       alignItems="center"
-      justifyContent="flex"
       flexDirection={"row"}
-      columnGap={columnGap}
+      gap={{
+        base: "11%",
+        md: isMini ? "0%" : "15%",
+        lg: "0%",
+      }}
     >
-      {shouldLabelBeSmall ? (
-        // small text
-        <>
-          <DurationDisplay
-            width={{ sm: "40%", md: "50%", lg: "40%" }}
-            startTime={task.timeInterval.startTime}
-            endTime={task.timeInterval.endTime}
-            fontSize={fontSize}
-          />
-          <Flex m={0} p={0} w="30%" justifyContent={"center"}>
-            <Flex w="15%">
-              <Category
-                color={color}
-                category={category}
-                size={3}
-                showTitle={false}
-                isHoverable={false}
-              />
-            </Flex>
-            <Flex w="85%">
-              <Text
-                display="flex"
-                alignItems={"center"}
-                fontWeight={"bold"}
-                textAlign={"center"}
-                fontSize="sm"
-              >
-                {task.detail}
-              </Text>
-            </Flex>
-            {task.taskType === "Did" && (
-              <FocusLevelSlider
-                flexDirection="row"
-                gap={3}
-                showMarks={false}
-                showLabel={false}
-                defaultValue={task.focusLevel}
-                levelLabelSize={"xs"}
-                width={"150px"}
-                isReadOnly={true}
-              />
-            )}
-          </Flex>
-        </>
-      ) : (
-        // large test
-        <>
-          <DurationDisplay
-            style={{ paddingLeft: "4%" }}
-            width={{ sm: "40%", md: "50%", lg: "40%" }}
-            fontSize="md"
-            startTime={task.timeInterval.startTime}
-            endTime={task.timeInterval.endTime}
-          />
-          <Flex m={0} p={0} w="fit-content" alignItems="center">
-            <Flex w="2em" display="flex" justifyContent={"flex-end"}>
-              <Category
-                color={color}
-                size={4}
-                category={category}
-                showTitle={false}
-                isHoverable={false}
-              />
-            </Flex>
+      <DurationDisplay
+        pl={"1em"}
+        startTime={task.timeInterval.startTime}
+        endTime={task.timeInterval.endTime}
+        fontSize={{
+          base: "4xs",
+          sm: "3xs",
+          md: "xs",
+          lg: "sm",
+        }}
+      />
 
-            <Flex w={"60%"} margin="0">
-              <Text display="flex" alignItems="center" fontWeight={"bold"}>
-                {task.detail}
-              </Text>
-            </Flex>
-            {task.taskType === "Did" && (
-              <FocusLevelSlider
-                flexDirection="row"
-                gap={3}
-                showMarks={false}
-                showLabel={false}
-                defaultValue={task.focusLevel}
-                levelLabelSize={"xs"}
-                width={"150px"}
-                isReadOnly={true}
-              />
-            )}
-          </Flex>
-        </>
-      )}
+      <Flex flex={1} m={0} pl={2} pr={2} w="30%" gap={{ base: 0, md: "1em" }}>
+        <Flex w="15%" alignItems="center" justifyContent="center">
+          <Category
+            color={color}
+            category={category}
+            size={3}
+            showTitle={false}
+            isHoverable={false}
+          />
+        </Flex>
+
+        <Flex w="50%" justifyContent="center">
+          <Text
+            display="flex"
+            alignItems={"center"}
+            fontWeight={"bold"}
+            textAlign={"center"}
+            justifyContent="center"
+            fontSize={{
+              base: "4xs",
+              sm: "3xs",
+              md: "xs",
+              lg: "sm",
+            }}
+          >
+            {task.detail}
+          </Text>
+        </Flex>
+        {task.taskType === "Did" && (
+          <FocusLevelSlider
+            flexDirection="row"
+            gap={2}
+            fontSize={{
+              base: "4xs",
+              sm: "3xs",
+              md: "2xs",
+              lg: "sm",
+            }}
+            showMarks={false}
+            showLabel={false}
+            defaultValue={task.focusLevel}
+            flex={0.8}
+            width={{ base: "40px", lg: "150px" }}
+            isReadOnly={true}
+          />
+        )}
+      </Flex>
     </Flex>
   );
 };

@@ -1,10 +1,4 @@
-import {
-  Flex,
-  Divider,
-  Text,
-  useStyleConfig,
-  useInterval,
-} from "@chakra-ui/react";
+import { Flex, Divider, useStyleConfig, useInterval } from "@chakra-ui/react";
 import React, { useEffect, useMemo, useState } from "react";
 import useMediaSize from "../../hooks/useMediaSize";
 import { useUISetting } from "../../hooks/useUISettings";
@@ -54,13 +48,13 @@ const CurrentTimeLine = ({ isMini = false }: CurrentTimeLineProps) => {
   //#endregion
   let width = useMemo(() => {
     if (isXL) {
-      return isMini ? "92.5%" : "94.7%";
+      return isMini ? "95%" : "94.7%";
     }
     if (isLG) {
       return isMini ? "91.5%" : "93.5%";
     }
     if (isMD) {
-      return isMini ? "88%" : "90.7%";
+      return isMini ? "91%" : "90.7%";
     }
     if (isSM) {
       return isMini ? "86%" : "88%";
@@ -73,7 +67,7 @@ const CurrentTimeLine = ({ isMini = false }: CurrentTimeLineProps) => {
 
   return (
     <Flex
-      w={isMini && isMD ? "88%" : "99%"}
+      w={width}
       position="absolute"
       left={9}
       zIndex={10}

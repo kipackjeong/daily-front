@@ -28,18 +28,19 @@ type FocusLevelSliderProps = {
   disabled?: boolean;
   isReadOnly?: boolean;
   onChangeEnd?;
+  fontSize?;
 } & FlexProps;
 // Step 2: Use the `useRadioGroup` hook to control a group of custom radios.
 function FocusLevelSlider({
   task,
   showLabel = true,
   showMarks = true,
-  levelLabelSize = "md",
   focusLevelRef,
   defaultValue = 50,
   disabled = false,
   isReadOnly = false,
   onChangeEnd,
+  fontSize,
   ...rest
 }: FocusLevelSliderProps) {
   const [sliderValue, setSliderValue] = React.useState(defaultValue);
@@ -59,7 +60,7 @@ function FocusLevelSlider({
     <Flex flexDirection="column" alignItems="center" {...rest}>
       {showLabel && <FormLabel>Focus Level </FormLabel>}
       <Text
-        fontSize={levelLabelSize}
+        fontSize={fontSize}
         fontWeight="bold"
         textAlign="center"
         display="flex"

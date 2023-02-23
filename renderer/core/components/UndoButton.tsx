@@ -5,6 +5,7 @@ import { FaUndoAlt } from "react-icons/fa";
 const UndoButton = ({ style, onClick, ...rest }: ButtonProps) => {
   return (
     <Button
+      width="fit-content"
       style={style}
       color={rest.color ? rest.color : "white"}
       backgroundColor="none"

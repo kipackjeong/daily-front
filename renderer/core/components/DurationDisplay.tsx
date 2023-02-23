@@ -15,16 +15,16 @@ const DurationDisplay = ({
   fontSize,
   width,
   bold = false,
-  style,
   onClick,
+  ...rest
 }: DurationDisplayProps) => {
   return (
     <Flex
       width={width}
-      style={style}
       cursor="pointer"
       onClick={onClick}
       justifyContent="center"
+      {...rest}
     >
       <Text
         pointerEvents="none"

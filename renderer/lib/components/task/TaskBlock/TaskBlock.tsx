@@ -1,5 +1,18 @@
-import { Card, Flex, useStyleConfig, Text, SlideFade } from "@chakra-ui/react";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Card,
+  Flex,
+  useStyleConfig,
+  Text,
+  SlideFade,
+  Portal,
+} from "@chakra-ui/react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DraggableData, Rnd } from "react-rnd";
 import CheckButton from "@core/components/CheckButton";
@@ -50,6 +63,7 @@ const TaskBlock =
     const { isOnline } = useAppStatus();
     const { isBase, isSM, isMD, isLG, isXL } = useMediaSize();
     const { pixelPerHour, pixelPerMinute } = useUISetting();
+    const taskBlockRef = useRef();
 
     const [height, setHeight] = useState<number>(
       convertTimeIntervalToPxHeight(task.timeInterval, pixelPerHour) == 0
@@ -120,52 +134,57 @@ const TaskBlock =
       task.taskType == "To Do" ? (
         <>
           {showFocusLevelSlider && (
-            <SlideFade
-              in={true}
-              offsetY={0}
-              offsetX={100}
-              style={{
-                position: "absolute",
-                left: "85%",
-                display: "flex",
-                alignItems: "center",
-                zIndex: 10,
-                paddingTop: 4,
-              }}
-              unmountOnExit={true}
-            >
-              <Card
-                zIndex={4}
-                position="absolute"
-                w="fit-content"
-                px={2}
-                right={-30}
-                bgColor="brand.green.100"
-                borderColor={"brand.green.250"}
-                onMouseLeave={onFocusSliderMouseOut}
+            <Portal containerRef={taskBlockRef}>
+              <SlideFade
+                in={true}
+                offsetY={0}
+                offsetX={100}
+                style={{
+                  position: "absolute",
+                  top: "-2%",
+                  right: "4%",
+                  display: "flex",
+                  alignItems: "center",
+                  zIndex: 10,
+                  paddingTop: 4,
+                }}
+                unmountOnExit={true}
               >
-                <Text fontSize="xs">How much did you focus?</Text>
-                <FocusLevelSlider
-                  showMarks={false}
-                  showLabel={false}
-                  defaultValue={task.focusLevel}
-                  levelLabelSize={"sm"}
-                  onChangeEnd={onFocusSliderChangeEnd}
-                  width={"10em"}
-                />
-              </Card>
-            </SlideFade>
+                <Card
+                  zIndex={4}
+                  position="absolute"
+                  w="fit-content"
+                  px={2}
+                  right={-30}
+                  bgColor="brand.green.100"
+                  borderColor={"brand.green.250"}
+                  onMouseLeave={onFocusSliderMouseOut}
+                >
+                  <Text fontSize="xs">How much did you focus?</Text>
+                  <FocusLevelSlider
+                    showMarks={false}
+                    showLabel={false}
+                    defaultValue={task.focusLevel}
+                    levelLabelSize={"sm"}
+                    onChangeEnd={onFocusSliderChangeEnd}
+                    width={"10em"}
+                  />
+                </Card>
+              </SlideFade>
+            </Portal>
           )}
 
           <CheckButton
             padding={0}
             size={isMini && isMD ? "xs" : "sm"}
             onClick={onCheckButtonClick}
+            color="brand.heavy"
             _hover={{ color: "brand.green.300" }}
           />
         </>
       ) : (
         <UndoButton
+          pt={1}
           padding={0}
           size={isMini && isMD ? "xs" : "sm"}
           onClick={async (e) => {
@@ -179,6 +198,7 @@ const TaskBlock =
 
             dispatch(taskActions.resetSelectedTask);
           }}
+          color="brand.heavy"
           _hover={{ color: "brand.regular" }}
         />
       );
@@ -195,11 +215,11 @@ const TaskBlock =
 
     const buttons = (
       <Flex
+        className="TaskBlock__side-buttons"
         style={{
           position: "absolute",
-          height: "100%",
-          right: isMini && isMD && isSM ? "-10em" : "2%",
-          top: "0px",
+          right: isMini && isMD && isSM ? "-1%" : "-1%",
+          top: "-30px",
           border: "none",
           alignItems: "center",
           zIndex: 2,
@@ -235,15 +255,11 @@ const TaskBlock =
 
     const label = (
       <TaskBlockLabel
+        isMini={isMini}
         task={task}
         height={height}
         color="brand.heavy"
-        columnGap={{
-          base: "11%",
-          md: isMini ? "0" : "15%",
-          lg: isMini ? "10%" : "25%",
-        }}
-        fontSize={isMini ? "xs" : "md"}
+        fontSize={{ base: "3xs", sm: "2xs", md: "xs", lg: "md", xl: "md" }}
       />
     );
     // #endregion
@@ -457,13 +473,13 @@ const TaskBlock =
     // set width of the block per media's screen size.
     let width = useMemo(() => {
       if (isXL) {
-        return isMini ? "92.5%" : "94.7%";
+        return isMini ? "95%" : "94.7%";
       }
       if (isLG) {
-        return isMini ? "91.5%" : "93.5%";
+        return isMini ? "94.5%" : "91.5%";
       }
       if (isMD) {
-        return isMini ? "88%" : "90.7%";
+        return isMini ? "91%" : "90.7%";
       }
       if (isSM) {
         return isMini ? "86%" : "88%";
@@ -501,6 +517,8 @@ const TaskBlock =
         onClick={onClickHandler}
       >
         <Flex
+          id={"task-block-" + task._id}
+          ref={taskBlockRef}
           __css={containerStyle}
           sx={dynamicStyle}
           onTouchStart={() => {

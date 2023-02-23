@@ -42,7 +42,9 @@ const OverdueTab = () => {
       {...tabStyle}
     >
       {overdueTodos.map((t) => {
-        return <TaskCard key={t._id} task={t} width="100%" />;
+        return (
+          <TaskCard key={t._id} task={t} width="100%" />
+        );
       })}{" "}
     </ExpandableTab>
   );
