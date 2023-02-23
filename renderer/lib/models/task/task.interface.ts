@@ -9,7 +9,7 @@ export interface ITask {
   focusLevel?: number;
   position?: number;
   timeInterval?: TimeInterval;
-  taskType?: string;
+  taskType?: "To Do" | "Did" | string;
   category?: string;
   goal?: mongoose.Types.ObjectId;
   priority?: number;
