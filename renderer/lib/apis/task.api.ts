@@ -1,7 +1,7 @@
-import IApi from "../../../core/interfaces/api.interface";
 import logger from "@core/utils/logger";
-import ITask from "./task.interface";
 import axiosInstance from "@core/utils/axios";
+import { ITask } from "@lib/models/task";
+import IApi from "@core/interfaces/api.interface";
 
 class TaskApi implements IApi {
   url = "/tasks";

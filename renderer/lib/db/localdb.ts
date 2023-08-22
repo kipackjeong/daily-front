@@ -1,7 +1,7 @@
 // db.ts
 import Dexie, { Table } from "dexie";
-import ICategory from "@lib/models/category/category.interface";
 import { ITask } from "@lib/models/task";
+import { ICategory } from "@lib/models/category";
 export class MySubClassedDexie extends Dexie {
   // 'friends' is added by dexie when declaring the stores()
   // We just tell the typing system this is the case

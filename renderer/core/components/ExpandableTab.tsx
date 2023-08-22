@@ -1,10 +1,8 @@
 import { Card, CardBody } from "@chakra-ui/card";
-import { ArrowDownIcon } from "@chakra-ui/icons";
-import { Flex, FlexProps, Grid, GridItem } from "@chakra-ui/layout";
+import { Flex, FlexProps } from "@chakra-ui/layout";
 import { Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
-import { Rnd } from "react-rnd";
 import IconButton from "./buttons/IconButton";
 
 type ExpandableTabProps = {
@@ -20,7 +18,7 @@ const ExpandableTab = ({
   children,
   className,
   ...rest
-}) => {
+}: ExpandableTabProps) => {
   const [showItems, setShowItems] = useState(defaultIsOpen);
 
   function onClickHandler() {

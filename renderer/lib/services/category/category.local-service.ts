@@ -1,6 +1,6 @@
+import { ICategory } from "@lib/models/category";
 import { IndexableType } from "dexie";
 import { db } from "../../db/localdb";
-import ICategory from "./category.interface";
 
 class categoryLocalService {
   private db = db;

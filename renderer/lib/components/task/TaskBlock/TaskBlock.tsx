@@ -1,44 +1,11 @@
-import {
-  Card,
-  Flex,
-  useStyleConfig,
-  Text,
-  SlideFade,
-  Portal,
-} from "@chakra-ui/react";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { DraggableData, Rnd } from "react-rnd";
-import { useAppStatus } from "../../../hooks/useAppStatus";
+import { Flex } from "@chakra-ui/react";
+import React, { useMemo } from "react";
+import { Rnd } from "react-rnd";
 import useMediaSize from "../../../hooks/useMediaSize";
-import { useUISetting } from "../../../hooks/useUISettings";
 import { ITask } from "@lib/models/task";
-import taskLocalService from "../../../services/task/task.local-service";
-import {
-  convertTimeIntervalToPxHeight,
-  convertPXtoSeconds,
-  addSeconds,
-  adjustIntervalToStartAfter,
-  adjustIntervalToStartBefore,
-  findOverlappedTask,
-  getPositionFromStartTime,
-  toPrecision,
-} from "@core/utils/helper";
 import TaskDescription from "../TaskDescription/TaskDescription";
 import TaskForm from "../TaskForm/TaskForm";
 import TaskBlockLabel from "./atoms/TaskBlockLabel";
-import {
-  selectSelectedTasks,
-  selectTasks,
-  taskActions,
-} from "@lib/redux/slices/task.slice";
-import taskService from "@lib/services/task/task.service";
 import SideButtons from "./atoms/SideButtons";
 import BlockDecorationLine from "./atoms/BlockDecorationLine";
 import useTaskBlock from "@lib/hooks/useTaskBlock";
