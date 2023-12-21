@@ -1,16 +1,12 @@
 module.exports = {
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.target = "electron-renderer";
-    }
+	webpack: (config, { isServer }) => {
+		if (!isServer) {
+			config.target = 'electron-renderer';
+		}
 
-    return config;
-  },
-  env: {
-    prod_mongodburl:
-      "mongodb+srv://kipackjeong:A20181004a%3F@daily-test.clvjbwe.mongodb.net/prod",
-    dev_mongodburl:
-      "mongodb+srv://kipackjeong:A20181004a%3F@daily-test.clvjbwe.mongodb.net/test",
-    apiurl: "http://localhost:3000",
-  },
+		return config;
+	},
+	env: {
+		apiurl: 'http://localhost:4001',
+	},
 };
